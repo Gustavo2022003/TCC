@@ -11,4 +11,10 @@
 ### Documentação
 > - [ ] Documentação
 
+### Versão definitiva
+> - [ ] Web
+> - [ ] Mobile
+> - [ ] MySQL
+> - [ ] Mapeamento Banco de dados
+
 [Entrar no projeto Figma](https://www.figma.com/team_invite/redeem/Zl0xomU9OeHM80aQnbQR2F)
