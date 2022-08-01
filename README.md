@@ -19,7 +19,7 @@
 
 ## Tecnologias:
 
-- Tailwind UI
-- 
+- Bootstrap
+- React Native
 
 [Entrar no projeto Figma](https://www.figma.com/team_invite/redeem/Zl0xomU9OeHM80aQnbQR2F)
