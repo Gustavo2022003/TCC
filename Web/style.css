@@ -183,8 +183,8 @@ body {
 
 /*Mudar cor de seleção de texto/conteúdo*/
 ::selection {
-    color: rgb(206, 255, 227);
-    background: rgba(7, 97, 4, 0.664);
+    color: rgb(0, 107, 14);
+    background: rgba(24, 185, 19, 0.87);
 }
 
 /*Footer*/
@@ -273,7 +273,7 @@ body {
     gap: 10px 20px;
     grid-auto-flow: row;
     grid-template-areas:
-      ". . . . . .";
+    ". . . . . .";
     margin-bottom: -130px;
 }
 
@@ -285,9 +285,9 @@ body {
         grid-template-rows: 1fr 1fr 1fr 1fr 1fr; 
         gap: 20px 10px; 
         grid-template-areas: 
-          ". ."
-          ". ."
-          ". .";
+        ". ."
+        ". ."
+        ". .";
         justify-items: center;
         margin-bottom: -500px;
     }
@@ -361,4 +361,3 @@ body {
     background-color: #86cc97;
     padding: 10px;
 }
-  
