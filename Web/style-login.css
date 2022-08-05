@@ -7,11 +7,11 @@ body {
     background-size: cover;
 }
 
-@media screen and (max-width: 1778px){
+@media screen and (max-width: 1200px){
     body {
         background-image: url(https://images.unsplash.com/photo-1600663791817-d74f5196ba29?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80);
-        background-repeat: no-repeat, repeat;
-        background-size: cover;
+        background-repeat: repeat;
+        background-size: auto;
     }
 }
 
@@ -383,6 +383,7 @@ a.category-name{
 
 .center {
     text-align: center;
+    margin: auto;
 }
 
 .div-category {
@@ -479,11 +480,15 @@ img.ingredient {
 /*Login page*/
 
 .login-box {
-    padding: 50px;
+    padding: 40px;
     border-radius: 20px;
     background-color: rgb(255, 255, 255);
-    min-width: 300px;
+    min-width: 500px;
     min-height: 600px;
+    align-items: center;
+    align-content: center;
+    justify-items: center;
+    justify-content: center;
 }
 
 .login-box-2 {
@@ -491,6 +496,10 @@ img.ingredient {
     border-radius: 20px;
     max-width: 500px;
     min-height: 600px;
+    align-items: center;
+    align-content: center;
+    justify-items: center;
+    justify-content: center;
 }
 
 /*Login - container*/
@@ -519,14 +528,14 @@ img.ingredient {
 
 .input-login:hover{
     transition: 1s;
-    width: 80%;
+    width: 100%;
     outline: 2px solid #077e07;
     background-color: rgba(54, 54, 54, 0.103);
 }
 
 .input-login:focus{
     transition: 1s;
-    width: 80%;
+    width: 100%;
     outline: 2px solid #077e07;
     background-color: rgba(54, 54, 54, 0.103);
 }
@@ -537,8 +546,8 @@ img.ingredient {
 
 
 .login-btn{
-    margin-top: 2rem;
-    margin-bottom: 2rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
     padding: 5px;
     border: none;
     background-color: #50a550;
@@ -574,11 +583,11 @@ img.ingredient {
     }
 
     .login-box {
-        margin: auto;
+        margin: 10vh auto;
         padding: 30px;
         border-radius: 20px;
         background-color: rgb(255, 255, 255);
-        min-width: 300px !important;
+        min-width: 400px !important;
         max-height: 100px !important;
     }
     
@@ -586,6 +595,102 @@ img.ingredient {
         display: none;
     }
 
+    .input-login {
+        padding: 10px;
+        border-radius: 10px;
+        width: 70%;
+        background-color: rgba(54, 54, 54, 0.103);
+        border: none;
+    }
+
+    .input-login:hover{
+        transition: 1s;
+        width: 100%;
+        outline: 2px solid #077e07;
+        background-color: rgba(54, 54, 54, 0.103);
+    }
+    
+    .input-login:focus{
+        transition: 1s;
+        width: 100%;
+        outline: 2px solid #077e07;
+        background-color: rgba(54, 54, 54, 0.103);
+    }
+    
+    .input-login:not(:hover){
+        transition: 1s;
+    }
+
+    .login-btn{
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+        padding: 5px;
+        border: none;
+        background-color: #50a550;
+        width: 10rem;
+        min-height: 2rem;
+        border-radius: 10px;
+        color: white;
+    }
+    
+    .login-btn:hover{
+        transform: scale(1.1);
+        transition: 1s;
+        background-color: #3f833f;
+    }
+    
+    .login-btn:not(:hover){
+        transition: 1s;
+    }
+
+}
+
+@media  only screen and (max-width: 484px){
+    .login-box {
+        margin: 10vh auto;
+        padding: 30px;
+        border-radius: 20px;
+        background-color: rgb(255, 255, 255);
+        min-width: 100% !important;
+        max-height: 100% !important;
+    }
+}
+
+@media only screen and (max-width: 288px) {
+    .login-box {
+        margin: 10vh auto;
+        padding: 30px;
+        border-radius: 20px;
+        background-color: rgb(255, 255, 255);
+        min-width: 100% !important;
+        max-height: 100% !important;
+    }
+}
+
+@media only screen and (max-height: 749px) {
+    .container-login-main {
+        margin: 0% 0% 0% 0%;
+        margin-top: 0%;
+        display: grid; 
+        grid-template-columns: 1fr 1fr; 
+        grid-template-rows: 1fr; 
+        gap: 0px 0em; 
+        grid-template-areas: 
+        ". ."; 
+        justify-content: center; 
+        align-content: center; 
+        justify-items: center; 
+        align-items: center;
+    }
+
+    .login-box {
+        margin: 20% 0% 0% 100%;
+        padding: 30px;
+        border-radius: 20px;
+        background-color: rgb(255, 255, 255);
+        min-width: 100% !important;
+        max-height: 100% !important;
+    }
 }
 
 .glass {
@@ -595,4 +700,13 @@ img.ingredient {
     background: rgba(0, 0, 0, 0.418);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+}
+
+.spacement {
+    margin: 10px 0px 0px 10px;
+}
+
+.form-p {
+    padding-left: 5px;
+    margin-bottom: 5px;
 }

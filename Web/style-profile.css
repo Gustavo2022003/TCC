@@ -83,8 +83,6 @@ body {
 }
 
 #main {
-    transition: margin-left .5s;
-    padding: 16px;
     min-height: 1500px !important;
 }
 
@@ -136,12 +134,6 @@ body {
 /*Divisória*/
 .divisory {
     border-top: 1px solid;
-}
-
-.divisory-profile {
-    border-top: 0.5px solid;
-    width: 100% !important;
-    background-color: rgba(165, 165, 165, 0.096);
 }
 
 /*Container settings*/
@@ -213,6 +205,7 @@ body {
     padding: 20px;
     background-color: rgb(44, 44, 44);
     min-height: 100px;
+    max-width: 1000px !important;
 }
 
 .footerlink {
@@ -467,4 +460,14 @@ img.ingredient {
     width: 100px;
     height: 100px;
     border-radius: 50%;
+}
+
+/*Profile*/
+
+.background-profile {
+    margin: auto;
+    max-width: 1000px !important;
+    min-height: 200px;
+    max-height: 200px;
+    background-color: rgb(177, 177, 177);
 }
