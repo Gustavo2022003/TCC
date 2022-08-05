@@ -12,7 +12,7 @@ export default function Welcome() {
   async function TokenLogin(){
     const value = await AsyncStorage.getItem('token');
     if (value !== null){
-      navigation.navigate('HomeStack');
+      navigation.navigate('UserStack');
       console.log("Conectado");
     }else{
       console.log('Está desconectado');
