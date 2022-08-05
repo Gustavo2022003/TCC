@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
+import { RefreshControl, StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -8,9 +8,11 @@ import { FlatList } from 'react-native-gesture-handler';
 import ComponentReceita from '../../components/ComponentReceita';
 
 
+
 export default function Home({navigation}) {
     const [user,setUser]=useState(null);
     const [receitas, setReceitas]=useState(null)
+    const [isRefreshing, setIsRefreshing] = useState(false)
 
     useEffect(()=>{
         async function getUser(){
@@ -23,7 +25,7 @@ export default function Home({navigation}) {
     
     useEffect(()=>{
         async function GetReceita(){
-            let response= await fetch('http://192.168.0.108:3000/feed',{
+            let response= await fetch('http://192.168.16.229:3000/feed',{
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -32,8 +34,15 @@ export default function Home({navigation}) {
             })
             let json=await response.json();
             setReceitas(json);
+            setIsRefreshing(false);
             }
         GetReceita();
+    },[]);
+    
+    const onRefresh = React.useCallback(() => {
+        //set isRefreshing to true
+        setIsRefreshing(true);
+        // and set isRefreshing to false at the end of your callApiMethod()
     },[]);
 
 
@@ -48,6 +57,11 @@ export default function Home({navigation}) {
             <View style={styles.bottom}>
             <FlatList
                 data={receitas}
+                refreshControl={
+                    <RefreshControl 
+                        refreshing={isRefreshing}
+                        onRefresh={onRefresh}
+                    />}
                 renderItem={({item}) =><ComponentReceita {...item}/>}
             />
             </View>
