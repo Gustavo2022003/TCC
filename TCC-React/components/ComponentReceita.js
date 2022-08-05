@@ -1,19 +1,23 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet,TouchableOpacity, Image} from 'react-native';
 
 
-export default function ComponentReceita({id, name, type}){
+export default function ComponentReceita({...item}){
+    const navigation = useNavigation();
     return(
         <View style={styles.container}>
+            <TouchableOpacity onPress={()=> navigation.navigate('Recipe', {...item})}>
             <View style={styles.central}>
                 <Image style={styles.img}
                 />
             </View>
             <View style={styles.content}>
-            <Text>Receita: {name}</Text>
-            <Text>Id: {id}</Text>
-            <Text>Type: {type}</Text>
+            <Text>Receita: {item.name}</Text>
+            <Text>Id: {item.id}</Text>
+            <Text>Type: {item.type}</Text>
             </View>
+            </TouchableOpacity>
         </View>
     )
 }

@@ -8,8 +8,7 @@ import { FlatList } from 'react-native-gesture-handler';
 import ComponentReceita from '../../components/ComponentReceita';
 
 
-export default function Home() {
-
+export default function Home({navigation}) {
     const [user,setUser]=useState(null);
     const [receitas, setReceitas]=useState(null)
 
@@ -49,7 +48,7 @@ export default function Home() {
             <View style={styles.bottom}>
             <FlatList
                 data={receitas}
-                renderItem={({item}) => <ComponentReceita {...item} />}
+                renderItem={({item}) =><ComponentReceita {...item}/>}
             />
             </View>
         </Animatable.View>

@@ -50,7 +50,7 @@ export default function Login({navigation}) {
         let userData = await AsyncStorage.setItem('userData', JSON.stringify(json));
         let resData=await AsyncStorage.getItem('userData');
         console.log(JSON.parse(resData));
-        navigation.navigate('HomeStack');
+        navigation.navigate('UserStack');
       };
     }
 

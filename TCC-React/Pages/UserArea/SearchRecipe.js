@@ -5,13 +5,10 @@ import * as Animatable from 'react-native-animatable';
 import { useNavigation } from '@react-navigation/native';
 
 
-export default function Recipe({route}) {
+export default function SearchRecipe() {
     return (
         <Animatable.View animation='fadeInUp' style={styles.container}>
-            <Text>Receita</Text>
-            <Text>Receita: {route.params?.name}</Text>
-            <Text>Id: {route.params?.id}</Text>
-            <Text>Type: {route.params?.type}</Text>
+            <Text>Area de Receita</Text>
         </Animatable.View>
     );
 }

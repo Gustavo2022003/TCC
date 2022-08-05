@@ -9,6 +9,7 @@ import Login from './Pages/Login';
 
 import Home from './Pages/UserArea/Home';
 import Profile from './Pages/UserArea/Profile';
+import SearchRecipe from './Pages/UserArea/SearchRecipe';
 import Recipe from './Pages/UserArea/Recipe';
 import Search from './Pages/UserArea/Search';
 import Chat from './Pages/UserArea/Chat';
@@ -18,9 +19,24 @@ import ButtonNew from './components/ButtonNew';
 import {Ionicons} from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-
+const LoginStack = createStackNavigator();
 const AppStack = createStackNavigator();
+const HomePages = createStackNavigator();
 const TabStack = createBottomTabNavigator();
+
+function HomeStack(){
+  return(
+    <HomePages.Navigator 
+    screenOptions={{
+      headerShown: false,
+      gestureEnabled: true,
+      cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+      gestureDirection: 'vertical',
+    }}>
+    <HomePages.Screen name="Home" component={Home} />
+    <HomePages.Screen name='Recipe' component={Recipe} />
+    </HomePages.Navigator>
+);}
 
 function TabHome() {
     return (
@@ -35,7 +51,7 @@ function TabHome() {
           height: '12%'
         }
       }}>
-        <TabStack.Screen name="Home" component={Home} 
+        <TabStack.Screen name="Feed" component={HomeStack} 
         options={{
           tabBarIcon: ({ color, size, focused})=>{
             if(focused){
@@ -53,7 +69,7 @@ function TabHome() {
             return <MaterialCommunityIcons name='account-outline' size={40} color='black' />
           }
         }} />
-        <TabStack.Screen name="Recipe" component={Recipe} 
+        <TabStack.Screen name="SearchRecipe" component={SearchRecipe} 
         options={{
           tabBarIcon: ({ color, size, focused})=>{
             if(focused){
@@ -84,19 +100,32 @@ function TabHome() {
     );
   }
 
+
+  function LoginScreens(){
+    return(
+      <LoginStack.Navigator 
+      screenOptions={{
+        headerShown: false,
+        gestureEnabled: true,
+        cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+        gestureDirection: 'vertical',
+      }}>
+      <LoginStack.Screen name="Welcome" component={Welcome} />
+      <LoginStack.Screen name='Login' component={Login} />
+      <LoginStack.Screen name='Register' component={Register} />
+      </LoginStack.Navigator>
+  );}
+
 export default function Routes(){
     return (
         <NavigationContainer>
             <AppStack.Navigator screenOptions={{
-                gestureEnabled: true,
                 gestureDirection: 'vertical',
                 cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
                 headerShown: false
                 }}>
-                <AppStack.Screen name='Welcome' component={Welcome} />
-                <AppStack.Screen name='Login' component={Login} />
-                <AppStack.Screen name='Register' component={Register} />
-                <AppStack.Screen name='HomeStack' component={TabHome} />
+                <AppStack.Screen name='LoginStack' component={LoginScreens} />
+                <AppStack.Screen name='UserStack' component={TabHome} />
             </AppStack.Navigator>
             
         </NavigationContainer>
