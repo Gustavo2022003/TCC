@@ -24,6 +24,7 @@ const AppStack = createStackNavigator();
 const HomePages = createStackNavigator();
 const TabStack = createBottomTabNavigator();
 
+
 function HomeStack(){
   return(
     <HomePages.Navigator 

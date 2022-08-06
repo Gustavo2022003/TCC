@@ -24,10 +24,11 @@ export default function ComponentReceita({...item}){
 
 const styles = StyleSheet.create({
     container:{
-        width: 380,
+        width: '90%',
         flex: 1,
         backgroundColor: 'wheat',
         justifyContent: 'flex-start',
+        padding: 15,
         margin: 20,
     },
     central:{
