@@ -28,9 +28,10 @@ export default function Recipe({route, navigation}) {
             <View>
             <Text>Receita</Text>
             </View>
-            <Text>Receita: {route.params?.name}</Text>
+            <Text>Receita: {route.params?.recipeName}</Text>
             <Text>Id: {route.params?.id}</Text>
-            <Text>Type: {route.params?.type}</Text>
+            <Text>Type: {route.params?.category}</Text>
+            <Text>Modo de Preparo: {route.params?.ModoPreparo}</Text>
         </Animatable.View>
     );
 }

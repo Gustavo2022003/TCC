@@ -13,9 +13,9 @@ export default function ComponentReceita({...item}){
                 />
             </View>
             <View style={styles.content}>
-            <Text>Receita: {item.name}</Text>
+            <Text>Receita: {item.recipeName}</Text>
             <Text>Id: {item.id}</Text>
-            <Text>Type: {item.type}</Text>
+            <Text>Type: {item.category}</Text>
             </View>
             </TouchableOpacity>
         </View>

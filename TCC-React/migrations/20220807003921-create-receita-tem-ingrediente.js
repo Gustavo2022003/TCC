@@ -1,27 +1,35 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Recipes', {
+    await queryInterface.createTable('ReceitaTemIngredientes', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
-        type: Sequelize.STRING
-      },
-      type: {
-        type: Sequelize.STRING
-      },
-      userId: {
+      idReceita: {
         type: Sequelize.INTEGER,
         references:{
-          model: 'users',
-          key:'id'
+          model: 'recipes',
+          key: 'id'
         },
         onUpdate: 'cascade',
         onDelete: 'cascade',
+        allowNull: false,
+      },
+      idIngrediente: {
+        type: Sequelize.INTEGER,
+        references:{
+          model: 'ingredientes',
+          key: 'id'
+        },
+        onUpdate: 'cascade',
+        onDelete: 'cascade',
+        allowNull: false,
+      },
+      quantidade: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
@@ -34,6 +42,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Recipes');
+    await queryInterface.dropTable('ReceitaTemIngredientes');
   }
 };
