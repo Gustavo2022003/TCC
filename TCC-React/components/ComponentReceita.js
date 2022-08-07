@@ -3,6 +3,7 @@ import React from 'react';
 import {View, Text, StyleSheet,TouchableOpacity, Image} from 'react-native';
 
 
+
 export default function ComponentReceita({...item}){
     const navigation = useNavigation();
     return(

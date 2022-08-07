@@ -3,8 +3,9 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { useNavigation } from '@react-navigation/native';
-import UploadImage from '../../components/UploadImage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as ImagePicker from 'expo-image-picker';
+import * as FileSystem from 'expo-file-system';
 
 
 export default function Profile({navigation}) {
@@ -30,7 +31,6 @@ export default function Profile({navigation}) {
         navigation.navigate('Welcome');
     }
 
-    try{
         async function GetProfile(){
         let response= await fetch('http://192.168.0.108:3000/getProfilePicture',{
             method: 'POST',
@@ -42,18 +42,32 @@ export default function Profile({navigation}) {
                 'Content-Type': 'application/json'
             }
         })
-        let json=await response.json();
+        let json=await response.text();
         console.log(json);
         setPicture(json);
-
-        useEffect(()=>{
-            GetProfile();
-        },[]);
-    }}
-    catch(e){
-        console.log(e)
     }
-    
+
+    const openImagePickerAsync = async () => {
+      
+        let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (permissionResult.granted === false) {
+            alert("Permission to access camera roll is required!");
+            return;
+        }
+        let pickerResult = await ImagePicker.launchImageLibraryAsync();
+        if (!pickerResult.cancelled) {
+            let uploadResult = await FileSystem.uploadAsync('http://192.168.0.108:3000/uploadProfilePicture', pickerResult.uri, {
+                httpMethod: 'POST',
+                uploadType: FileSystem.FileSystemUploadType.MULTIPART,
+                fieldName: 'avatar',
+                parameters: {
+                    'uri': toString(pickerResult.uri),
+                    'user': toString(user)
+                }
+            });            
+        }
+        console.log(pickerResult.uri)
+      }
     
 
 
@@ -61,9 +75,8 @@ export default function Profile({navigation}) {
 
     return (
         <Animatable.View animation='fadeInUp' style={styles.container}>
-            <Text></Text>
-            <UploadImage/>
-            <Image source={picture}/>
+            <TouchableOpacity onPress={openImagePickerAsync}><Text>Alterar Foto</Text></TouchableOpacity>
+            <Image/>
             <Text>Tela de Perfil</Text>
             <TouchableOpacity style={styles.LogoutButton} onPress={Logout}>
                 <Text>Sair</Text>

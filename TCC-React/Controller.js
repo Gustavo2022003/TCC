@@ -62,18 +62,18 @@ app.post('/getProfilePicture'), async (req,res)=>{
 
 app.post('/uploadProfilePicture',upload, async (req,res)=>{
     let response = req.file
-    console.log(req.body.userId)
-    let updatepicture = await user.update({ profilePicture: response.filename },{
+    console.log(response)
+    /*let updatepicture = await user.update({ profilePicture: response.filename },{
         where: {
           username: req.body.name
         }
-      });
-      console.log(updatepicture)
+      });*/
+      /*console.log(updatepicture)
       if(updatepicture === null){
         res.send(JSON.stringify('Deu Erro'));
     }else{
         res.send(updatepicture);
-    }
+    }*/
 });
 
 
