@@ -46,7 +46,7 @@ export default function Home({navigation}) {
         async function getUser(){
             let response = await AsyncStorage.getItem('userData');
             let json=JSON.parse(response);
-            setUser(json.id);
+            setUser(json.name);
         }
         getUser();
     },[]);

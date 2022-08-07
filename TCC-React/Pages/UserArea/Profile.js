@@ -10,6 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function Profile({navigation}) {
 
     const [user,setUser]=useState(null);
+    const [picture, setPicture]=useState(null);
     
     //Picker
 
@@ -19,7 +20,7 @@ export default function Profile({navigation}) {
         async function getUser(){
             let response = await AsyncStorage.getItem('userData');
             let json=JSON.parse(response);
-            setUser(json.id);
+            setUser(json.username);
         }
         getUser();
     },[]);
@@ -29,13 +30,40 @@ export default function Profile({navigation}) {
         navigation.navigate('Welcome');
     }
 
+    try{
+        async function GetProfile(){
+        let response= await fetch('http://192.168.0.108:3000/getProfilePicture',{
+            method: 'POST',
+            body: {
+                userId: user,
+            },
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+        let json=await response.json();
+        console.log(json);
+        setPicture(json);
+
+        useEffect(()=>{
+            GetProfile();
+        },[]);
+    }}
+    catch(e){
+        console.log(e)
+    }
+    
+    
+
+
 
 
     return (
         <Animatable.View animation='fadeInUp' style={styles.container}>
-            <Text>{user}</Text>
+            <Text></Text>
             <UploadImage/>
-            <Image></Image>
+            <Image source={picture}/>
             <Text>Tela de Perfil</Text>
             <TouchableOpacity style={styles.LogoutButton} onPress={Logout}>
                 <Text>Sair</Text>

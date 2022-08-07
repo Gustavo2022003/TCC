@@ -1,52 +1,43 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Image, View, Platform } from 'react-native';
+import { Button, Image, View, Platform, Text } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-
+import * as FileSystem from 'expo-file-system';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function ImagePickerExample() {
-
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    console.log(result);
-
-    if (!result.cancelled) {
-
-    try{
-    const formdata = new FormData()
-    formdata.append('Picture',{
-        uri: result.uri,
-        type: result.type,
-        
-    });
-    let res = await fetch('http://192.168.0.108:3000/upload',{
-        method: 'POST',
-        body: JSON.stringify({formdata}),
-    });
-    let ResponseJson = await res.json();
-    console.log(ResponseJson, "ResponseJson")
+  
+  const [user,setUser]=useState(null);
+  useEffect(()=>{
+    async function getUser(){
+        let response = await AsyncStorage.getItem('userData');
+        let json=JSON.parse(response);
+        setUser(json.username);
     }
-    catch(e){
-        console.log(e);
+    getUser();
+  },[]);
+
+  const openImagePickerAsync = async () => {
+    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (permissionResult.granted === false) {
+      alert("Permission to access camera roll is required!");
+      return;
     }
-}else{
-    console.log('cancelou')
-}
-
-
-
-
-  };
+    let pickerResult = await ImagePicker.launchImageLibraryAsync();
+    if (!pickerResult.cancelled) {
+      const uploadResult = await FileSystem.uploadAsync('http://192.168.0.108:3000/uploadProfilePicture', pickerResult.uri, {
+        httpMethod: 'POST',
+        uploadType: FileSystem.FileSystemUploadType.MULTIPART,
+        fieldName: 'avatar',
+        body: JSON.stringify({
+          name: user
+        })
+      })
+    }
+  }
 
   return (
-    <View style={{ lignItems: 'center', justifyContent: 'center' }}>
-      <Button title="Pick an image from camera roll" onPress={pickImage} />
-        <Image style={{ width: 200, height: 200 }} />
+    <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+      <Text>{user}</Text>
+      <Button title="Pick an image from camera roll" onPress={openImagePickerAsync} />
     </View>
   );
 }

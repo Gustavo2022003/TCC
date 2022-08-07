@@ -33,20 +33,47 @@ app.post('/feed', async (req,res)=>{
 
 });
 
-const storage = multer.diskStorage({
-    destination: "Images",
-    filename: (req, file, cb) =>{
-        cb(null, Date.now()+ path.extname(file.originalname))
-    }
-})
-const upload = multer({
-    storage: storage
-}).single('Picture')
+var storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    console.log(file)
+    cb(null, 'Images');
+  },
+  filename: function(req, file, cb) {
+    console.log(file)
+    cb(null, file.originalname);
+  }
+});
+var upload = multer({
+  storage: storage
+}).single("avatar")
 
-app.post('/upload',upload, async (req,res)=>{
-    let response = req.body
-    console.log('me cutucaram')
-    console.log (response)
+app.post('/getProfilePicture'), async (req,res)=>{
+    let response = user.findOne({
+        attributes: ['profilePicture'],
+        where: {id: req.body.userId}
+    });
+    console.log(response);
+    if(response === null){
+        res.send(JSON.stringify('Deu Erro'));
+    }else{
+        res.send(response);
+    }
+}
+
+app.post('/uploadProfilePicture',upload, async (req,res)=>{
+    let response = req.file
+    console.log(req.body.userId)
+    let updatepicture = await user.update({ profilePicture: response.filename },{
+        where: {
+          username: req.body.name
+        }
+      });
+      console.log(updatepicture)
+      if(updatepicture === null){
+        res.send(JSON.stringify('Deu Erro'));
+    }else{
+        res.send(updatepicture);
+    }
 });
 
 
