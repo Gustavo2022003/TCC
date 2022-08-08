@@ -3,7 +3,8 @@ const cors= require('cors');
 const bodyParser = require('body-parser');
 const models=require('./models');
 const multer = require('multer');
-const path = require('path')
+const path = require('path');
+
 
 const app = express();
 app.use(cors());
@@ -16,6 +17,7 @@ app.post('/login',async (req,res)=>{
     let response = await user.findOne({
         where:{username: req.body.name, password: req.body.password}
     });
+    console.log(response)
     if(response === null){
         res.send(JSON.stringify('error'));
     }else{
@@ -47,10 +49,10 @@ var upload = multer({
   storage: storage
 }).single("avatar")
 
-app.post('/getProfilePicture'), async (req,res)=>{
-    let response = user.findOne({
+app.post('/getAvatar/:user', async (req,res)=>{
+    let response =await user.findAll({
         attributes: ['profilePicture'],
-        where: {id: req.body.userId}
+        where: {id: req.params.user}
     });
     console.log(response);
     if(response === null){
@@ -58,23 +60,26 @@ app.post('/getProfilePicture'), async (req,res)=>{
     }else{
         res.send(response);
     }
-}
+});
 
-app.post('/uploadProfilePicture',upload, async (req,res)=>{
-    let response = req.file
-    console.log(response)
-    /*let updatepicture = await user.update({ profilePicture: response.filename },{
+app.post('/uploadPicture/:userId',upload, async (req,res)=>{
+    let userid = req.params.userId
+    console.log(userid);
+    let response = (req.file.destination +"/"+req.file.originalname)
+    console.log(response);
+    let updatepicture = await user.update({ profilePicture: response },{
         where: {
-          username: req.body.name
+            id: userid
         }
-      });*/
-      /*console.log(updatepicture)
-      if(updatepicture === null){
+    });
+    console.log(updatepicture)
+    if(updatepicture === null){
         res.send(JSON.stringify('Deu Erro'));
     }else{
         res.send(updatepicture);
-    }*/
+    }
 });
+
 
 
 
