@@ -37,11 +37,9 @@ app.post('/feed', async (req,res)=>{
 
 var storage = multer.diskStorage({
   destination: function(req, file, cb) {
-    console.log(file)
     cb(null, 'Images');
   },
   filename: function(req, file, cb) {
-    console.log(file)
     cb(null, file.originalname);
   }
 });
@@ -64,9 +62,7 @@ app.post('/getAvatar/:user', async (req,res)=>{
 
 app.post('/uploadPicture/:userId',upload, async (req,res)=>{
     let userid = req.params.userId
-    console.log(userid);
     let response = (req.file.destination +"/"+req.file.originalname)
-    console.log(response);
     let updatepicture = await user.update({ profilePicture: response },{
         where: {
             id: userid
