@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
@@ -66,14 +67,28 @@ export default function Profile({navigation}) {
             alert("Permission to access camera roll is required!");
             return;
         }
-        let pickerResult = await ImagePicker.launchImageLibraryAsync();
+        let pickerResult = await ImagePicker.launchImageLibraryAsync({allowsEditing: true,});
         console.log(pickerResult)
+        
         if (!pickerResult.cancelled) {
-            let uploadResult = await FileSystem.uploadAsync('http://192.168.0.108:3000/uploadPicture/'+user, pickerResult.uri, {
-                httpMethod: 'POST',
-                uploadType: FileSystem.FileSystemUploadType.MULTIPART,
-                fieldName: 'avatar',
-            });     
+            // ImagePicker saves the taken photo to disk and returns a local URI to it
+                let localUri = pickerResult.uri;
+                let filename = localUri.split('/').pop();
+
+            // Infer the type of the image
+                let match = /\.(\w+)$/.exec(filename);
+                let type = match ? `image/${match[1]}` : `image`;
+
+            // Upload the image using the fetch and FormData APIs
+                let formData = new FormData();
+            // Assume "photo" is the name of the form field the server expects
+                formData.append('photo', { uri: localUri, name: filename, type });
+            await axios.post('http://192.168.0.108:3000/uploadPicture/'+user, formData, {headers: {
+                'Content-Type': 'multipart/form-data',
+             }})
+            .catch(function (error) {
+                console.log(error.toJSON());
+              });
         setPicture(pickerResult.uri)
         }
     }

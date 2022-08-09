@@ -45,7 +45,7 @@ var storage = multer.diskStorage({
 });
 var upload = multer({
   storage: storage
-}).single("avatar")
+}).single('photo')
 
 app.post('/getAvatar/:user', async (req,res)=>{
     let response =await user.findAll({
@@ -62,8 +62,9 @@ app.post('/getAvatar/:user', async (req,res)=>{
 
 app.post('/uploadPicture/:userId',upload, async (req,res)=>{
     let userid = req.params.userId
-    let response = (req.file.destination +"/"+req.file.originalname)
-    let updatepicture = await user.update({ profilePicture: response },{
+    let response = req.file
+    console.log(response)
+    /*let updatepicture = await user.update({ profilePicture: response },{
         where: {
             id: userid
         }
@@ -73,7 +74,7 @@ app.post('/uploadPicture/:userId',upload, async (req,res)=>{
         res.send(JSON.stringify('Deu Erro'));
     }else{
         res.send(updatepicture);
-    }
+    }*/
 });
 
 
