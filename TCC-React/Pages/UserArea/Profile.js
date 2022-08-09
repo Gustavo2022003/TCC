@@ -44,16 +44,15 @@ export default function Profile({navigation}) {
             let json=await response.json();
             let idImage = JSON.stringify(json)
             //DEIXA O NOME DA IMAGEM DO JEITO QUE PRECISO
-            let newImage = idImage.slice(20,67)
+            let newImage = idImage.slice(22,62)
             console.log("Antes: "+idImage)
             console.log("Depois:"+newImage)
             let strPicture = newImage.toString()
-            //setPicture(strPicture)
-            console.log('meu setPicture:'+strPicture)
-            /*let picturePath = '../../'
-            let finalPath = picturePath.concat(strPicture)
-            let finalfinalpath = toString(finalPath);
-            setPicture(finalfinalpath)*/
+            let picturePath = '../../Images/'
+            let finalPath = picturePath + strPicture
+            let finalfinalpath = finalPath.toString();
+            console.log(`Caminho final`+ finalfinalpath)
+            setPicture(finalfinalpath)
         }
     useEffect(()=>{
         GetProfile();
@@ -89,19 +88,18 @@ export default function Profile({navigation}) {
             .catch(function (error) {
                 console.log(error.toJSON());
               });
-        setPicture(pickerResult.uri)
         }
     }
     
     
    
-    //source={require('../../'+picture)}
+    //source={require('../../Images/'+picture)}
 
     return (
         <Animatable.View animation='fadeInUp' style={styles.container}>
             <TouchableOpacity><Text>{picture}</Text></TouchableOpacity>
             <TouchableOpacity onPress={openImagePickerAsync}><Text>Alterar Foto do {user}</Text></TouchableOpacity>
-            <Image style={styles.avatar}/>
+            <Image source={{uri: `${picture}`}}style={styles.avatar} resizeMode={'cover'}/>
             <Text>Tela de Perfil</Text>
             <TouchableOpacity style={styles.LogoutButton} onPress={Logout}>
                 <Text>Sair</Text>

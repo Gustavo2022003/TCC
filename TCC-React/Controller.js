@@ -1,3 +1,4 @@
+const http = require('http');
 const express= require('express');
 const cors= require('cors');
 const bodyParser = require('body-parser');
@@ -62,9 +63,9 @@ app.post('/getAvatar/:user', async (req,res)=>{
 
 app.post('/uploadPicture/:userId',upload, async (req,res)=>{
     let userid = req.params.userId
-    let response = req.file
+    let response = JSON.stringify(req.file.filename)
     console.log(response)
-    /*let updatepicture = await user.update({ profilePicture: response },{
+    let updatepicture = await user.update({ profilePicture: response },{
         where: {
             id: userid
         }
@@ -74,18 +75,20 @@ app.post('/uploadPicture/:userId',upload, async (req,res)=>{
         res.send(JSON.stringify('Deu Erro'));
     }else{
         res.send(updatepicture);
-    }*/
+    }
 });
 
 
 
 
-
-
+var server = http.createServer(app)
+server.listen(3030)
+console.log('Server na porta 3030?')
 let port=process.env.PORT || 3000;
 app.listen(port,(req,res)=>{
     console.log('Servidor Rodando')
 })
+
 
 
 
