@@ -7,7 +7,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
-
+import profile from '../../Images/d30126d5-1560-4882-90c3-4d2aaa382d88.jpg'
 
 export default function Profile({navigation}) {
     
@@ -48,10 +48,10 @@ export default function Profile({navigation}) {
             console.log("Antes: "+idImage)
             console.log("Depois:"+newImage)
             let strPicture = newImage.toString()
-            let picturePath = '../../Images/'
+            let picturePath = 'http://192.168.0.108:3000/Images/'
             let finalPath = picturePath + strPicture
             let finalfinalpath = finalPath.toString();
-            console.log(`Caminho final`+ finalfinalpath)
+            console.log(`Caminho final: `+ finalfinalpath)
             setPicture(finalfinalpath)
         }
     useEffect(()=>{
@@ -88,6 +88,7 @@ export default function Profile({navigation}) {
             .catch(function (error) {
                 console.log(error.toJSON());
               });
+            GetProfile();
         }
     }
     
@@ -99,7 +100,7 @@ export default function Profile({navigation}) {
         <Animatable.View animation='fadeInUp' style={styles.container}>
             <TouchableOpacity><Text>{picture}</Text></TouchableOpacity>
             <TouchableOpacity onPress={openImagePickerAsync}><Text>Alterar Foto do {user}</Text></TouchableOpacity>
-            <Image source={{uri: `${picture}`}}style={styles.avatar} resizeMode={'cover'}/>
+            <Image source={{uri: picture}}style={styles.avatar} resizeMode={'cover'}/>
             <Text>Tela de Perfil</Text>
             <TouchableOpacity style={styles.LogoutButton} onPress={Logout}>
                 <Text>Sair</Text>

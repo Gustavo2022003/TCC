@@ -7,12 +7,25 @@ const multer = require('multer');
 const path = require('path');
 
 
+
 const app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 let user=models.User;
 let recipe=models.Recipe;
+
+let port=process.env.PORT || 3000;
+
+const host = '192.168.0.108';
+
+
+
+const server = http.createServer(app);
+server.listen(port, host, () => {
+    console.log(`Server is running on http://${host}:${port}`);
+});
+
 
 app.post('/login',async (req,res)=>{
     let response = await user.findOne({
@@ -61,6 +74,10 @@ app.post('/getAvatar/:user', async (req,res)=>{
     }
 });
 
+app.use("/Images",express.static("Images"), ()=>{
+    console.log('Vou retornar a foto pera ae')
+});
+
 app.post('/uploadPicture/:userId',upload, async (req,res)=>{
     let userid = req.params.userId
     let response = JSON.stringify(req.file.filename)
@@ -81,13 +98,7 @@ app.post('/uploadPicture/:userId',upload, async (req,res)=>{
 
 
 
-var server = http.createServer(app)
-server.listen(3030)
-console.log('Server na porta 3030?')
-let port=process.env.PORT || 3000;
-app.listen(port,(req,res)=>{
-    console.log('Servidor Rodando')
-})
+
 
 
 
