@@ -24,6 +24,7 @@ const AppStack = createStackNavigator();
 const HomePages = createStackNavigator();
 const TabStack = createBottomTabNavigator();
 
+
 function HomeStack(){
   return(
     <HomePages.Navigator 
@@ -120,8 +121,8 @@ export default function Routes(){
     return (
         <NavigationContainer>
             <AppStack.Navigator screenOptions={{
-                gestureDirection: 'vertical',
                 cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+                gestureEnabled: false,
                 headerShown: false
                 }}>
                 <AppStack.Screen name='LoginStack' component={LoginScreens} />

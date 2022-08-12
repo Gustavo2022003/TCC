@@ -1,17 +1,47 @@
 import React, {useEffect, useState} from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
+import { FlatList, RefreshControl, StyleSheet, Text, View, TouchableOpacity, Image, BackHandler} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { FlatList } from 'react-native-gesture-handler';
 import ComponentReceita from '../../components/ComponentReceita';
+import { useBackHandler } from '@react-native-community/hooks';
+
+
+    const wait = (timeout) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+    }
+    
 
 
 export default function Home({navigation}) {
+    
     const [user,setUser]=useState(null);
-    const [receitas, setReceitas]=useState(null)
+    const [receitas, setReceitas]=useState(null);
+    const [refreshing, setRefreshing] = useState(false);
 
+    let shouldBeHandledHere = true;
+    useBackHandler(() => {
+        if (shouldBeHandledHere) {
+            // handle it
+            return true
+          }
+          // let the default thing happen
+          return false
+        })
+
+    async function GetReceita(){
+        let response= await fetch('http://192.168.0.108:3000/feed',{
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+        let json=await response.json();
+        setReceitas(json);
+    };
+    
     useEffect(()=>{
         async function getUser(){
             let response = await AsyncStorage.getItem('userData');
@@ -22,19 +52,16 @@ export default function Home({navigation}) {
     },[]);
     
     useEffect(()=>{
-        async function GetReceita(){
-            let response= await fetch('http://192.168.0.108:3000/feed',{
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json'
-                }
-            })
-            let json=await response.json();
-            setReceitas(json);
-            }
         GetReceita();
     },[]);
+    
+    
+    const onRefresh = async () => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+    GetReceita();
+    console.log('Refresh')
+    };
 
 
 
@@ -48,6 +75,11 @@ export default function Home({navigation}) {
             <View style={styles.bottom}>
             <FlatList
                 data={receitas}
+                refreshControl={
+                    <RefreshControl 
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                    />}
                 renderItem={({item}) =><ComponentReceita {...item}/>}
             />
             </View>
