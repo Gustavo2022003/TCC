@@ -1,17 +1,21 @@
 import React, {useState, useEffect} from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView} from 'react-native';
+import {FlatList, RefreshControl, StyleSheet, Text, View, TouchableOpacity, Image, ScrollView} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
+import {Ionicons} from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons'; 
 import * as FileSystem from 'expo-file-system';
 
 export default function Profile({navigation}) {
     
     const [user,setUser]= useState(null);
+    const [name, setName]= useState(null)
     const [picture, setPicture]=useState(null);
+    const [refreshing, setRefreshing] = useState(false);
     //Picker
 
     useEffect(()=>{
@@ -19,10 +23,10 @@ export default function Profile({navigation}) {
             let response = await AsyncStorage.getItem('userData');
             let json=JSON.parse(response);
             setUser(json.id);
+            setName(json.completeName);
         }
         getUser();
     },[]);
-    
     async function Logout(){
         await AsyncStorage.removeItem('token')
         navigation.navigate('Welcome');
@@ -53,6 +57,7 @@ export default function Profile({navigation}) {
             console.log(`Caminho final: `+ finalfinalpath)
             setPicture(finalfinalpath)
         }
+        
     useEffect(()=>{
         GetProfile();
     },[]);
@@ -91,29 +96,55 @@ export default function Profile({navigation}) {
         }
     }
     
-    
+    const onRefresh = async () => {
+        setRefreshing(true);
+        wait(2000).then(() => setRefreshing(false));
+        GetReceita();
+        console.log('Refresh')
+        };
    
     //source={require('../../Images/'+picture)}
 
     return (
         <Animatable.View animation='fadeInUp' style={styles.container}>
-            <TouchableOpacity><Text>{picture}</Text></TouchableOpacity>
-            <TouchableOpacity onPress={openImagePickerAsync}><Text>Alterar Foto do {user}</Text></TouchableOpacity>
+            <View style={styles.header}>
+                <Ionicons name='exit-outline' size={40} color={'black'} onPress={Logout}/>
+                <Text style={styles.HeaderTitle}>Profile</Text>
+                <Feather name="edit" size={32} color={"black"}/>
+            </View>
+            <ScrollView>
+            <TouchableOpacity onPress={openImagePickerAsync}><Text>Alterar Foto de Perfil</Text></TouchableOpacity>
+            <Text>{name}</Text>
             <Image source={{uri: picture}}style={styles.avatar} resizeMode={'cover'}/>
-            <Text>Tela de Perfil</Text>
-            <TouchableOpacity style={styles.LogoutButton} onPress={Logout}>
-                <Text>Sair</Text>
-            </TouchableOpacity>
+            </ScrollView>
         </Animatable.View>
-    );
+        );
 }
 
 const styles = StyleSheet.create({
 container: {
     flex: 1,
-    backgroundColor: '#A0E2AF',
+    backgroundColor: '#ffffff',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'flex-start'
+},
+principalTitle:{
+    fontSize: 40,
+    fontWeight: '700',
+    marginTop: '9%',
+    
+},
+header:{
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: '2%',
+    width: '96%',
+    height: '12%',
+},
+HeaderTitle:{
+    fontSize: 40,
+    fontWeight: '700',
 },
 LogoutButton:{
     margin: 20,
@@ -125,8 +156,9 @@ LogoutButton:{
     backgroundColor: '#FFFFFF'
 },
 avatar: {
-    width: 200,
-    height:200
+    width: 180,
+    height:180,
+    borderRadius: 90,
 }
 
 });
