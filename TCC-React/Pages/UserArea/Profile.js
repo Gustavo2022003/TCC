@@ -8,32 +8,37 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import {Ionicons} from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons'; 
-import * as FileSystem from 'expo-file-system';
+import ComponentReceita from '../../components/ComponentReceita';
 
 export default function Profile({navigation}) {
     
     const [user,setUser]= useState(null);
     const [name, setName]= useState(null)
+    const [Username, setUsername]= useState(null);
     const [picture, setPicture]=useState(null);
     const [refreshing, setRefreshing] = useState(false);
-    //Picker
-
+    const [receitas, setReceitas]=useState(null);
+    
+    //UseEffect to Get the User
     useEffect(()=>{
         async function getUser(){
             let response = await AsyncStorage.getItem('userData');
             let json=JSON.parse(response);
             setUser(json.id);
             setName(json.completeName);
+            setUsername(json.username);
         }
         getUser();
     },[]);
+
+    //Function to Logout
     async function Logout(){
         await AsyncStorage.removeItem('token')
         navigation.navigate('Welcome');
     }
 
-    
-        async function GetProfile(){
+    //Function to Get the Profile
+    async function GetProfile(){
             // Forçar pegar para enviar para a rota
             let getuser = await AsyncStorage.getItem('userData');
             let user = JSON.parse(getuser);
@@ -45,24 +50,47 @@ export default function Profile({navigation}) {
                 },
             })
             let json=await response.json();
+            let Image = json[0].profilePicture;
+            if (Image === null){
+                setPicture('http://192.168.0.108:3000/Images/17bcb88b-4881-4d42-bf97-2b8793c16a65.png')
+            }else{
             let idImage = JSON.stringify(json)
             //DEIXA O NOME DA IMAGEM DO JEITO QUE PRECISO
             let newImage = idImage.slice(22,62)
-            console.log("Antes: "+idImage)
-            console.log("Depois:"+newImage)
             let strPicture = newImage.toString()
             let picturePath = 'http://192.168.0.108:3000/Images/'
             let finalPath = picturePath + strPicture
             let finalfinalpath = finalPath.toString();
-            console.log(`Caminho final: `+ finalfinalpath)
             setPicture(finalfinalpath)
-        }
-        
+            }
+    }
+
+    //UseEffet do Get Profile
     useEffect(()=>{
         GetProfile();
     },[]);
-    
 
+    //Function Get the Recipe by Profile Id
+    async function GetReceita(){
+        let getuser = await AsyncStorage.getItem('userData');
+        let user = JSON.parse(getuser);
+        let response = await fetch('http://192.168.0.108:3000/recipe/'+user.id,{
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+        let json=await response.json();
+        setReceitas(json);
+    };
+
+    //UseEffect GetReceita
+    useEffect(()=>{
+        GetReceita();
+    },[]);
+
+    //Selector Images
     const openImagePickerAsync = async () => {
     
         let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -95,13 +123,20 @@ export default function Profile({navigation}) {
             GetProfile();
         }
     }
-    
+
+
+    //WAIT
+    const wait = (timeout) => {
+        return new Promise(resolve => setTimeout(resolve, timeout));
+    }    
+    //Function to refresh the apge
     const onRefresh = async () => {
         setRefreshing(true);
         wait(2000).then(() => setRefreshing(false));
+        GetProfile();
         GetReceita();
         console.log('Refresh')
-        };
+    };
    
     //source={require('../../Images/'+picture)}
 
@@ -112,11 +147,24 @@ export default function Profile({navigation}) {
                 <Text style={styles.HeaderTitle}>Profile</Text>
                 <Feather name="edit" size={32} color={"black"}/>
             </View>
-            <ScrollView>
-            <TouchableOpacity onPress={openImagePickerAsync}><Text>Alterar Foto de Perfil</Text></TouchableOpacity>
-            <Text>{name}</Text>
-            <Image source={{uri: picture}}style={styles.avatar} resizeMode={'cover'}/>
-            </ScrollView>
+            {/*<TouchableOpacity onPress={openImagePickerAsync}><Text>Alterar Foto de Perfil</Text></TouchableOpacity>   */}    
+            
+            <View style={styles.bottom}>
+            <FlatList
+                data={receitas}
+                ListHeaderComponent={
+                    <View>
+                    <Image source={{uri: picture}} style={styles.avatar} resizeMode={'cover'}/>
+                    <Text  style={styles.name}>{name}</Text>
+                    <Text  style={styles.username}>@{Username}</Text>
+                    </View>}
+                refreshControl={ <RefreshControl 
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                />}
+                renderItem={({item}) =><ComponentReceita {...item}/>}
+            />
+            </View>
         </Animatable.View>
         );
 }
@@ -127,12 +175,6 @@ container: {
     backgroundColor: '#ffffff',
     alignItems: 'center',
     justifyContent: 'flex-start'
-},
-principalTitle:{
-    fontSize: 40,
-    fontWeight: '700',
-    marginTop: '9%',
-    
 },
 header:{
     flexDirection: 'row',
@@ -156,9 +198,25 @@ LogoutButton:{
     backgroundColor: '#FFFFFF'
 },
 avatar: {
+    alignSelf: 'center',
     width: 180,
     height:180,
     borderRadius: 90,
+},
+name:{
+    alignSelf: 'center',
+    textAlign: 'center',
+    marginTop: '2%',
+    fontSize: 20,
+    fontWeight: '700',
+},
+username:{
+    alignSelf: 'center',
+    fontSize: 16,
+    color: '#686868'
+},
+bottom:{
+    marginBottom:'40%',
 }
 
 });

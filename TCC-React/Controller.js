@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const models=require('./models');
 const multer = require('multer');
 const path = require('path');
+var Sequelize = require('sequelize');
 
 
 
@@ -26,7 +27,7 @@ server.listen(port, host, () => {
     console.log(`Server is running on http://${host}:${port}`);
 });
 
-
+//Check Login
 app.post('/login',async (req,res)=>{
     let response = await user.findOne({
         where:{username: req.body.name, password: req.body.password}
@@ -39,8 +40,9 @@ app.post('/login',async (req,res)=>{
     }
 });
 
+//Recipes feed
 app.post('/feed', async (req,res)=>{
-    let response = await recipe.findAll();
+    let response = await recipe.findAll({order:[Sequelize.literal('RAND()')]});
     if(response === null){
         res.send(JSON.stringify('Deu Erro'));
     }else{
@@ -48,7 +50,7 @@ app.post('/feed', async (req,res)=>{
     }
 
 });
-
+//Store Path Multer
 var storage = multer.diskStorage({
   destination: function(req, file, cb) {
     cb(null, 'Images');
@@ -57,16 +59,18 @@ var storage = multer.diskStorage({
     cb(null, file.originalname);
   }
 });
+
+//Create Image at server
 var upload = multer({
   storage: storage
 }).single('photo')
 
+//Get Profile Picture
 app.post('/getAvatar/:user', async (req,res)=>{
     let response =await user.findAll({
         attributes: ['profilePicture'],
         where: {id: req.params.user}
     });
-    console.log(response);
     if(response === null){
         res.send(JSON.stringify('Deu Erro'));
     }else{
@@ -74,10 +78,12 @@ app.post('/getAvatar/:user', async (req,res)=>{
     }
 });
 
+//Set Images path public
 app.use("/Images",express.static("Images"), ()=>{
     console.log('Vou retornar a foto pera ae')
 });
 
+//Upload profile picture
 app.post('/uploadPicture/:userId',upload, async (req,res)=>{
     let userid = req.params.userId
     let response = JSON.stringify(req.file.filename)
@@ -95,6 +101,16 @@ app.post('/uploadPicture/:userId',upload, async (req,res)=>{
     }
 });
 
+//Get receita from specific profile
+app.post('/recipe/:id', async (req,res)=>{
+    let response = await recipe.findAll({where: {UserId: req.params.id}});
+    if(response === null){
+        res.send(JSON.stringify('Deu Erro'));
+    }else{
+        res.send(response);
+    }
+
+});
 
 
 
