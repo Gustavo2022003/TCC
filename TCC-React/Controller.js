@@ -40,6 +40,22 @@ app.post('/login',async (req,res)=>{
     }
 });
 
+//Register
+app.post('/register',async (req,res)=>{
+    let response = await user.findOne({
+        where:{
+            username: req.body.username, 
+            password: req.body.password
+        }
+    });
+    console.log(response)
+    if(response === null){
+        res.send(JSON.stringify('error'));
+    }else{
+        res.send(response);
+    }
+});
+
 //Recipes feed
 app.post('/feed', async (req,res)=>{
     let response = await recipe.findAll({order:[Sequelize.literal('RAND()')]});
