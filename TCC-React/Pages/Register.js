@@ -18,40 +18,54 @@ import logo from './Images/Foodio.png';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 
+import AlertCustom from '../components/Alert';
+
 export default function Register() {
   const UserInfo = {fullname: '', username:'', email: '', password: '', confirmPassword:'' }
   const [username,setUsername] = useState('');
   const [email,setEmail] = useState('');
   const [password,setPassword] = useState('');
   const [fullname,setfullname] = useState('');
+  const [visibleAlert, setVisibleAlert] = useState(false);
+  const [alertTitle, setAlertTitle] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
   //Validation E-mail
 
 
   // Function to Register
   async function sendFormRegister(values){
-    /*let response= await fetch('http://192.168.0.108:3000/register',{
+    let response= await fetch('http://192.168.0.108:3000/register',{
       method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        fullname: UserInfo.fullname,
-        username: UserInfo.username,
-        email: UserInfo.email,
-        password: UserInfo.password,
+        fullname: values.fullname,
+        username: values.username,
+        email: values.email,
+        password: values.password,
       })
-    });*/
-    console.log(values.fullname);
-    console.log(values.username);
-    console.log(values.email);
-    console.log(values.password);
-    /*let json=await response.json();
-    if(json === 'error'){
-      console.log('Ocorreu um Erro')
+    });
+    let json=await response.json();
+    
+    if(json === 'null'){
+      setVisibleAlert(true);
+      setAlertTitle('Úsuario cadastrado')
+      setAlertMessage('O Úsuario foi cadastrado com sucesso!')
+      console.log(visibleAlert);
+      console.log('Úsario Disponivel')
+    }else if(json == 'UserError'){
+      setVisibleAlert(true);
+      setAlertTitle('Erro ao cadastrar úsuario')
+      setAlertMessage('Erro ao cadastrar úsuario, pois esse username já foi cadastrado, utilize outro username')
+      console.log('Usuario com esse username já foi Cadastrado')
     }else{
-      console.log('Usuario Cadastrado')
-    };*/
+      setVisibleAlert(true);
+      setAlertTitle('Erro ao cadastrar úsuario')
+      setAlertMessage('Erro ao cadastrar úsuario, pois esse email já foi cadastrado, utilize outro email')
+      console.log('Usuario com esse email já foi Cadastrado')
+    }
   }
 
   const registerSchema = yup.object().shape({
@@ -70,6 +84,12 @@ export default function Register() {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <Animatable.View animation='fadeInUp' style={styles.container}>
+          <AlertCustom 
+      visible={visibleAlert}
+      title = {alertTitle}
+      message = {alertMessage}
+      positiveButton={() => setVisibleAlert(false)}
+      />
               <View style={styles.logo}>
               <Image source={logo} style={styles.logoimg}/>
               </View>

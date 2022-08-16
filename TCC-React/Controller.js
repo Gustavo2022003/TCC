@@ -6,6 +6,7 @@ const models=require('./models');
 const multer = require('multer');
 const path = require('path');
 var Sequelize = require('sequelize');
+const { Op } = require("sequelize");
 
 
 
@@ -32,7 +33,6 @@ app.post('/login',async (req,res)=>{
     let response = await user.findOne({
         where:{username: req.body.name, password: req.body.password}
     });
-    console.log(response)
     if(response === null){
         res.send(JSON.stringify('error'));
     }else{
@@ -43,16 +43,21 @@ app.post('/login',async (req,res)=>{
 //Register
 app.post('/register',async (req,res)=>{
     let response = await user.findOne({
-        where:{
-            username: req.body.username, 
-            password: req.body.password
-        }
+        where: {[Op.or]: [
+            {username: req.body.username},{email: req.body.email}
+        ]}
     });
     console.log(response)
     if(response === null){
-        res.send(JSON.stringify('error'));
-    }else{
-        res.send(response);
+        res.send(JSON.stringify('null'));
+    }else{ 
+        if(response.dataValues.username == req.body.username){
+            res.send(JSON.stringify('UserError'));
+        }else if(response.dataValues.email == req.body.email){
+            res.send(JSON.stringify('EmailError'));
+        }else{
+            res.send(JSON.stringify('DiferentError'));
+        }
     }
 });
 
