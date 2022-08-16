@@ -17,16 +17,20 @@ import logo from './Images/Foodio.png';
 import google from './Images/google.png';
 import facebook from './Images/facebook.png';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Formik } from 'formik';
+import * as yup from 'yup';
+
+import AlertCustom from '../components/Alert';
 
 export default function Login({navigation}) {
-
-    const [display, setDisplay]=useState('none') //Seta erro sem display ao entrar
-    const [user, setUser]=useState(null)
-    const [password, setPassword]=useState(null)
+    const userInfo = {username: '', password: ''}
+    const [visibleAlert, setVisibleAlert] = useState(false);
+    const [alertTitle, setAlertTitle] = useState('');
+    const [alertMessage, setAlertMessage] = useState('');
     const [token, setToken]=useState(null)
 
     //Envio Form de Login
-    async function sendForm(){
+    async function sendForm(values){
       let response= await fetch('http://192.168.0.108:3000/login',{
         method: 'POST',
         headers: {
@@ -34,19 +38,18 @@ export default function Login({navigation}) {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          name: user,
-          password: password
+          name: values.username,
+          password: values.password
         })
       });
       let json=await response.json();
       if(json === 'error'){
-        setDisplay('flex');
-        setTimeout(()=>{
-          setDisplay('none');
-        },5000);
+        setVisibleAlert(true);
+        setAlertTitle('Erro ao fazer login')
+        setAlertMessage('O úsuario e/ou senha estão incorretos')
         await AsyncStorage.clear();
       }else{
-        await AsyncStorage.setItem('token', user)
+        await AsyncStorage.setItem('token', values.username)
         let userData = await AsyncStorage.setItem('userData', JSON.stringify(json));
         let resData=await AsyncStorage.getItem('userData');
         console.log(JSON.parse(resData));
@@ -54,6 +57,10 @@ export default function Login({navigation}) {
       };
     }
 
+    const LoginSchema = yup.object().shape({
+      username: yup.string().trim().required('Username is Required'),
+      password: yup.string().trim().required('Password is Required'),
+    });
 
     return (
     <KeyboardAvoidingView
@@ -62,6 +69,12 @@ export default function Login({navigation}) {
     >
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
     <Animatable.View animation='fadeInUp' style={styles.container}>
+    <AlertCustom 
+      visible={visibleAlert}
+      title = {alertTitle}
+      message = {alertMessage}
+      positiveButton={() => setVisibleAlert(false)}
+      />
             <Image source={logo} style={styles.logoimg}/>
             
             
@@ -69,22 +82,31 @@ export default function Login({navigation}) {
           <View style={styles.formBg}>
             <View style={styles.forms}>
               <Text style={styles.title}>Log-in</Text>
-              
-              <TextInput style={styles.input} placeholder='Username' onChangeText={text=>setUser(text)}/>
-
-              <TextInput style={styles.input} placeholder='Password' secureTextEntry={true} onChangeText={text=>setPassword(text)}/>
-
+              <Formik
+              initialValues={userInfo}
+              onSubmit={sendForm}
+              validationSchema={LoginSchema}
+              >
+              {({handleSubmit, errors,touched, handleChange, handleBlur, values})=> {
+                const{username,password} = values
+                return (
+                  <>
+              <TextInput style={styles.input} placeholder='Username' value={username} onBlur={handleBlur('username')} onChangeText={handleChange('username')}/>
+              {touched.username && errors.username && <Text style={styles.error}>{errors.username}</Text>}
+              <TextInput style={styles.input} placeholder='Password' value={password} onBlur={handleBlur('password')} secureTextEntry={true} onChangeText={handleChange('password')}/>
+              {touched.password && errors.password && <Text style={styles.error}>{errors.password}</Text>}
               <TouchableOpacity style={styles.forgot}>
                 <Text style={styles.forgotTxt}>Forgot Password?</Text>
               </TouchableOpacity>
-            
-              <View>
-                <Text style={styles.erroLoginTxt(display)}>Login ou Senha Incorretos</Text>
-              </View>
 
-              <TouchableOpacity style={styles.LogButton} onPress={() =>sendForm()}>
-                  <Text style={styles.LogText}>Login</Text>
+              {errors.fullname || errors.username || errors.email || errors.password || errors.confirmPassword ?
+              <TouchableOpacity style={styles.LogButtonInvalid} disabled={!Formik.isValid}>
+                <Text style={styles.LogTextInvalid}>Login</Text> 
               </TouchableOpacity>
+              : 
+              <TouchableOpacity style={styles.LogButton} onPress={handleSubmit} disabled={!LoginSchema.isValid}>
+                <Text style={styles.LogText}>Login</Text> 
+              </TouchableOpacity>}
                       
               <View style={styles.OtherButton}>
                 <TouchableOpacity style={styles.googleButton}>
@@ -94,9 +116,10 @@ export default function Login({navigation}) {
                 <TouchableOpacity style={styles.facebookButton}>
                   <Image source={facebook} style={styles.facebookimg}/>
                 </TouchableOpacity>
-              
               </View>
-
+              </>
+              )}} 
+              </Formik>
             </View>
             <StatusBar style='auto' />
           </View>
@@ -135,6 +158,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
   },
+  error:{
+    alignSelf: 'flex-start',
+    marginTop: '-2%',
+    paddingBottom: 10,
+    color: 'red',
+    fontWeight: '700',
+    marginLeft: '14%',
+  },
   forms: {
     top: '5%',
     flex: 1,
@@ -161,15 +192,16 @@ const styles = StyleSheet.create({
     color: '#808080',
     fontWeight: '500',
   },
-  erroLoginTxt:(text = 'none')=>({
-    color: 'red',
-    marginBottom: 10,
-    fontSize: 18,
-    fontWeight: '500',
-    display: text
-  }),
   LogButton:{
     backgroundColor: '#A0E2AF',
+    width: '60%',
+    height: 60,
+    borderRadius: 112,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  LogButtonInvalid:{
+    backgroundColor: '#eaeaea',
     width: '60%',
     height: 60,
     borderRadius: 112,
@@ -180,6 +212,11 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontWeight: '700',
     color: '#000000',
+  },
+  LogTextInvalid:{
+    fontSize: 26,
+    fontWeight: '700',
+    color: '#999999',
   },
   OtherButton:{
     marginTop: 20,

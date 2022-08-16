@@ -22,10 +22,6 @@ import AlertCustom from '../components/Alert';
 
 export default function Register() {
   const UserInfo = {fullname: '', username:'', email: '', password: '', confirmPassword:'' }
-  const [username,setUsername] = useState('');
-  const [email,setEmail] = useState('');
-  const [password,setPassword] = useState('');
-  const [fullname,setfullname] = useState('');
   const [visibleAlert, setVisibleAlert] = useState(false);
   const [alertTitle, setAlertTitle] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
