@@ -216,7 +216,7 @@ username:{
     color: '#686868'
 },
 bottom:{
-    marginBottom:'40%',
+    marginBottom:'42%',
 }
 
 });

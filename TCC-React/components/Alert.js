@@ -30,6 +30,7 @@ export default function AlertCustom({visible, title, message, positiveButton}){
 
 const styles = StyleSheet.create({
     container:{
+        width: '100%',
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',

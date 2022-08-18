@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ComponentReceita from '../../components/ComponentReceita';
 import { useBackHandler } from '@react-native-community/hooks';
 
+import AlertCustom from '../../components/Alert';
 
     const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
@@ -19,6 +20,11 @@ export default function Home({navigation}) {
     const [user,setUser]=useState(null);
     const [receitas, setReceitas]=useState(null);
     const [refreshing, setRefreshing] = useState(false);
+    
+    // Alert
+    const [errorFeed, setErrorFeed] = useState(false);
+    const [alertTitle, setAlertTitle] = useState('');
+    const [alertMessage, setAlertMessage] = useState('');
 
     let shouldBeHandledHere = true;
     useBackHandler(() => {
@@ -39,7 +45,15 @@ export default function Home({navigation}) {
             }
         })
         let json=await response.json();
-        setReceitas(json);
+        if (json == 'FeedError'){
+            console.log('Erro no Banco de Dados')
+            setAlertTitle('Erro ao Carregar Feed')
+            setAlertMessage('Clique no Botão para atualizar o feed novamente')
+            setErrorFeed(true)
+        }else{
+            console.log('Receitas Retornadas')
+            setReceitas(json);
+        }
     };
     
     useEffect(()=>{
@@ -61,14 +75,21 @@ export default function Home({navigation}) {
     wait(2000).then(() => setRefreshing(false));
     GetReceita();
     console.log('Refresh')
+    setErrorFeed(false)
     };
 
-
+// Talvez Mudar Tirar o Alert e colocar aviso na tela toda!
 
 
 
     return (
         <Animatable.View animation='fadeInUp' style={styles.container}>
+            <AlertCustom 
+                visible={errorFeed}
+                title = {alertTitle}
+                message = {alertMessage}
+                positiveButton={onRefresh}
+            />
             <View style={styles.header}>
                 <Text style={styles.HeaderTitle}>Feed</Text>
             </View>

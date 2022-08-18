@@ -64,8 +64,9 @@ app.post('/register',async (req,res)=>{
 //Recipes feed
 app.post('/feed', async (req,res)=>{
     let response = await recipe.findAll({order:[Sequelize.literal('RAND()')]});
-    if(response === null){
-        res.send(JSON.stringify('Deu Erro'));
+    console.log(response)
+    if(response.length === 0){
+        res.send(JSON.stringify('FeedError'));
     }else{
         res.send(response);
     }
