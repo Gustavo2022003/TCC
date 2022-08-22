@@ -88,6 +88,7 @@ export default function Home({navigation}) {
             <View style={styles.header}>
                 <Text style={styles.HeaderTitle}>Feed</Text>
             </View>
+            <View style={{ width: '95%', backgroundColor: '#000000', height: 3,opacity: 0.3 ,borderRadius: 3}}><Text>teste</Text></View>
             {errorFeed == true ?
             <View style={styles.error}>
                 <Text style={styles.errorTxtTitle}>Feed loading error</Text>
@@ -120,16 +121,15 @@ container: {
     justifyContent: 'flex-start'
 },
 header:{
-    backgroundColor: 'lightgray',
-    position: 'absolute',
+    backgroundColor: '#ffffff',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
-    height: '12%',
+    height: '10%',
 },
 HeaderTitle:{
-    marginTop: '4%',
+    marginTop: '7%',
     fontSize: 40,
     fontWeight: '700',
 },
@@ -137,9 +137,9 @@ bottom:{
     marginBottom:'40%',
 },
 error:{
+    flex: 0.8,
     justifyContent: 'center',
     alignItems: 'center',
-    height: '100%',
     width: '100%'
 },
 errorTxt:{
