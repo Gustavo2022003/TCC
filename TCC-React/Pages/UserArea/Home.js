@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ComponentReceita from '../../components/ComponentReceita';
 import { useBackHandler } from '@react-native-community/hooks';
 
+import { Ionicons } from '@expo/vector-icons'; 
 import AlertCustom from '../../components/Alert';
 
     const wait = (timeout) => {
@@ -37,7 +38,7 @@ export default function Home({navigation}) {
         })
 
     async function GetReceita(){
-        let response= await fetch('http://192.168.0.108:3000/feed',{
+        let response= await fetch('http://192.168.16.233:3000/feed',{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -84,16 +85,19 @@ export default function Home({navigation}) {
 
     return (
         <Animatable.View animation='fadeInUp' style={styles.container}>
-            <AlertCustom 
-                visible={errorFeed}
-                title = {alertTitle}
-                message = {alertMessage}
-                positiveButton={onRefresh}
-            />
             <View style={styles.header}>
                 <Text style={styles.HeaderTitle}>Feed</Text>
             </View>
-            <View style={styles.bottom}>
+            {errorFeed == true ?
+            <View style={styles.error}>
+                <Text style={styles.errorTxtTitle}>Feed loading error</Text>
+                <Ionicons name="ios-cloud-offline-outline" size={94} color="black" />
+                <Text numberOfLines={2} style={styles.errorTxt}>Failed while loading Feed, click to refresh!</Text>
+                <TouchableOpacity style={styles.ButtonRefreshError}>
+                    <Text style={styles.buttonTxt}>Refresh Feed</Text>
+                </TouchableOpacity>
+            </View>
+            : <View style={styles.bottom}>
             <FlatList
                 data={receitas}
                 refreshControl={
@@ -103,7 +107,7 @@ export default function Home({navigation}) {
                     />}
                 renderItem={({item}) =><ComponentReceita {...item}/>}
             />
-            </View>
+            </View>}
         </Animatable.View>
     );
 }
@@ -116,6 +120,8 @@ container: {
     justifyContent: 'flex-start'
 },
 header:{
+    backgroundColor: 'lightgray',
+    position: 'absolute',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -129,5 +135,35 @@ HeaderTitle:{
 },
 bottom:{
     marginBottom:'40%',
+},
+error:{
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
+    width: '100%'
+},
+errorTxt:{
+    marginTop: '1%',
+    fontSize: 16,
+    fontWeight: '500',
+},
+errorTxtTitle:{
+    fontSize: 26,
+    fontWeight: '700',
+    marginBottom: '2%'
+},
+ButtonRefreshError:{
+    marginTop: '3%',
+    backgroundColor: '#A0E2AF',
+    padding: '3%',
+    width: '40%',
+    height: 45,
+    borderRadius: 15,
+    justifyContent:'center'
+},
+buttonTxt:{
+    fontSize: 17,
+    fontWeight: '700',
+    textAlign: 'center',
 }
 });
