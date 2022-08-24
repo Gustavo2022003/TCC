@@ -419,8 +419,8 @@ p.margin-top {
 
 .titulo1{
     font-weight: bold;
-    color: #077e07;
-    font-size: 45px;
+    color: #306e30;
+    font-size: 72px;
     text-align: center;
     margin-bottom: 20px;
 }
@@ -460,7 +460,7 @@ p.margin-top {
 /*Ingredients page*/
 
 .fundo-verde {
-    background-color: #86cc97;
+    background-color: #b3e4c0;
     padding: 20px;
 }
 
@@ -473,4 +473,5 @@ img.ingredient {
     width: 100px;
     height: 100px;
     border-radius: 50%;
+    border: 3px solid #ebd57e;
 }
