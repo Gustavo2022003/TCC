@@ -16,6 +16,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 let user=models.User;
 let recipe=models.Recipe;
+let ingrediente = models.Ingrediente
 
 let port=process.env.PORT || 3000;
 
@@ -72,6 +73,19 @@ app.post('/feed', async (req,res)=>{
     }
 
 });
+
+//GetIngredients
+app.post('/ingredients', async (req,res)=>{
+    let response = await ingrediente.findAll({order:[Sequelize.literal('ingredienteName ASC')]});
+    console.log(response)
+    if(response.length === 0){
+        res.send(JSON.stringify('IngredientsError'));
+    }else{
+        res.send(response);
+    }
+
+});
+
 //Store Path Multer
 var storage = multer.diskStorage({
   destination: function(req, file, cb) {

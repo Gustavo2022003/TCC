@@ -38,7 +38,7 @@ export default function Home({navigation}) {
         })
 
     async function GetReceita(){
-        let response= await fetch('http://192.168.16.233:3000/feed',{
+        let response= await fetch('http://192.168.0.108:3000/feed',{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -50,7 +50,8 @@ export default function Home({navigation}) {
             console.log('Erro no Banco de Dados')
             setAlertTitle('Erro ao Carregar Feed')
             setAlertMessage('Clique no Botão para atualizar o feed novamente')
-            setErrorFeed(true)
+            setErrorFeed(true);
+            setReceitas(null);
         }else{
             console.log('Receitas Retornadas')
             setReceitas(json);
@@ -79,7 +80,6 @@ export default function Home({navigation}) {
     setErrorFeed(false)
     };
 
-// Talvez Mudar Tirar o Alert e colocar aviso na tela toda!
 
 
 
@@ -88,13 +88,13 @@ export default function Home({navigation}) {
             <View style={styles.header}>
                 <Text style={styles.HeaderTitle}>Feed</Text>
             </View>
-            <View style={{ width: '95%', backgroundColor: '#000000', height: 3,opacity: 0.3 ,borderRadius: 3}}><Text>teste</Text></View>
+            <View style={{ width: '80%', backgroundColor: '#000000', height: 3,opacity: 0.1 ,borderRadius: 3, marginTop: '-3%'}}><Text>teste</Text></View>
             {errorFeed == true ?
             <View style={styles.error}>
                 <Text style={styles.errorTxtTitle}>Feed loading error</Text>
                 <Ionicons name="ios-cloud-offline-outline" size={94} color="black" />
                 <Text numberOfLines={2} style={styles.errorTxt}>Failed while loading Feed, click to refresh!</Text>
-                <TouchableOpacity style={styles.ButtonRefreshError}>
+                <TouchableOpacity style={styles.ButtonRefreshError} onPress={onRefresh}>
                     <Text style={styles.buttonTxt}>Refresh Feed</Text>
                 </TouchableOpacity>
             </View>
@@ -125,11 +125,11 @@ header:{
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop: '2%',
     width: '100%',
-    height: '10%',
+    height: '12%',
 },
 HeaderTitle:{
-    marginTop: '7%',
     fontSize: 40,
     fontWeight: '700',
 },
