@@ -180,9 +180,9 @@ header:{
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: '2%',
+    marginTop: '4%',
     width: '96%',
-    height: '12%',
+    height: '10%',
 },
 HeaderTitle:{
     fontSize: 40,

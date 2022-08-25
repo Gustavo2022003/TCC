@@ -26,10 +26,10 @@ export default function Register() {
   const [alertTitle, setAlertTitle] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
   //Validation E-mail
-
+  const navigation = useNavigation();
 
   // Function to Register
-  async function sendFormRegister(values){
+  async function sendFormRegister(values,{resetForm}){
     let response= await fetch('http://192.168.0.108:3000/register',{
       method: 'POST',
       headers: {
@@ -62,6 +62,7 @@ export default function Register() {
       setAlertMessage('Erro ao cadastrar úsuario, pois esse email já foi cadastrado, utilize outro email')
       console.log('Usuario com esse email já foi Cadastrado')
     }
+    resetForm({values: ''})
   }
 
   const registerSchema = yup.object().shape({
@@ -84,7 +85,7 @@ export default function Register() {
       visible={visibleAlert}
       title = {alertTitle}
       message = {alertMessage}
-      positiveButton={() => setVisibleAlert(false)}
+      positiveButton={() => [setVisibleAlert(false), navigation.replace('Login')]}
       />
               <View style={styles.logo}>
               <Image source={logo} style={styles.logoimg}/>
@@ -103,13 +104,13 @@ export default function Register() {
                             const{fullname, username, email, password,confirmPassword} = values
                           return (
                           <>
-                          <TextInput style={styles.input} placeholder='Full name' value={fullname} onBlur={handleBlur('fullname')} onChangeText={handleChange('fullname',UserInfo.fullname)}/>
+                          <TextInput style={styles.input} placeholder='Full name' value={fullname} onBlur={handleBlur('fullname')} onChangeText={handleChange('fullname')}/>
                           {touched.fullname && errors.fullname && <Text style={styles.error}>{errors.fullname}</Text>}
 
-                          <TextInput style={styles.input} placeholder='Username' value={username} onBlur={handleBlur('username')} onChangeText={handleChange('username',UserInfo.username)}/>
+                          <TextInput style={styles.input} placeholder='Username' value={username} onBlur={handleBlur('username')} onChangeText={handleChange('username')}/>
                           {touched.username && errors.username && <Text style={styles.error}>{errors.username}</Text>}
 
-                          <TextInput style={styles.input} placeholder='E-mail' value={email} onBlur={handleBlur('email')} onChangeText={handleChange('email',UserInfo.email)}/>
+                          <TextInput style={styles.input} placeholder='E-mail' value={email} onBlur={handleBlur('email')} onChangeText={handleChange('email')}/>
                           {touched.email && errors.email && <Text style={styles.error}>{errors.email}</Text>}
 
                           <TextInput style={styles.input} placeholder='Password' value={password} onBlur={handleBlur('password')} secureTextEntry={true} onChangeText={handleChange('password')}/>

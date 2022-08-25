@@ -20,7 +20,7 @@ let ingrediente = models.Ingrediente
 
 let port=process.env.PORT || 3000;
 
-const host = '192.168.43.53';
+const host = '192.168.0.108';
 
 
 
@@ -68,7 +68,6 @@ app.post('/register',async (req,res)=>{
 //Recipes feed
 app.post('/feed', async (req,res)=>{
     let response = await recipe.findAll({order:[Sequelize.literal('RAND()')]});
-    console.log(response)
     if(response.length === 0){
         res.send(JSON.stringify('FeedError'));
     }else{
@@ -80,7 +79,6 @@ app.post('/feed', async (req,res)=>{
 //GetIngredients
 app.post('/ingredients', async (req,res)=>{
     let response = await ingrediente.findAll({order:[Sequelize.literal('ingredienteName ASC')]});
-    console.log(response)
     if(response.length === 0){
         res.send(JSON.stringify('IngredientsError'));
     }else{

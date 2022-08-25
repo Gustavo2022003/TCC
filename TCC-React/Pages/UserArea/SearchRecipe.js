@@ -59,7 +59,7 @@ export default function SearchRecipe() {
             <View style={styles.header}>
                 <Text style={styles.HeaderTitle}>Search Recipe</Text>
             </View>
-            <View style={{ width: '80%', backgroundColor: '#000000', height: 3,opacity: 0.1 ,borderRadius: 3, marginTop: '-3%'}}><Text>teste</Text></View>
+            {/*<View style={{ width: '80%', backgroundColor: '#000000', height: 3,opacity: 0.1 ,borderRadius: 3, marginTop: '-3%'}}><Text>teste</Text></View>*/}
             {errorFeed == true ?
             <View style={styles.error}>
                 <Text style={styles.errorTxtTitle}>Feed loading error</Text>
@@ -74,7 +74,7 @@ export default function SearchRecipe() {
                 data={ingredients}
                 keyExtractor={(item, index) => index}
                 renderItem={({item, index}) => ( 
-                <View style={{ backgroundColor: index++ % 2 === 0 ? '#83B98F' :'#A0E2AF' }}>
+                <View style={{backgroundColor: index++ % 2 === 0 ? '#83B98F' :'#A0E2AF' }}>
                     <ComponentIngrediente {...item}/>
                 </View>
                 )}
@@ -96,9 +96,9 @@ header:{
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: '2%',
+    marginTop: '4%',
     width: '100%',
-    height: '12%',
+    height: '10%',
 },
 HeaderTitle:{
     fontSize: 32,
