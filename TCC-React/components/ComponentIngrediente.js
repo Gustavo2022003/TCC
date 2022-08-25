@@ -14,6 +14,9 @@ export default function ComponentIngrediente({...item}){
             </View>
             <View style={styles.content}>
             <Text>{item.ingredienteName}</Text>
+            <TouchableOpacity onPress={()=>console.log('Incrementou')}>
+                    <Text>+</Text>
+            </TouchableOpacity>
             </View>
         </View>
     )
