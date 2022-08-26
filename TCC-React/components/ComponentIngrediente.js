@@ -4,20 +4,22 @@ import {View, Text, StyleSheet,TouchableOpacity, Image} from 'react-native';
 
 
 
-export default function ComponentIngrediente({...item}){
+export default function ComponentIngrediente({index, ...item}){
     const navigation = useNavigation();
 
         const [counter, setCounter] = useState(0);
         async function increment(){
-            setCounter(counter + 1)
-            console.log('incrementou')
+            const newCounter = counter + 1;
+            setCounter(newCounter);
+            console.log(newCounter);
         }
         async function decrement(){
             if (counter <= 0){
                 console.log('Não consegue ser menor que 0')
             }else{
-            setCounter(counter - 1)
-            console.log('decrementou')
+                const newCounter = counter - 1;
+                setCounter(newCounter);
+                console.log(newCounter);
             }
         }
 
@@ -28,14 +30,19 @@ export default function ComponentIngrediente({...item}){
             />
             </View>
             <View style={styles.content}>
+                <View style={{width: '35%'}}>
                 <Text>{item.ingredienteName}</Text>
-                <TouchableOpacity onPress={decrement}>
-                        <Text>-</Text>
-                </TouchableOpacity>
-                <Text>{counter}</Text>
-                <TouchableOpacity onPress={increment}>
-                        <Text>+</Text>
-                </TouchableOpacity>
+                <Text>{index}</Text>
+                </View>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <TouchableOpacity style={styles.buttonControl}onPress={decrement}>
+                            <Text>-</Text>
+                    </TouchableOpacity>
+                    <Text style={{fontSize: 28}}>{counter}</Text>
+                    <TouchableOpacity style={styles.buttonControl} onPress={increment}>
+                            <Text>+</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </View>
 
@@ -63,5 +70,14 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         height: 99,
         alignItems: 'center'
+    },
+    buttonControl:{
+        backgroundColor:"#EFD89C",
+        width: 34,
+        height: 34,
+        borderRadius: 19,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginHorizontal: '10%'
     }
 })

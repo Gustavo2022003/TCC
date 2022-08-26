@@ -14,13 +14,14 @@ export default function SearchRecipe() {
 
     const [ingredients, setIngredients]=useState(null);
     const [refreshing, setRefreshing] = useState(false);
+    const [counterIngredient, setCounterIngredient] = useState(null);
 
     const [errorFeed, setErrorFeed] = useState(false);
     const [alertTitle, setAlertTitle] = useState('');
     const [alertMessage, setAlertMessage] = useState('');
 
     async function GetIngredients(){
-        let response= await fetch('http://192.168.0.108:3000/ingredients',{
+        let response= await fetch('http://192.168.16.233:3000/ingredients',{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -72,10 +73,10 @@ export default function SearchRecipe() {
             : <View style={styles.bottom}>
             <FlatList
                 data={ingredients}
-                keyExtractor={(item, index) => index}
-                renderItem={({item, index}) => ( 
+                keyExtractor={(item, index) =>  index.toString()}
+                renderItem={({item, index}) => (
                 <View style={{backgroundColor: index++ % 2 === 0 ? '#83B98F' :'#A0E2AF' }}>
-                    <ComponentIngrediente {...item}/>
+                    <ComponentIngrediente {...item} index={index} />
                 </View>
                 )}
             />
