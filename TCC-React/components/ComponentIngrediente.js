@@ -1,11 +1,26 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet,TouchableOpacity, Image} from 'react-native';
 
 
 
 export default function ComponentIngrediente({...item}){
     const navigation = useNavigation();
+
+        const [counter, setCounter] = useState(0);
+        async function increment(){
+            setCounter(counter + 1)
+            console.log('incrementou')
+        }
+        async function decrement(){
+            if (counter <= 0){
+                console.log('Não consegue ser menor que 0')
+            }else{
+            setCounter(counter - 1)
+            console.log('decrementou')
+            }
+        }
+
     return(
         <View style={styles.container}>
             <View style={styles.central}>
@@ -13,12 +28,18 @@ export default function ComponentIngrediente({...item}){
             />
             </View>
             <View style={styles.content}>
-            <Text>{item.ingredienteName}</Text>
-            <TouchableOpacity onPress={()=>console.log('Incrementou')}>
-                    <Text>+</Text>
-            </TouchableOpacity>
+                <Text>{item.ingredienteName}</Text>
+                <TouchableOpacity onPress={decrement}>
+                        <Text>-</Text>
+                </TouchableOpacity>
+                <Text>{counter}</Text>
+                <TouchableOpacity onPress={increment}>
+                        <Text>+</Text>
+                </TouchableOpacity>
             </View>
         </View>
+
+
     )
 }
 
@@ -39,8 +60,8 @@ const styles = StyleSheet.create({
     },
     content:{
         width: '100%',
+        flexDirection: 'row',
         height: 99,
-        justifyContent: 'center',
-        alignItems:'flex-start',
+        alignItems: 'center'
     }
 })
