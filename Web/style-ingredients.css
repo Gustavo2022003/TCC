@@ -462,16 +462,69 @@ p.margin-top {
 .fundo-verde {
     background-color: #b3e4c0;
     padding: 20px;
+    display: grid; 
+    grid-template-columns: auto auto 1fr; 
+    grid-template-rows: auto; 
+    gap: 0px 0px 0px; 
+    grid-template-areas: 
+    ". . ."; 
 }
 
 .fundo-normal {
     background-color: #ffffff;
     padding: 20px;
+    display: grid; 
+    grid-template-columns: auto auto 1fr; 
+    grid-template-rows: auto; 
+    gap: 0px 0px 0px; 
+    grid-template-areas: 
+    ". . ."; 
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap');
+
+.nome-ingrediente {
+    margin-left: 50px;
+    align-self: center;
+    margin-top: 1vh;
+    font-size: 32px;
+    font-weight: 200;
+    color: #306e30;
+    font-family: 'Inter', sans-serif;
 }
 
 img.ingredient {
     width: 100px;
     height: 100px;
     border-radius: 50%;
-    border: 3px solid #ebd57e;
+    border: 3px solid #EFD89C;
+}
+
+.botoes {
+    display: grid; 
+    grid-auto-columns: 1fr; 
+    grid-template-columns: 50px 100px 50px; 
+    grid-template-rows: 100px; 
+    gap: 0px 0px; 
+    grid-template-areas: 
+    ". . .";
+}
+
+button.btn-ingredients {
+    background-color: #EFD89C;
+    width: 50px;
+    height: 50px;
+    border: none;
+    border-radius: 50%;
+    color: #183B20;
+    font-size: 35px;
+    align-self: center;
+}
+
+p.btn-ingredients {
+    color: #183B20;
+    font-weight: bold;
+    font-size: 20px;
+    align-self: center;
+    margin-top: 10%;
 }
