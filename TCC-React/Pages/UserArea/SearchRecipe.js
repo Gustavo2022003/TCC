@@ -14,14 +14,14 @@ export default function SearchRecipe() {
 
     const [ingredients, setIngredients]=useState(null);
     const [refreshing, setRefreshing] = useState(false);
-    const [counterIngredient, setCounterIngredient] = useState(null);
+    const [counterIngredient, setCounterIngredient] = useState(0);
 
     const [errorFeed, setErrorFeed] = useState(false);
     const [alertTitle, setAlertTitle] = useState('');
     const [alertMessage, setAlertMessage] = useState('');
 
     async function GetIngredients(){
-        let response= await fetch('http://192.168.16.233:3000/ingredients',{
+        let response= await fetch('http://192.168.0.108:3000/ingredients',{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -37,15 +37,41 @@ export default function SearchRecipe() {
             setIngredients(null);
         }else{
             console.log('Ingredientes Carregados')
-            setIngredients(json);
+            let newIngredients = json.map(item => {
+                return { ...item, quantItem: 0};
+            });
+            setIngredients(newIngredients);
         }
     };
-    
+
+
     useEffect(()=>{
         GetIngredients();
     },[]);
-    
-    
+    async function checkGeral(){
+        console.log(ingredients)
+    }
+    let RenderItem = ({item, index}) => {
+        async function increment(){      
+            item.quantItem += 1;
+            console.log(item);
+            return item.quantItem;
+        }
+        async function decrement(){
+            if (item.quantItem <= 0){
+                console.log('Não consegue ser menor que 0')
+            }else{;
+                item.quantItem -= 1;
+                console.log(item);
+                return item.quantItem;
+            }
+        }
+    return(
+    <View style={{backgroundColor: index++ % 2 === 0 ? '#83B98F' :'#A0E2AF' }}>
+        <ComponentIngrediente {...item} index={index} increment={increment} decrement={decrement}/>
+    </View>
+    )}
+
     const onRefresh = async () => {
         setRefreshing(true);
         wait(2000).then(() => setRefreshing(false));
@@ -59,6 +85,7 @@ export default function SearchRecipe() {
         <Animatable.View animation='fadeInUp' style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.HeaderTitle}>Search Recipe</Text>
+                <Text></Text>
             </View>
             {/*<View style={{ width: '80%', backgroundColor: '#000000', height: 3,opacity: 0.1 ,borderRadius: 3, marginTop: '-3%'}}><Text>teste</Text></View>*/}
             {errorFeed == true ?
@@ -71,14 +98,13 @@ export default function SearchRecipe() {
                 </TouchableOpacity>
             </View>
             : <View style={styles.bottom}>
+                <TouchableOpacity onPress={checkGeral}>
+                    <Text>OI DEUS, SOU EU DNV</Text>
+                </TouchableOpacity>
             <FlatList
                 data={ingredients}
                 keyExtractor={(item, index) =>  index.toString()}
-                renderItem={({item, index}) => (
-                <View style={{backgroundColor: index++ % 2 === 0 ? '#83B98F' :'#A0E2AF' }}>
-                    <ComponentIngrediente {...item} index={index} />
-                </View>
-                )}
+                renderItem={RenderItem}
             />
             </View>}
         </Animatable.View>

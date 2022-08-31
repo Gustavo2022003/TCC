@@ -4,25 +4,30 @@ import {View, Text, StyleSheet,TouchableOpacity, Image} from 'react-native';
 
 
 
-export default function ComponentIngrediente({index, ...item}){
-    const navigation = useNavigation();
+export default function ComponentIngrediente({increment, decrement, index, ...item}){
 
         const [counter, setCounter] = useState(0);
-        async function increment(){
+        
+        async function incrementCounter(){
             const newCounter = counter + 1;
             setCounter(newCounter);
-            console.log(newCounter);
         }
-        async function decrement(){
+        async function decrementCounter(){
             if (counter <= 0){
                 console.log('Não consegue ser menor que 0')
             }else{
                 const newCounter = counter - 1;
                 setCounter(newCounter);
-                console.log(newCounter);
             }
         }
-
+        function OnClickIncrement(){
+            increment();
+            incrementCounter();
+        }
+        function OnClickDecrement(){
+            decrement();
+            decrementCounter();
+        }
     return(
         <View style={styles.container}>
             <View style={styles.central}>
@@ -35,11 +40,11 @@ export default function ComponentIngrediente({index, ...item}){
                 <Text>{index}</Text>
                 </View>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <TouchableOpacity style={styles.buttonControl}onPress={decrement}>
+                    <TouchableOpacity style={styles.buttonControl}onPress={OnClickDecrement}>
                             <Text>-</Text>
                     </TouchableOpacity>
                     <Text style={{fontSize: 28}}>{counter}</Text>
-                    <TouchableOpacity style={styles.buttonControl} onPress={increment}>
+                    <TouchableOpacity style={styles.buttonControl} onPress={OnClickIncrement}>
                             <Text>+</Text>
                     </TouchableOpacity>
                 </View>
