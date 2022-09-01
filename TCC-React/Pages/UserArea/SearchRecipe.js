@@ -21,7 +21,7 @@ export default function SearchRecipe() {
     const [alertMessage, setAlertMessage] = useState('');
 
     async function GetIngredients(){
-        let response= await fetch('http://192.168.0.108:3000/ingredients',{
+        let response= await fetch('http://192.168.16.233:3000/ingredients',{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -60,6 +60,16 @@ export default function SearchRecipe() {
             let value = item.quantItem;
             setCounter(value)
             return item.quantItem;
+        });
+        let res = await fetch('http://192.168.16.233:3000/searchRecipe',{
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                itens: flatQuery
+            })
         });
 
         console.log(flatQuery);

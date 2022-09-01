@@ -20,7 +20,7 @@ let ingrediente = models.Ingrediente
 
 let port=process.env.PORT || 3000;
 
-const host = '192.168.0.108';
+const host = '192.168.16.233';
 
 
 
@@ -150,6 +150,13 @@ app.post('/recipe/:id', async (req,res)=>{
 });
 
 
+//Search Recipe
+app.post('/searchRecipe', async (req,res) => {
+    let array = req.body.itens;
+    let quantItems = array.length
+    let response = await recipe.findAll()
+    
+});
 
 
 
@@ -158,7 +165,3 @@ app.post('/recipe/:id', async (req,res)=>{
 
 
 
-
-
-
-// Upload Image via Multer
