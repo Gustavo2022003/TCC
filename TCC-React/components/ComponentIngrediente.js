@@ -4,34 +4,14 @@ import {View, Text, StyleSheet,TouchableOpacity, Image} from 'react-native';
 
 
 
-export default function ComponentIngrediente({checkAndReset, increment, decrement, index, ...item}){
+export default function ComponentIngrediente({increment, decrement, index, ...item}){
 
-        const [counter, setCounter] = useState(0);
-
+        const [value, setValue] = useState(item.quantItem);
+        
         useEffect(() => {
-            setCounter(0);
-        },[])
+            setValue(item.quantItem);
+        },[increment, decrement])
 
-        async function incrementCounter(){
-            const newCounter = counter + 1;
-            setCounter(newCounter);
-        }
-        async function decrementCounter(){
-            if (counter <= 0){
-                console.log('Não consegue ser menor que 0')
-            }else{
-                const newCounter = counter - 1;
-                setCounter(newCounter);
-            }
-        }
-        function OnClickIncrement(){
-            increment();
-            incrementCounter();
-        }
-        function OnClickDecrement(){
-            decrement();
-            decrementCounter();
-        }
     return(
         <View style={styles.container}>
             <View style={styles.central}>
@@ -44,11 +24,11 @@ export default function ComponentIngrediente({checkAndReset, increment, decremen
                 <Text>{index}</Text>
                 </View>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <TouchableOpacity style={styles.buttonControl}onPress={OnClickDecrement}>
+                    <TouchableOpacity style={styles.buttonControl}onPress={decrement}>
                             <Text>-</Text>
                     </TouchableOpacity>
-                    <Text style={{fontSize: 28}}>{counter}</Text>
-                    <TouchableOpacity style={styles.buttonControl} onPress={OnClickIncrement}>
+                    <Text style={{fontSize: 28}}>{value}</Text>
+                    <TouchableOpacity style={styles.buttonControl} onPress={increment}>
                             <Text>+</Text>
                     </TouchableOpacity>
                 </View>

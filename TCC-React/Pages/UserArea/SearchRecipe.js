@@ -14,7 +14,7 @@ export default function SearchRecipe() {
 
     const [ingredients, setIngredients]=useState(null);
     const [refreshing, setRefreshing] = useState(false);
-    const [counter, setCounter] = useState(0);
+    const [counter, setCounter] = useState([]);
 
     const [errorFeed, setErrorFeed] = useState(false);
     const [alertTitle, setAlertTitle] = useState('');
@@ -51,14 +51,16 @@ export default function SearchRecipe() {
     },[]);
 
 
-
     async function checkGeral(){
         var ingredientQuery = ingredients.filter(ingredient => ingredient.quantItem > 0).map(ingredients => {return [ingredients.id, ingredients.quantItem]})
         // Sempre numéros impares serão os IDS dos ingredientes e os Pares Quantidades
         let flatQuery = ingredientQuery.flatMap(ingredients => ingredients)
-        /*ingredients.forEach(item => {
-            item.quantItem = 0;
-        });*/
+        ingredients.forEach(item => {
+            item.quantItem = 0
+            let value = item.quantItem;
+            setCounter(value)
+            return item.quantItem;
+        });
 
         console.log(flatQuery);
     }
@@ -67,6 +69,8 @@ export default function SearchRecipe() {
     let RenderItem = ({item, index}) => {
         async function increment(){      
             item.quantItem += 1;
+            let value = item.quantItem;
+            setCounter(value)
             return item.quantItem;
         }
         async function decrement(){
@@ -74,9 +78,12 @@ export default function SearchRecipe() {
                 console.log('Não consegue ser menor que 0')
             }else{;
                 item.quantItem -= 1;
+                let value = item.quantItem;
+                setCounter(value)
                 return item.quantItem;
             }
         }
+
     return(
     <View style={{backgroundColor: index++ % 2 === 0 ? '#83B98F' :'#A0E2AF' }}>
         <ComponentIngrediente {...item} index={index} increment={increment} decrement={decrement}/>
