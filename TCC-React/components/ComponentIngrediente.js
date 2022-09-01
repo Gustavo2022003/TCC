@@ -4,10 +4,14 @@ import {View, Text, StyleSheet,TouchableOpacity, Image} from 'react-native';
 
 
 
-export default function ComponentIngrediente({increment, decrement, index, ...item}){
+export default function ComponentIngrediente({checkAndReset, increment, decrement, index, ...item}){
 
         const [counter, setCounter] = useState(0);
-        
+
+        useEffect(() => {
+            setCounter(0);
+        },[])
+
         async function incrementCounter(){
             const newCounter = counter + 1;
             setCounter(newCounter);

@@ -14,7 +14,7 @@ export default function SearchRecipe() {
 
     const [ingredients, setIngredients]=useState(null);
     const [refreshing, setRefreshing] = useState(false);
-    const [counterIngredient, setCounterIngredient] = useState(0);
+    const [counter, setCounter] = useState(0);
 
     const [errorFeed, setErrorFeed] = useState(false);
     const [alertTitle, setAlertTitle] = useState('');
@@ -37,6 +37,7 @@ export default function SearchRecipe() {
             setIngredients(null);
         }else{
             console.log('Ingredientes Carregados')
+            // Add quant to the object
             let newIngredients = json.map(item => {
                 return { ...item, quantItem: 0};
             });
@@ -48,13 +49,21 @@ export default function SearchRecipe() {
     useEffect(()=>{
         GetIngredients();
     },[]);
+
+
+
     async function checkGeral(){
-        console.log(ingredients)
+        var ingredientQuery = ingredients.filter(ingredient => ingredient.quantItem > 0).map(ingredients => {return {...ingredients}});
+        /*ingredients.forEach(item => {
+            item.quantItem = 0;
+        });*/
+        console.log(ingredientQuery);
     }
+
+    //Render item to Flat List
     let RenderItem = ({item, index}) => {
         async function increment(){      
             item.quantItem += 1;
-            console.log(item);
             return item.quantItem;
         }
         async function decrement(){
@@ -62,7 +71,6 @@ export default function SearchRecipe() {
                 console.log('Não consegue ser menor que 0')
             }else{;
                 item.quantItem -= 1;
-                console.log(item);
                 return item.quantItem;
             }
         }
