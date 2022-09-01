@@ -53,11 +53,13 @@ export default function SearchRecipe() {
 
 
     async function checkGeral(){
-        var ingredientQuery = ingredients.filter(ingredient => ingredient.quantItem > 0).map(ingredients => {return {...ingredients}});
+        var ingredientQuery = ingredients.filter(ingredient => ingredient.quantItem > 0).map(ingredients => {return [ingredients.id, ingredients.quantItem]})
+        let flatQuery = ingredientQuery.flatMap(ingredients => ingredients)
         /*ingredients.forEach(item => {
             item.quantItem = 0;
         });*/
-        console.log(ingredientQuery);
+
+        console.log(flatQuery);
     }
 
     //Render item to Flat List
