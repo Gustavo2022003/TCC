@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import ComponentIngrediente from '../../components/ComponentIngrediente';
 import { Ionicons } from '@expo/vector-icons';
+import AlertCustom from '../../components/Alert';
 const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
     }
@@ -17,11 +18,12 @@ export default function SearchRecipe() {
     const [counter, setCounter] = useState([]);
 
     const [errorFeed, setErrorFeed] = useState(false);
+    const [visibleAlert, setVisibleAlert] = useState(false);
     const [alertTitle, setAlertTitle] = useState('');
     const [alertMessage, setAlertMessage] = useState('');
 
     async function GetIngredients(){
-        let response= await fetch('http://192.168.0.108:3000/ingredients',{
+        let response= await fetch('http://192.168.43.53:3000/ingredients',{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -55,25 +57,31 @@ export default function SearchRecipe() {
         var ingredientQuery = ingredients.filter(ingredient => ingredient.quantItem > 0).map(ingredients => {return [ingredients.id, ingredients.quantItem]})
         // Sempre numéros impares serão os IDS dos ingredientes e os Pares Quantidades
         let flatQuery = ingredientQuery.flatMap(ingredients => ingredients)
+        console.log(flatQuery)
+        if(flatQuery.length > 10){
+            setVisibleAlert(true)
+            setAlertTitle('Erro ao fazer consulta')
+            setAlertMessage('Me Desculpe, mas por enquanto você não pode realizar um consulta com mais de 5 ingredientes')
+        }
+        else{
+            ingredients.forEach(item => {
+                item.quantItem = 0
+                let value = item.quantItem;
+                setCounter(value);
+                return item.quantItem;
+            });
 
-        /*ingredients.forEach(item => {
-            item.quantItem = 0
-            let value = item.quantItem;
-            setCounter(value)
-            return item.quantItem;
-        });*/
-
-        let res = await fetch('http://192.168.0.108:3000/searchRecipe',{
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                itens: flatQuery
-            })
-        });
-
+            let res = await fetch('http://192.168.43.53:3000/searchRecipe',{
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    itens: flatQuery
+                })
+            });
+        }
     }
 
     //Render item to Flat List
@@ -81,7 +89,7 @@ export default function SearchRecipe() {
         async function increment(){      
             item.quantItem += 1;
             let value = item.quantItem;
-            setCounter(value)
+            setCounter(value);
             return item.quantItem;
         }
         async function decrement(){
@@ -89,8 +97,7 @@ export default function SearchRecipe() {
                 console.log('Não consegue ser menor que 0')
             }else{;
                 item.quantItem -= 1;
-                let value = item.quantItem;
-                setCounter(value)
+                await setCounter(item.quantItem)
                 return item.quantItem;
             }
         }
@@ -116,6 +123,12 @@ export default function SearchRecipe() {
                 <Text style={styles.HeaderTitle}>Search Recipe</Text>
                 <Text></Text>
             </View>
+            <AlertCustom 
+                visible={visibleAlert}
+                title = {alertTitle}
+                message = {alertMessage}
+                positiveButton={() => setVisibleAlert(false)}
+            />
             {/*<View style={{ width: '80%', backgroundColor: '#000000', height: 3,opacity: 0.1 ,borderRadius: 3, marginTop: '-3%'}}><Text>teste</Text></View>*/}
             {errorFeed == true ?
             <View style={styles.error}>
