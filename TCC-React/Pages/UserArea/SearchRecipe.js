@@ -21,7 +21,7 @@ export default function SearchRecipe() {
     const [alertMessage, setAlertMessage] = useState('');
 
     async function GetIngredients(){
-        let response= await fetch('http://192.168.16.233:3000/ingredients',{
+        let response= await fetch('http://192.168.0.108:3000/ingredients',{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -55,13 +55,15 @@ export default function SearchRecipe() {
         var ingredientQuery = ingredients.filter(ingredient => ingredient.quantItem > 0).map(ingredients => {return [ingredients.id, ingredients.quantItem]})
         // Sempre numéros impares serão os IDS dos ingredientes e os Pares Quantidades
         let flatQuery = ingredientQuery.flatMap(ingredients => ingredients)
-        ingredients.forEach(item => {
+
+        /*ingredients.forEach(item => {
             item.quantItem = 0
             let value = item.quantItem;
             setCounter(value)
             return item.quantItem;
-        });
-        let res = await fetch('http://192.168.16.233:3000/searchRecipe',{
+        });*/
+
+        let res = await fetch('http://192.168.0.108:3000/searchRecipe',{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -72,7 +74,6 @@ export default function SearchRecipe() {
             })
         });
 
-        console.log(flatQuery);
     }
 
     //Render item to Flat List

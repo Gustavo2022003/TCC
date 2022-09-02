@@ -20,7 +20,7 @@ let ingrediente = models.Ingrediente
 
 let port=process.env.PORT || 3000;
 
-const host = '192.168.16.233';
+const host = '192.168.0.108';
 
 
 
@@ -150,11 +150,17 @@ app.post('/recipe/:id', async (req,res)=>{
 });
 
 
+// SELECT * FROM `receitatemingredientes` WHERE (`idIngrediente`,`quantidade`) IN ((3,4),(4,5),(2,2),(3,1),(1,1));
+//Talvez usar or e contar a compatibilidade/ vezes que receita apareceu, melhor solução por enquanto
+//PENSAR EM ALGUM JEITO DE ORDENAR POR MAIOR COMPATIBILIDADE DA CONSULTA
+//PARA EXIBIR USAR DISTINCT SELECT PRO ID DA RECEITA, SE NÃO IRÁ REPETIR RECEITA
+
 //Search Recipe
 app.post('/searchRecipe', async (req,res) => {
     let array = req.body.itens;
-    let quantItems = array.length
-    let response = await recipe.findAll()
+    console.log(array);
+    //let quantItems = array.length;
+    //let response = await recipe.findAll()
     
 });
 
