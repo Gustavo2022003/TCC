@@ -23,7 +23,7 @@ export default function SearchRecipe() {
     const [alertMessage, setAlertMessage] = useState('');
 
     async function GetIngredients(){
-        let response= await fetch('http://192.168.43.53:3000/ingredients',{
+        let response= await fetch('http://192.168.0.108:3000/ingredients',{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -51,7 +51,8 @@ export default function SearchRecipe() {
     useEffect(()=>{
         GetIngredients();
     },[]);
-
+    
+    
 
     async function checkGeral(){
         var ingredientQuery = ingredients.filter(ingredient => ingredient.quantItem > 0).map(ingredients => {return [ingredients.id, ingredients.quantItem]})
@@ -71,7 +72,7 @@ export default function SearchRecipe() {
                 return item.quantItem;
             });
 
-            let res = await fetch('http://192.168.43.53:3000/searchRecipe',{
+            let res = await fetch('http://192.168.0.108:3000/searchRecipe',{
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -83,28 +84,40 @@ export default function SearchRecipe() {
             });
         }
     }
-
     //Render item to Flat List
     let RenderItem = ({item, index}) => {
+        //Check if selected more than 5 ingredients and remove the last inserted
+        async function checkQuant(){
+            var ingredientQuery = ingredients.filter(ingredient => ingredient.quantItem > 0).map(ingredients => {return [ingredients.id, ingredients.quantItem]})
+            // Sempre numéros impares serão os IDS dos ingredientes e os Pares Quantidades
+            let flatQuery = ingredientQuery.flatMap(ingredients => ingredients)
+            if(flatQuery.length > 10){
+                setVisibleAlert(true)
+                setAlertTitle('Erro ao adicionar item')
+                setAlertMessage('Você não pode realizar uma consulta com mais de 5 itens')
+                setCounter([item.quantItem -= 1, item.id]);
+                return item.quantItem, item.id;
+            }
+        }
+
         async function increment(){      
-            item.quantItem += 1;
-            let value = item.quantItem;
-            setCounter(value);
-            return item.quantItem;
+            setCounter([item.quantItem += 1, item.id]);
+            checkQuant();
+            return item.quantItem, item.id;
         }
         async function decrement(){
             if (item.quantItem <= 0){
                 console.log('Não consegue ser menor que 0')
             }else{;
-                item.quantItem -= 1;
-                await setCounter(item.quantItem)
-                return item.quantItem;
+                setCounter([item.quantItem -= 1, item.id])
+                return item.quantItem, item.id;
             }
         }
+        
 
     return(
     <View style={{backgroundColor: index++ % 2 === 0 ? '#83B98F' :'#A0E2AF' }}>
-        <ComponentIngrediente {...item} index={index} increment={increment} decrement={decrement}/>
+        <ComponentIngrediente {...item} index={index} counterId={counter} increment={increment} decrement={decrement}/>
     </View>
     )}
 

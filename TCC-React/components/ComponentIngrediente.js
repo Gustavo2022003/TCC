@@ -4,13 +4,13 @@ import {View, Text, StyleSheet,TouchableOpacity, Image} from 'react-native';
 
 
 
-export default function ComponentIngrediente({increment, decrement, index, ...item}){
+export default function ComponentIngrediente({counterId, increment, decrement, index, ...item}){
 
         const [value, setValue] = useState(item.quantItem);
         
         useEffect(() => {
             setValue(item.quantItem);
-        },[increment, decrement])
+        },[increment, decrement,counterId])
 
     return(
         <View style={styles.container}>
