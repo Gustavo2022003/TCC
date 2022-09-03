@@ -10,9 +10,11 @@ import Login from './Pages/Login';
 import Home from './Pages/UserArea/Home';
 import Profile from './Pages/UserArea/Profile';
 import SearchRecipe from './Pages/UserArea/SearchRecipe';
+import SearchResult from './Pages/UserArea/SearchResult';
 import Recipe from './Pages/UserArea/Recipe';
 import Search from './Pages/UserArea/Search';
 import Chat from './Pages/UserArea/Chat';
+
 
 import ButtonNew from './components/ButtonNew';
 
@@ -23,6 +25,7 @@ const LoginStack = createStackNavigator();
 const AppStack = createStackNavigator();
 const HomePages = createStackNavigator();
 const TabStack = createBottomTabNavigator();
+const SearchPages = createStackNavigator();
 
 
 function HomeStack(){
@@ -37,6 +40,21 @@ function HomeStack(){
     <HomePages.Screen name="Home" component={Home} />
     <HomePages.Screen name='Recipe' component={Recipe} />
     </HomePages.Navigator>
+);}
+
+function SearchStack(){
+  return(
+    <SearchPages.Navigator 
+    screenOptions={{
+      headerShown: false,
+      gestureEnabled: false,
+      cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+      gestureDirection: 'vertical',
+    }}>
+    <SearchPages.Screen name="SearchStack" component={SearchRecipe} />
+    <SearchPages.Screen name='SearchResult' component={SearchResult} />
+    <SearchPages.Screen name='Recipe' component={Recipe} />
+    </SearchPages.Navigator>
 );}
 
 function TabHome() {
@@ -70,7 +88,7 @@ function TabHome() {
             return <MaterialCommunityIcons name='account-outline' size={40} color='black' />
           }
         }} />
-        <TabStack.Screen name="SearchRecipe" component={SearchRecipe} 
+        <TabStack.Screen name="SearchRecipe" component={SearchStack} 
         options={{
           tabBarIcon: ({ color, size, focused})=>{
             if(focused){

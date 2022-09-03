@@ -7,15 +7,17 @@ import { useNavigation } from '@react-navigation/native';
 import ComponentIngrediente from '../../components/ComponentIngrediente';
 import { Ionicons } from '@expo/vector-icons';
 import AlertCustom from '../../components/Alert';
+import { array } from 'yup';
+
 const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
     }
 
-export default function SearchRecipe() {
-
+export default function SearchRecipe({navigation}) {
     const [ingredients, setIngredients]=useState(null);
     const [refreshing, setRefreshing] = useState(false);
     const [counter, setCounter] = useState([]);
+    const [queryResult, setQueryResult] = useState([]);
 
     const [errorFeed, setErrorFeed] = useState(false);
     const [visibleAlert, setVisibleAlert] = useState(false);
@@ -51,28 +53,30 @@ export default function SearchRecipe() {
     useEffect(()=>{
         GetIngredients();
     },[]);
-    
-    
 
     async function checkGeral(){
         var ingredientQuery = ingredients.filter(ingredient => ingredient.quantItem > 0).map(ingredients => {return [ingredients.id, ingredients.quantItem]})
         // Sempre numéros impares serão os IDS dos ingredientes e os Pares Quantidades
         let flatQuery = ingredientQuery.flatMap(ingredients => ingredients)
-        console.log(flatQuery)
-        if(flatQuery.length > 10){
+        if(flatQuery.length == 0){
+            setVisibleAlert(true)
+            setAlertTitle('Erro ao fazer consulta')
+            setAlertMessage('Você não pode realizar uma consulta sem inserir nenhum ingrediente')
+        }
+        else if(flatQuery.length > 10){
             setVisibleAlert(true)
             setAlertTitle('Erro ao fazer consulta')
             setAlertMessage('Me Desculpe, mas por enquanto você não pode realizar um consulta com mais de 5 ingredientes')
         }
         else{
-            ingredients.forEach(item => {
+            /*ingredients.forEach(item => {
                 item.quantItem = 0
                 let value = item.quantItem;
                 setCounter(value);
                 return item.quantItem;
-            });
+            });*/
 
-            let res = await fetch('http://192.168.0.108:3000/searchRecipe',{
+            let query = await fetch('http://192.168.0.108:3000/searchRecipe',{
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -81,7 +85,10 @@ export default function SearchRecipe() {
                 body: JSON.stringify({
                     itens: flatQuery
                 })
-            });
+            }).then(query => query.json());
+            let result = await query.map(receita =>receita.idReceita);
+            setQueryResult(result);
+            navigation.navigate("SearchResult", queryResult)
         }
     }
     //Render item to Flat List

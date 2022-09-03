@@ -6,7 +6,9 @@ const models=require('./models');
 const multer = require('multer');
 const path = require('path');
 var Sequelize = require('sequelize');
-const { Op } = require("sequelize");
+const { Op, where } = require("sequelize");
+const { QueryTypes } = require('sequelize');
+const db = require('./models/index')
 
 
 
@@ -155,14 +157,41 @@ app.post('/recipe/:id', async (req,res)=>{
 //PENSAR EM ALGUM JEITO DE ORDENAR POR MAIOR COMPATIBILIDADE DA CONSULTA
 //PARA EXIBIR USAR DISTINCT SELECT PRO ID DA RECEITA, SE NÃO IRÁ REPETIR RECEITA
 
+/* SQL QUERY WORKING -> SELECT idReceita
+FROM receitatemingredientes
+where ((idIngrediente = 1 and quantidade > 0 <= 5) or (idIngrediente = 2 and quantidade > 0 <= 5)
+or (idIngrediente = 3 and quantidade > 0 <= 5) or (idIngrediente = 4 and quantidade > 0 <=5)
+or (idIngrediente = 5 and quantidade > 0 <= 5))
+GROUP BY idReceita
+ORDER BY COUNT(idReceita) desc;
+*/
+
 //Search Recipe
 app.post('/searchRecipe', async (req,res) => {
     let array = req.body.itens;
-    console.log(array);
-    //let quantItems = array.length;
-    //let response = await recipe.findAll()
-    
+    if (array.length < 10){
+        while(array.length < 10){
+            array.push(0);
+        }
+    }
+    const recipes = await db.sequelize.query("SELECT `idReceita` FROM `receitatemingredientes` where ((`idIngrediente` = " + array[0] + " and `quantidade` > 0 <= "+ array[1] +") or (`idIngrediente` = " + 
+    array[2] + " and `quantidade` > 0 <=" + array[3] +") or (`idIngrediente` =" + array[4] + " and `quantidade` > 0 <= "+ array[5] +") or (`idIngrediente` ="+ array[6]+ " and `quantidade` > 0 <=" + 
+    array[7] + ") or (`idIngrediente` =" +array[8]+ " and quantidade > 0 <=" + array[9] +"))GROUP BY idReceita ORDER BY COUNT(idReceita) desc;", { raw: false, type: QueryTypes.SELECT });
+    res.send(recipes)
 });
+
+app.post('/searchedRecipes', async (req,res) => {
+    let array = req.body.list
+    console.log(array)
+    let response = await recipe.findAll({where: { id: array},
+        order: Sequelize.literal("FIELD(Recipe.id,"+array.join(',')+")")});
+
+    if(response.length === 0){
+        res.send(JSON.stringify('SearchError'));
+    }else{
+        res.send(response);
+    }
+})
 
 
 
