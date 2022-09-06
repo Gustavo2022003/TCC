@@ -19,14 +19,21 @@ import AlertCustom from '../../components/Alert';
 export default function SearchResult({route, navigation}) {
     
     const [user,setUser]=useState(null);
-    const [recipeArray, setRecipeArray] = useState(route.params)
     const [receitas, setReceitas]=useState(null);
+    const [array, setArray] = useState(route.params.itens);
     const [refreshing, setRefreshing] = useState(false);
     
     // Alert
     const [errorFeed, setErrorFeed] = useState(false);
-    const [alertTitle, setAlertTitle] = useState('');
-    const [alertMessage, setAlertMessage] = useState('');
+
+
+    useEffect(() => {
+        if (array == 'NoFound'){
+            setErrorFeed(true)
+        }else{
+            GetSearchedReceita();
+        }
+    }, [array]);
 
     let shouldBeHandledHere = true;
     useBackHandler(() => {
@@ -37,6 +44,7 @@ export default function SearchResult({route, navigation}) {
           // let the default thing happen
         return false
     })
+
     async function GetSearchedReceita(){
         let response= await fetch('http://192.168.0.108:3000/searchedRecipes',{
             method: 'POST',
@@ -45,7 +53,7 @@ export default function SearchResult({route, navigation}) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                list: recipeArray
+                list: array
             })
         })
         let json=await response.json();
@@ -70,17 +78,12 @@ export default function SearchResult({route, navigation}) {
         getUser();
     },[]);
     
-    useEffect(()=>{
-        GetSearchedReceita()
-    },[recipeArray]);
-    
-    
     const onRefresh = async () => {
-    setRefreshing(true);
-    wait(2000).then(() => setRefreshing(false));
-    GetSearchedReceita();
-    console.log('Refresh')
-    setErrorFeed(false)
+        setRefreshing(true);
+        wait(2000).then(() => setRefreshing(false));
+        GetSearchedReceita();
+        console.log('Refresh')
+        setErrorFeed(false)
     };
 
 
@@ -90,16 +93,15 @@ export default function SearchResult({route, navigation}) {
         <Animatable.View animation='fadeInUp' style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.HeaderTitle}>Search Results</Text>
-                <Text>{route.params}</Text>
             </View>
             {/*<View style={{ width: '80%', backgroundColor: '#000000', height: 3,opacity: 0.1 ,borderRadius: 3, marginTop: '-3%'}}><Text>teste</Text></View>*/}
             {errorFeed == true ?
             <View style={styles.error}>
-                <Text style={styles.errorTxtTitle}>Feed loading error</Text>
+                <Text style={styles.errorTxtTitle}>Search Error</Text>
                 <Ionicons name="ios-cloud-offline-outline" size={94} color="black" />
-                <Text numberOfLines={2} style={styles.errorTxt}>Failed while loading Feed, click to refresh!</Text>
-                <TouchableOpacity style={styles.ButtonRefreshError} onPress={onRefresh}>
-                    <Text style={styles.buttonTxt}>Refresh Feed</Text>
+                <Text numberOfLines={2} style={styles.errorTxt}>Doesn't exists any recipe with the selected ingredients, try again with another ingredients</Text>
+                <TouchableOpacity style={styles.ButtonRefreshError} onPress={()=>navigation.goBack()}>
+                    <Text style={styles.buttonTxt}>Make a new search</Text>
                 </TouchableOpacity>
             </View>
             : <View style={styles.bottom}>
@@ -148,8 +150,10 @@ error:{
 },
 errorTxt:{
     marginTop: '1%',
+    width: '90%',
     fontSize: 16,
     fontWeight: '500',
+    textAlign: 'center'
 },
 errorTxtTitle:{
     fontSize: 26,
@@ -160,7 +164,6 @@ ButtonRefreshError:{
     marginTop: '3%',
     backgroundColor: '#A0E2AF',
     padding: '3%',
-    width: '40%',
     height: 45,
     borderRadius: 15,
     justifyContent:'center'

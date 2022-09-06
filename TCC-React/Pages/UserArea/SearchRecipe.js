@@ -13,11 +13,12 @@ const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
     }
 
-export default function SearchRecipe({navigation}) {
+export default function SearchRecipe({navigation, routes}) {
     const [ingredients, setIngredients]=useState(null);
     const [refreshing, setRefreshing] = useState(false);
     const [counter, setCounter] = useState([]);
     const [queryResult, setQueryResult] = useState([]);
+    const [errorFound, setErrorFound] = useState('')
 
     const [errorFeed, setErrorFeed] = useState(false);
     const [visibleAlert, setVisibleAlert] = useState(false);
@@ -49,10 +50,12 @@ export default function SearchRecipe({navigation}) {
         }
     };
 
-
     useEffect(()=>{
         GetIngredients();
-    },[]);
+        console.log('atualizando')
+    },[navigation]);
+
+    
 
     async function checkGeral(){
         var ingredientQuery = ingredients.filter(ingredient => ingredient.quantItem > 0).map(ingredients => {return [ingredients.id, ingredients.quantItem]})
@@ -75,7 +78,6 @@ export default function SearchRecipe({navigation}) {
                 setCounter(value);
                 return item.quantItem;
             });*/
-
             let query = await fetch('http://192.168.0.108:3000/searchRecipe',{
                 method: 'POST',
                 headers: {
@@ -85,10 +87,17 @@ export default function SearchRecipe({navigation}) {
                 body: JSON.stringify({
                     itens: flatQuery
                 })
-            }).then(query => query.json());
-            let result = await query.map(receita =>receita.idReceita);
-            setQueryResult(result);
-            navigation.navigate("SearchResult", queryResult)
+            })
+            let res = await query.json()
+            if (res == "NoFound"){
+                setErrorFound("NoFound")
+                navigation.navigate('SearchResult', {itens: 'NoFound'})
+            }else{    
+                let result = await res.map(receita =>receita.idReceita);
+                console.log(result)
+                setQueryResult(result);
+                navigation.navigate('SearchResult', {itens: result})
+            }
         }
     }
     //Render item to Flat List
@@ -135,7 +144,6 @@ export default function SearchRecipe({navigation}) {
         console.log('Refresh')
         setErrorFeed(false)
     };
-
 
     return (
         <Animatable.View animation='fadeInUp' style={styles.container}>
