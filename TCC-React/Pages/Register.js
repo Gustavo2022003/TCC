@@ -30,7 +30,7 @@ export default function Register() {
 
   // Function to Register
   async function sendFormRegister(values,{resetForm}){
-    let response= await fetch('http://192.168.0.108:3000/register',{
+    let response= await fetch('http://192.168.43.53:3000/register',{
       method: 'POST',
       headers: {
         Accept: 'application/json',

@@ -38,7 +38,7 @@ export default function Home({navigation}) {
         })
 
     async function GetReceita(){
-        let response= await fetch('http://192.168.0.108:3000/feed',{
+        let response= await fetch('http://192.168.43.53:3000/feed',{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -106,6 +106,9 @@ export default function Home({navigation}) {
                     refreshing={refreshing}
                     onRefresh={onRefresh}
                     />}
+                ItemSeparatorComponent={() => (
+                    <View style={{ backgroundColor:'black', width:'90%', height: 2.5, opacity: 0.05, alignSelf: 'center'}}/>
+                )}    
                 renderItem={({item}) =><ComponentReceita {...item}/>}
             />
             </View>}

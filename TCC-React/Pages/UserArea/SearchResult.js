@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ComponentReceita from '../../components/ComponentReceita';
 import { useBackHandler } from '@react-native-community/hooks';
 
-import { Ionicons } from '@expo/vector-icons'; 
+import { MaterialIcons } from '@expo/vector-icons'; 
 import AlertCustom from '../../components/Alert';
 
     const wait = (timeout) => {
@@ -46,7 +46,7 @@ export default function SearchResult({route, navigation}) {
     })
 
     async function GetSearchedReceita(){
-        let response= await fetch('http://192.168.0.108:3000/searchedRecipes',{
+        let response= await fetch('http://192.168.43.53:3000/searchedRecipes',{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -98,7 +98,7 @@ export default function SearchResult({route, navigation}) {
             {errorFeed == true ?
             <View style={styles.error}>
                 <Text style={styles.errorTxtTitle}>Search Error</Text>
-                <Ionicons name="ios-cloud-offline-outline" size={94} color="black" />
+                <MaterialIcons name="search-off" size={94} color="black" />
                 <Text numberOfLines={2} style={styles.errorTxt}>Doesn't exists any recipe with the selected ingredients, try again with another ingredients</Text>
                 <TouchableOpacity style={styles.ButtonRefreshError} onPress={()=>navigation.goBack()}>
                     <Text style={styles.buttonTxt}>Make a new search</Text>

@@ -11,6 +11,7 @@ export default function ComponentReceita({...item}){
             <TouchableOpacity onPress={()=> navigation.navigate('Recipe', {...item})}>
             <View style={styles.central}>
                 <Image style={styles.img}
+                source={{uri: 'http://192.168.43.53:3000/Images/912C5759-697C-42EB-AE5E-21239E8EB76E.jpg'}}
                 />
             </View>
             <View style={styles.content}>
@@ -25,20 +26,21 @@ export default function ComponentReceita({...item}){
 
 const styles = StyleSheet.create({
     container:{
-        width: '90%',
+        width: '100%',
+        alignSelf:'center',
         flex: 1,
-        backgroundColor: 'wheat',
         justifyContent: 'flex-start',
         padding: 15,
-        margin: 20,
+        marginHorizontal: 20,
     },
     central:{
         alignItems:'center',
     },
     img:{
-        margin: 20,
-        width: 350,
-        height: 150
+        margin: 10,
+        width: 330,
+        height: 220,
+        resizeMode:'center'
     },
     content:{
         alignItems:'flex-start',
