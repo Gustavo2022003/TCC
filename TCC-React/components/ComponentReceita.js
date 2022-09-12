@@ -5,19 +5,22 @@ import {View, Text, StyleSheet,TouchableOpacity, Image} from 'react-native';
 
 
 export default function ComponentReceita({...item}){
+    console.log(item);
+    let modoPreparo = item.ModoPreparo;
+    console.log(modoPreparo.toString());
     const navigation = useNavigation();
     return(
         <View style={styles.container}>
             <TouchableOpacity onPress={()=> navigation.navigate('Recipe', {...item})}>
             <View style={styles.central}>
                 <Image style={styles.img}
-                source={{uri: 'http://192.168.43.53:3000/Images/912C5759-697C-42EB-AE5E-21239E8EB76E.jpg'}}
+                source={{uri: 'http://192.168.43.92:3000/Images/912C5759-697C-42EB-AE5E-21239E8EB76E.jpg'}}
                 />
             </View>
             <View style={styles.content}>
-            <Text>Receita: {item.recipeName}</Text>
-            <Text>Id: {item.id}</Text>
-            <Text>Type: {item.category}</Text>
+            <Text style={styles.title}>{item.recipeName}</Text>
+            <Text style={styles.category}>{item.category}</Text>
+            <Text style={styles.text}>{modoPreparo}</Text>
             </View>
             </TouchableOpacity>
         </View>
@@ -45,5 +48,15 @@ const styles = StyleSheet.create({
     content:{
         alignItems:'flex-start',
         marginLeft: 20
+    },
+    title:{
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginLeft: '6%'
+    },
+    category:{
+        fontSize: 15,
+        color: '#A9A9A9',
+        marginLeft: '6%'
     }
 })
