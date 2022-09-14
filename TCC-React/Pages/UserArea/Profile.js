@@ -8,7 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import {Ionicons} from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons'; 
-import ComponentReceita from '../../components/ComponentReceita';
+import ComponentReceitaProfile from '../../components/ComponentReceitaProfile';
 
 export default function Profile({navigation}) {
     
@@ -162,7 +162,7 @@ export default function Profile({navigation}) {
                     refreshing={refreshing}
                     onRefresh={onRefresh}
                 />}
-                renderItem={({item}) =><ComponentReceita {...item}/>}
+                renderItem={({item}) =><ComponentReceitaProfile {...item}/>}
             />
             </View>
         </Animatable.View>
