@@ -6,7 +6,7 @@ import {View, Text, StyleSheet,TouchableOpacity, Image} from 'react-native';
 
 
 export default function ComponentReceita({...item}){
-
+            const navigation = useNavigation();
             const [picture, setPicture]= useState(null);
                 
             async function getPicture(){

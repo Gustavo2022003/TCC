@@ -128,9 +128,9 @@ header:{
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: '4%',
+    paddingTop: '7%',
     width: '100%',
-    height: '10%',
+    height: '9%',
 },
 HeaderTitle:{
     fontSize: 40,
