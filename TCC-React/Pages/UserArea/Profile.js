@@ -158,10 +158,10 @@ export default function Profile({navigation}) {
                     <Text  style={styles.name}>{name}</Text>
                     <Text  style={styles.username}>@{Username}</Text>
                     </View>}
-                refreshControl={ <RefreshControl 
+                    refreshControl={ <RefreshControl 
                     refreshing={refreshing}
                     onRefresh={onRefresh}
-                />}
+                    />}
                 renderItem={({item}) =><ComponentReceitaProfile {...item}/>}
             />
             </View>
