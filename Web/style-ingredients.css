@@ -156,7 +156,15 @@ body {
 }
 
 .flex-container {
-    margin: auto;
+    margin: 30px auto 30px auto;
+    display: grid; 
+    grid-template-columns: 1fr auto 1fr; 
+    grid-template-rows: auto; 
+    gap: 0px 0px; 
+    grid-template-areas: 
+    ". . ."; 
+    align-content: center; 
+    align-items: center
 }
 
 /*Botão flutuante (Receita)*/
@@ -412,15 +420,214 @@ p.margin-top {
         ". ."
         ". .";
     }
+
+    .btns-ingredient {
+        display: flex; 
+        grid-template-columns: 0fr 0fr 0fr; 
+        grid-template-rows: 0.5fr; 
+        gap: 0px 1em; 
+        grid-template-areas: 
+        ". . .";
+    }
+
+    .btn-ingredient {
+        height: 30px !important;
+        width: 30px !important;
+    }
+
+    .text-btn {
+        font-size: 20px !important;
+    }
+
+    .ingredient-counter {
+        font-size: 10px;
+        margin-top: -7px !important;
+    }
+
+    html {
+        padding: 0px !important;
+    }
+
+    .fundo-verde {
+        padding: 20px !important;
+        background-color: #b3e4c0!important;
+        display: grid!important; 
+        grid-template-columns: auto!important; 
+        grid-template-rows: auto auto auto!important; 
+        gap: 0px 0px!important; 
+        grid-template-areas: 
+        "."
+        "."
+        "."!important; 
+        justify-content: center!important; 
+        align-content: center!important; 
+        justify-items: center!important; 
+        align-items: center!important; 
+    }
+    
+    .fundo-normal {
+        padding: 20px !important;
+        background-color: #ffffff;
+        display: grid!important; 
+        grid-template-columns: auto!important; 
+        grid-template-rows: auto auto auto!important; 
+        gap: 0px 0px!important; 
+        grid-template-areas: 
+        "."
+        "."
+        "."!important; 
+        justify-content: center!important; 
+        align-content: center!important; 
+        justify-items: center!important; 
+        align-items: center!important; 
+    }
+
+    .flex-container {
+        margin: auto;
+        display: grid!important; 
+        grid-template-columns: auto!important; 
+        grid-template-rows: auto auto auto!important; 
+        gap: 0px 0px!important; 
+        grid-template-areas: 
+        "."
+        "."
+        "."!important; 
+        justify-content: center!important; 
+        align-content: center!important; 
+        justify-items: center!important; 
+        align-items: center!important; 
+    }
+
+    .reset-btn {
+        margin-bottom: 30px;
+    }
+
+    .nome-ingrediente {
+        margin-left: 0px !important;
+        text-align: center;
+        margin-top: 1vh;
+        font-size: 32px;
+        font-weight: 200;
+        color: #306e30;
+        font-family: 'Inter', sans-serif;
+    }
+
 }
 
+
+@media only screen and (max-width: 990px){
+    .Categorygrid {  
+        display: grid;
+        grid-template-columns: 0.5fr 0.5fr;
+        grid-template-rows: 0.5fr 0.5fr 0.5fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+        ". ."
+        ". ."
+        ". .";
+    }
+
+    .btns-ingredient {
+        display: flex; 
+        grid-template-columns: 0fr 0fr 0fr; 
+        grid-template-rows: 0.5fr; 
+        gap: 0px 1em; 
+        grid-template-areas: 
+        ". . .";
+    }
+
+    .btn-ingredient {
+        height: 30px !important;
+        width: 30px !important;
+    }
+
+    .text-btn {
+        font-size: 20px !important;
+    }
+
+    .ingredient-counter {
+        font-size: 10px;
+        margin-top: -7px !important;
+    }
+
+    html {
+        padding: 0px !important;
+    }
+
+    .fundo-verde {
+        padding: 20px !important;
+        background-color: #b3e4c0!important;
+        display: grid!important; 
+        grid-template-columns: auto!important; 
+        grid-template-rows: auto auto auto!important; 
+        gap: 0px 0px!important; 
+        grid-template-areas: 
+        "."
+        "."
+        "."!important; 
+        justify-content: center!important; 
+        align-content: center!important; 
+        justify-items: center!important; 
+        align-items: center!important; 
+    }
+    
+    .fundo-normal {
+        padding: 20px !important;
+        background-color: #ffffff;
+        display: grid!important; 
+        grid-template-columns: auto!important; 
+        grid-template-rows: auto auto auto!important; 
+        gap: 0px 0px!important; 
+        grid-template-areas: 
+        "."
+        "."
+        "."!important; 
+        justify-content: center!important; 
+        align-content: center!important; 
+        justify-items: center!important; 
+        align-items: center!important; 
+    }
+
+    .flex-container {
+        margin: auto;
+        display: grid!important; 
+        grid-template-columns: auto!important; 
+        grid-template-rows: auto auto auto!important; 
+        gap: 0px 0px!important; 
+        grid-template-areas: 
+        "."
+        "."
+        "."!important; 
+        justify-content: center!important; 
+        align-content: center!important; 
+        justify-items: center!important; 
+        align-items: center!important; 
+    }
+
+    .reset-btn {
+        margin-bottom: 30px;
+        margin-left: 0vw !important;
+    }
+
+    .nome-ingrediente {
+        margin-left: 0px !important;
+        text-align: center;
+        margin-top: 1vh;
+        font-size: 32px;
+        font-weight: 200;
+        color: #306e30;
+        font-family: 'Inter', sans-serif;
+    }
+
+}
 
 /*Textos*/
 
 .titulo1{
     font-weight: bold;
-    color: #306e30;
-    font-size: 72px;
+    color: #519151;
+    font-size: 60px;
     text-align: center;
     margin-bottom: 20px;
 }
@@ -460,26 +667,30 @@ p.margin-top {
 /*Ingredients page*/
 
 .fundo-verde {
-    background-color: #b3e4c0;
     padding: 20px;
-    display: grid; 
-    grid-template-columns: auto auto 1fr; 
-    grid-template-rows: auto; 
-    gap: 0px 0px 0px; 
-    grid-template-areas: 
-    ". . ."; 
+    background-color: #1a8d257a;
+    display: grid;
+    grid-template-columns: 0.5fr 3fr 1fr;
+    grid-template-rows: 1fr;
+    grid-column-gap: 20px;
+    grid-row-gap: 20px;
+    justify-items: start;
+    align-items: center;
+    align-content: center;
 }
 
 .fundo-normal {
-    background-color: #ffffff;
     padding: 20px;
-    display: grid; 
-    grid-template-columns: auto auto 1fr; 
-    grid-template-rows: auto; 
-    gap: 0px 0px 0px; 
-    grid-template-areas: 
-    ". . ."; 
+    background-color: #ffffff;
+    display: grid;
+    grid-template-columns: 0.5fr 3fr 1fr;
+    grid-template-rows: 1fr;
+    grid-column-gap: 20px;
+    grid-row-gap: 20px;
+    justify-items: start;
+    align-items: center;
 }
+
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap');
 
@@ -489,7 +700,7 @@ p.margin-top {
     margin-top: 1vh;
     font-size: 32px;
     font-weight: 200;
-    color: #306e30;
+    color: #183C20;
     font-family: 'Inter', sans-serif;
 }
 
@@ -497,34 +708,86 @@ img.ingredient {
     width: 100px;
     height: 100px;
     border-radius: 50%;
-    border: 3px solid #EFD89C;
 }
 
-.botoes {
+.btns-ingredient {
     display: grid; 
-    grid-auto-columns: 1fr; 
-    grid-template-columns: 50px 100px 50px; 
-    grid-template-rows: 100px; 
-    gap: 0px 0px; 
+    grid-template-columns: 0fr 0fr 0fr; 
+    grid-template-rows: 0.5fr; 
+    gap: 0px 1em; 
     grid-template-areas: 
     ". . .";
 }
 
-button.btn-ingredients {
-    background-color: #EFD89C;
-    width: 50px;
-    height: 50px;
-    border: none;
+.btn-ingredient {
+    background-color: #ecd77a;
     border-radius: 50%;
-    color: #183B20;
-    font-size: 35px;
-    align-self: center;
+    border: none;
+    height: 50px;
+    width: 50px;
+    transform: scale(1.0);
 }
 
-p.btn-ingredients {
-    color: #183B20;
-    font-weight: bold;
-    font-size: 20px;
-    align-self: center;
-    margin-top: 10%;
+.text-btn {
+    font-size: 30px;
+    color: rgb(17, 17, 17);
+    font-weight: 400;
+}
+
+.ingredient-counter {
+    font-size: 30px;
+    margin-top: 3px;
+    width: 60px;
+    background-color: rgba(255, 206, 101, 0);
+    border: none;
+    text-align: center;
+}
+
+.ingredient-counter{
+    font-size: 30px;
+    margin-top: 3px;
+    width: 60px;
+    background-color: rgba(255, 206, 101, 0);
+    border: none;
+    text-align: center;
+}
+
+.ingredient-counter:focus {
+    transition: 1s;
+    outline: none;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.247)
+}
+
+.ingredient-counter:not(:focus) {
+    transition: 1s;
+    outline: none;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0)
+}
+
+.ingredient-counter::-webkit-outer-spin-button,
+.ingredient-counter::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.reset-btn {
+    margin-left: 7vw;
+    background-color: #e6d678;
+    border: none;
+    border-radius: 10px;
+    height: 30px;
+    width: 100px;
+}
+
+@media only screen and (max-width: 1883){
+    .reset-btn {
+        margin-left: 10px !important;
+        background-color: rgb(255, 206, 101);
+        border: none;
+        border-radius: 10px;
+        height: 30px;
+        width: 100px;
+    }
 }
