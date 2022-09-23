@@ -42,6 +42,20 @@ function HomeStack(){
     </HomePages.Navigator>
 );}
 
+function ProfileStack(){
+  return(
+    <HomePages.Navigator 
+    screenOptions={{
+      headerShown: false,
+      gestureEnabled: true,
+      cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+      gestureDirection: 'vertical',
+    }}>
+    <HomePages.Screen name="ProfileScreen" component={Profile} />
+    <HomePages.Screen name='Recipe' component={Recipe} />
+    </HomePages.Navigator>
+);}
+
 function SearchStack(){
   return(
     <SearchPages.Navigator 
@@ -79,7 +93,7 @@ function TabHome() {
             return <Ionicons name='home-outline' size={40} color='black' />
           }
         }} />
-        <TabStack.Screen name="Profile" component={Profile} 
+        <TabStack.Screen name="Profile" component={ProfileStack} 
         options={{
           tabBarIcon: ({ color, size, focused})=>{
             if(focused){
