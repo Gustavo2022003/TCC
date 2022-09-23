@@ -22,7 +22,7 @@ let ingrediente = models.Ingrediente
 
 let port=process.env.PORT || 3000;
 
-const host = '192.168.0.108';
+const host = '192.168.43.161';
 
 
 
@@ -52,9 +52,8 @@ app.post('/register',async (req,res)=>{
     });
     console.log(response)
     if(response === null){
-        res.send(JSON.stringify('null'));
         let register = await user.create({completeName: req.body.fullname, username: req.body.username,
-        email: req.body.email, password: req.body.password })
+        email: req.body.email, password: req.body.password, profilePicture: '17bcb88b-4881-4d42-bf97-2b8793c16a65.png' })
         console.log('Usuário cadastrado com ID: ', register.id)
     }else{ 
         if(response.dataValues.username == req.body.username){

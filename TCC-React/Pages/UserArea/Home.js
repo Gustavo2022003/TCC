@@ -38,7 +38,7 @@ export default function Home({navigation}) {
         })
 
     async function GetReceita(){
-        let response= await fetch('http://192.168.0.108:3000/feed',{
+        let response= await fetch('http://192.168.43.161:3000/feed',{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -47,7 +47,6 @@ export default function Home({navigation}) {
         })
         let json=await response.json();
         if (json == 'FeedError'){
-            console.log('Erro no Banco de Dados')
             setAlertTitle('Erro ao Carregar Feed')
             setAlertMessage('Clique no Botão para atualizar o feed novamente')
             setErrorFeed(true);

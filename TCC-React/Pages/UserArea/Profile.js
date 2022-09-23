@@ -42,27 +42,21 @@ export default function Profile({navigation}) {
             // Forçar pegar para enviar para a rota
             let getuser = await AsyncStorage.getItem('userData');
             let user = JSON.parse(getuser);
-            let response= await fetch('http://192.168.0.108:3000/getAvatar/'+user.id,{
+            let response= await fetch('http://192.168.43.161:3000/getAvatar/'+user.id,{
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json'
                 },
             })
-            let json=await response.json();
-            let Image = json[0].profilePicture;
-            if (Image === null){
-                setPicture('http://192.168.0.108:3000/Images/17bcb88b-4881-4d42-bf97-2b8793c16a65.png')
-            }else{
-            let idImage = JSON.stringify(json)
             //DEIXA O NOME DA IMAGEM DO JEITO QUE PRECISO
-            let newImage = idImage.slice(22,62)
-            let strPicture = newImage.toString()
-            let picturePath = 'http://192.168.0.108:3000/Images/'
-            let finalPath = picturePath + strPicture
+            let json=await response.json();
+            let idImage = JSON.stringify(json)
+            let newImage = idImage.substring(20, idImage.length - 3)
+            let picturePath = 'http://192.168.43.161:3000/Images/'
+            let finalPath = picturePath + newImage;
             let finalfinalpath = finalPath.toString();
             setPicture(finalfinalpath)
-            }
     }
 
     //UseEffet do Get Profile
@@ -74,7 +68,7 @@ export default function Profile({navigation}) {
     async function GetReceita(){
         let getuser = await AsyncStorage.getItem('userData');
         let user = JSON.parse(getuser);
-        let response = await fetch('http://192.168.0.108:3000/recipe/'+user.id,{
+        let response = await fetch('http://192.168.43.161:3000/recipe/'+user.id,{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -114,7 +108,7 @@ export default function Profile({navigation}) {
                 let formData = new FormData();
             // Assume "photo" is the name of the form field the server expects
                 formData.append('photo', { uri: localUri, name: filename, type });
-            await axios.post('http://192.168.0.108:3000/uploadPicture/'+user, formData, {headers: {
+            await axios.post('http://192.168.43.161:3000/uploadPicture/'+user, formData, {headers: {
                 'Content-Type': 'multipart/form-data',
              }})
             .catch(function (error) {

@@ -8,7 +8,7 @@ import { AntDesign } from '@expo/vector-icons';
 
 
 export default function Recipe({route, navigation}) {
-    
+    const [pictureRecipe, setPictureRecipe] = useState(null);
     let shouldBeHandledHere = true;
 
     //Evitar voltar pelo android
@@ -20,6 +20,19 @@ export default function Recipe({route, navigation}) {
           // let the default thing happen
           return false
         })
+
+
+        async function getPictureReceita(){
+                
+            let idImage = route.params?.profilePicture;
+            let picturePath = 'http://192.168.43.161:3000/Images/'
+            let finalPath = picturePath + idImage
+            let finalfinalpath = finalPath.toString();
+            setPictureRecipe(finalfinalpath)
+        }
+        useEffect(()=>{
+            getPictureReceita();
+        },[route])
 
     return (
         <Animatable.View animation='fadeInUp' style={styles.container}>

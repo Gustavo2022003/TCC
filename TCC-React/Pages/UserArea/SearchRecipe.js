@@ -26,7 +26,7 @@ export default function SearchRecipe({navigation, routes}) {
     const [alertMessage, setAlertMessage] = useState('');
 
     async function GetIngredients(){
-        let response= await fetch('http://192.168.0.108:3000/ingredients',{
+        let response= await fetch('http://192.168.43.161:3000/ingredients',{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -35,7 +35,6 @@ export default function SearchRecipe({navigation, routes}) {
         })
         let json=await response.json();
         if (json == 'IngredientsError'){
-            console.log('Erro no Banco de Dados')
             setAlertTitle('Erro ao Carregar Ingredientes')
             setAlertMessage('Clique no Botão para atualizar os ingredientes novamente')
             setErrorFeed(true);
@@ -78,7 +77,7 @@ export default function SearchRecipe({navigation, routes}) {
                 setCounter(value);
                 return item.quantItem;
             });*/
-            let query = await fetch('http://192.168.0.108:3000/searchRecipe',{
+            let query = await fetch('http://192.168.43.161:3000/searchRecipe',{
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',

@@ -10,17 +10,13 @@ export default function ComponentReceita({...item}){
             const [picture, setPicture]= useState(null);
                 
             async function getPicture(){
-                let NewImage = item.User.profilePicture;
-                if (NewImage === null){
-                    setPicture('http://192.168.0.108:3000/Images/17bcb88b-4881-4d42-bf97-2b8793c16a65.png')
-                }else{
+                
                     let idImage = item.User.profilePicture;
-                    let newImage = idImage.substring(1, idImage.length - 1)
-                    let picturePath = 'http://192.168.0.108:3000/Images/'
-                    let finalPath = picturePath + newImage
+                    console.log(idImage)
+                    let picturePath = 'http://192.168.43.161:3000/Images/'
+                    let finalPath = picturePath + idImage
                     let finalfinalpath = finalPath.toString();
                     setPicture(finalfinalpath)
-                }
             }
 
             useEffect(()=>{
@@ -38,7 +34,7 @@ export default function ComponentReceita({...item}){
             </View>
             <View style={styles.central}>
                 <Image style={styles.img}
-                source={{uri: 'http://192.168.0.108:3000/Images/912C5759-697C-42EB-AE5E-21239E8EB76E.jpg'}}
+                source={{uri: 'http://192.168.43.161:3000/Images/912C5759-697C-42EB-AE5E-21239E8EB76E.jpg'}}
                 />
             </View>
             <View style={styles.content}>
