@@ -22,7 +22,7 @@ let ingrediente = models.Ingrediente
 
 let port=process.env.PORT || 3000;
 
-const host = '192.168.43.92';
+const host = '192.168.0.108';
 
 
 
@@ -143,7 +143,7 @@ app.post('/uploadPicture/:userId',upload, async (req,res)=>{
 
 //Get receita from specific profile
 app.post('/recipe/:id', async (req,res)=>{
-    let response = await recipe.findAll({where: {UserId: req.params.id}});
+    let response = await recipe.findAll({where: {UserId: req.params.id}, order:[Sequelize.literal('RAND()')], include: [{model: user, required: true}]});
     if(response === null){
         res.send(JSON.stringify('Deu Erro'));
     }else{

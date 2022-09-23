@@ -12,17 +12,14 @@ export default function ComponentReceita({...item}){
             async function getPicture(){
                 let NewImage = item.User.profilePicture;
                 if (NewImage === null){
-                    setPicture('http://192.168.43.92:3000/Images/17bcb88b-4881-4d42-bf97-2b8793c16a65.png')
+                    setPicture('http://192.168.0.108:3000/Images/17bcb88b-4881-4d42-bf97-2b8793c16a65.png')
                 }else{
                     let idImage = item.User.profilePicture;
-                    //DEIXA O NOME DA IMAGEM DO JEITO QUE PRECISO
-                    let newImage = idImage.slice(22,62)
-                    let strPicture = newImage.toString()
-                    let picturePath = 'http://192.168.43.92:3000/Images/'
-                    let finalPath = picturePath + strPicture
+                    let newImage = idImage.substring(1, idImage.length - 1)
+                    let picturePath = 'http://192.168.0.108:3000/Images/'
+                    let finalPath = picturePath + newImage
                     let finalfinalpath = finalPath.toString();
-                    console.log(finalfinalpath)
-                    console.log(item.User.profilePicture)
+                    setPicture(finalfinalpath)
                 }
             }
 
@@ -41,7 +38,7 @@ export default function ComponentReceita({...item}){
             </View>
             <View style={styles.central}>
                 <Image style={styles.img}
-                source={{uri: 'http://192.168.43.92:3000/Images/912C5759-697C-42EB-AE5E-21239E8EB76E.jpg'}}
+                source={{uri: 'http://192.168.0.108:3000/Images/912C5759-697C-42EB-AE5E-21239E8EB76E.jpg'}}
                 />
             </View>
             <View style={styles.content}>
@@ -101,6 +98,7 @@ const styles = StyleSheet.create({
     imgProfile:{
         width:40,
         height: 40,
+        borderRadius:20,
         marginLeft: '6%'
     }
 })

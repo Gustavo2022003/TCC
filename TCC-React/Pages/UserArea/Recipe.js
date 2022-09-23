@@ -10,7 +10,6 @@ import { AntDesign } from '@expo/vector-icons';
 export default function Recipe({route, navigation}) {
     
     let shouldBeHandledHere = true;
-    console.log(route)
 
     //Evitar voltar pelo android
     useBackHandler(() => {
@@ -26,7 +25,7 @@ export default function Recipe({route, navigation}) {
         <Animatable.View animation='fadeInUp' style={styles.container}>
             <View style={styles.header}>
                 <TouchableOpacity style={{flexDirection:'row', alignSelf:'center'}}onPress={()=> navigation.goBack()}>
-                    <AntDesign name="left" size={24} color="black" />
+                    <AntDesign style={{alignSelf:'center'}} name="left" size={24} color="black" />
                     <Text style={{alignSelf:"center", fontSize: 20, fontWeight: 'bold'}}>Back</Text>
                 </TouchableOpacity>
                 <Text style={styles.HeaderTitle}>Receitas</Text>
@@ -59,13 +58,15 @@ container: {
 header:{
     flexDirection: 'row',
     alignItems: 'center',
+    alignContent: 'center',
     justifyContent: 'space-between',
-    paddingTop: '7%',
+    paddingTop: '8%',
     width: '96%',
-    height: '9%',
+    height: '10%',
 },
 HeaderTitle:{
-    fontSize: 40,
+    fontSize: 36,
     fontWeight: '700',
+    textAlign: 'center'
 },
 });

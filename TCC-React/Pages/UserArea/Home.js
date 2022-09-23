@@ -38,7 +38,7 @@ export default function Home({navigation}) {
         })
 
     async function GetReceita(){
-        let response= await fetch('http://192.168.43.92:3000/feed',{
+        let response= await fetch('http://192.168.0.108:3000/feed',{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -128,12 +128,12 @@ header:{
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: '7%',
+    paddingTop: '8%',
     width: '100%',
-    height: '9%',
+    height: '10%',
 },
 HeaderTitle:{
-    fontSize: 40,
+    fontSize: 36,
     fontWeight: '700',
 },
 bottom:{

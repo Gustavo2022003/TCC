@@ -26,7 +26,7 @@ export default function SearchRecipe({navigation, routes}) {
     const [alertMessage, setAlertMessage] = useState('');
 
     async function GetIngredients(){
-        let response= await fetch('http://192.168.43.92:3000/ingredients',{
+        let response= await fetch('http://192.168.0.108:3000/ingredients',{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -78,7 +78,7 @@ export default function SearchRecipe({navigation, routes}) {
                 setCounter(value);
                 return item.quantItem;
             });*/
-            let query = await fetch('http://192.168.43.92:3000/searchRecipe',{
+            let query = await fetch('http://192.168.0.108:3000/searchRecipe',{
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -193,12 +193,12 @@ header:{
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: '4%',
+    paddingTop: '8%',
     width: '100%',
     height: '10%',
 },
 HeaderTitle:{
-    fontSize: 32,
+    fontSize: 36,
     fontWeight: '700',
 },
 bottom:{

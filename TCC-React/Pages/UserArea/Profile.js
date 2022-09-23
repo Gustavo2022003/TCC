@@ -42,7 +42,7 @@ export default function Profile({navigation}) {
             // Forçar pegar para enviar para a rota
             let getuser = await AsyncStorage.getItem('userData');
             let user = JSON.parse(getuser);
-            let response= await fetch('http://192.168.43.92:3000/getAvatar/'+user.id,{
+            let response= await fetch('http://192.168.0.108:3000/getAvatar/'+user.id,{
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -52,13 +52,13 @@ export default function Profile({navigation}) {
             let json=await response.json();
             let Image = json[0].profilePicture;
             if (Image === null){
-                setPicture('http://192.168.43.92:3000/Images/17bcb88b-4881-4d42-bf97-2b8793c16a65.png')
+                setPicture('http://192.168.0.108:3000/Images/17bcb88b-4881-4d42-bf97-2b8793c16a65.png')
             }else{
             let idImage = JSON.stringify(json)
             //DEIXA O NOME DA IMAGEM DO JEITO QUE PRECISO
             let newImage = idImage.slice(22,62)
             let strPicture = newImage.toString()
-            let picturePath = 'http://192.168.43.92:3000/Images/'
+            let picturePath = 'http://192.168.0.108:3000/Images/'
             let finalPath = picturePath + strPicture
             let finalfinalpath = finalPath.toString();
             setPicture(finalfinalpath)
@@ -74,7 +74,7 @@ export default function Profile({navigation}) {
     async function GetReceita(){
         let getuser = await AsyncStorage.getItem('userData');
         let user = JSON.parse(getuser);
-        let response = await fetch('http://192.168.43.92:3000/recipe/'+user.id,{
+        let response = await fetch('http://192.168.0.108:3000/recipe/'+user.id,{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -114,7 +114,7 @@ export default function Profile({navigation}) {
                 let formData = new FormData();
             // Assume "photo" is the name of the form field the server expects
                 formData.append('photo', { uri: localUri, name: filename, type });
-            await axios.post('http://192.168.43.92:3000/uploadPicture/'+user, formData, {headers: {
+            await axios.post('http://192.168.0.108:3000/uploadPicture/'+user, formData, {headers: {
                 'Content-Type': 'multipart/form-data',
              }})
             .catch(function (error) {
@@ -143,9 +143,9 @@ export default function Profile({navigation}) {
     return (
         <Animatable.View animation='fadeInUp' style={styles.container}>
             <View style={styles.header}>
-                <Ionicons name='exit-outline' size={40} color={'black'} onPress={Logout}/>
+                <Ionicons name='exit-outline' style={{alignSelf:'center'}} size={40} color={'black'} onPress={Logout}/>
                 <Text style={styles.HeaderTitle}>Profile</Text>
-                <Feather name="edit" size={32} color={"black"}/>
+                <Feather name="edit" style={{alignSelf:'center'}} size={32} color={"black"}/>
             </View>
             {/*<TouchableOpacity onPress={openImagePickerAsync}><Text>Alterar Foto de Perfil</Text></TouchableOpacity>   */}    
             
@@ -180,12 +180,12 @@ header:{
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: '7%',
+    paddingTop: '8%',
     width: '96%',
-    height: '9%',
+    height: '10%',
 },
 HeaderTitle:{
-    fontSize: 40,
+    fontSize: 36,
     fontWeight: '700',
 },
 LogoutButton:{
@@ -198,6 +198,7 @@ LogoutButton:{
     backgroundColor: '#FFFFFF'
 },
 avatar: {
+    marginTop: '5%',
     alignSelf: 'center',
     width: 180,
     height:180,
