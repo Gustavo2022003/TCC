@@ -22,7 +22,7 @@ let ingrediente = models.Ingrediente
 
 let port=process.env.PORT || 3000;
 
-const host = '192.168.43.161';
+const host = '192.168.0.108';
 
 
 
@@ -50,7 +50,6 @@ app.post('/register',async (req,res)=>{
             {username: req.body.username},{email: req.body.email}
         ]}
     });
-    console.log(response)
     if(response === null){
         let register = await user.create({completeName: req.body.fullname, username: req.body.username,
         email: req.body.email, password: req.body.password, profilePicture: '17bcb88b-4881-4d42-bf97-2b8793c16a65.png' })
@@ -69,7 +68,6 @@ app.post('/register',async (req,res)=>{
 //Recipes feed
 app.post('/feed', async (req,res)=>{
     let response = await recipe.findAll({order:[Sequelize.literal('RAND()')], include: [{model: user, required: true}]});
-    console.log(response);
     if(response.length === 0){
         res.send(JSON.stringify('FeedError'));
     }else{
@@ -88,6 +86,16 @@ app.post('/ingredients', async (req,res)=>{
     }
 
 });
+
+app.post('/user/:userId', async (req,res)=>{
+    let response = await user.findOne({ where:{id: req.params.userId}})
+    if (response === null){
+        res.send(JSON.stringify('NoProfile'))
+    }else{
+        res.send(response)
+    }
+})
+
 
 //Store Path Multer
 var storage = multer.diskStorage({
@@ -119,14 +127,12 @@ app.post('/getAvatar/:user', async (req,res)=>{
 
 //Set Images path public
 app.use("/Images",express.static("Images"), ()=>{
-    console.log('Vou retornar a foto pera ae')
 });
 
 //Upload profile picture
 app.post('/uploadPicture/:userId',upload, async (req,res)=>{
     let userid = req.params.userId
     let response = JSON.stringify(req.file.filename)
-    console.log(response)
     let updatepicture = await user.update({ profilePicture: response },{
         where: {
             id: userid

@@ -26,7 +26,7 @@ export default function SearchRecipe({navigation, routes}) {
     const [alertMessage, setAlertMessage] = useState('');
 
     async function GetIngredients(){
-        let response= await fetch('http://192.168.43.161:3000/ingredients',{
+        let response= await fetch('http://192.168.0.108:3000/ingredients',{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -51,7 +51,6 @@ export default function SearchRecipe({navigation, routes}) {
 
     useEffect(()=>{
         GetIngredients();
-        console.log('atualizando')
     },[navigation]);
 
     
@@ -77,7 +76,7 @@ export default function SearchRecipe({navigation, routes}) {
                 setCounter(value);
                 return item.quantItem;
             });*/
-            let query = await fetch('http://192.168.43.161:3000/searchRecipe',{
+            let query = await fetch('http://192.168.0.108:3000/searchRecipe',{
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -93,7 +92,6 @@ export default function SearchRecipe({navigation, routes}) {
                 navigation.navigate('SearchResult', {itens: 'NoFound'})
             }else{    
                 let result = await res.map(receita =>receita.idReceita);
-                console.log(result)
                 setQueryResult(result);
                 navigation.navigate('SearchResult', {itens: result})
             }

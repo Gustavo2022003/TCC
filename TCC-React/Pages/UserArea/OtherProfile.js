@@ -6,43 +6,21 @@ import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
-import {Ionicons} from '@expo/vector-icons';
-import { Feather } from '@expo/vector-icons'; 
 import ComponentReceitaProfile from '../../components/ComponentReceitaProfile';
+import { AntDesign } from '@expo/vector-icons'; 
 
-export default function Profile({navigation}) {
+export default function Profile({route, navigation}) {
     
-    const [user,setUser]= useState(null);
     const [name, setName]= useState(null)
     const [Username, setUsername]= useState(null);
     const [picture, setPicture]=useState(null);
     const [refreshing, setRefreshing] = useState(false);
     const [receitas, setReceitas]=useState(null);
-    
-    //UseEffect to Get the User
-    useEffect(()=>{
-        async function getUser(){
-            let response = await AsyncStorage.getItem('userData');
-            let json=JSON.parse(response);
-            setUser(json.id);
-            setName(json.completeName);
-            setUsername(json.username);
-        }
-        getUser();
-    },[]);
 
-    //Function to Logout
-    async function Logout(){
-        await AsyncStorage.removeItem('token')
-        navigation.navigate('Welcome');
-    }
-
-    //Function to Get the Profile
-    async function GetProfile(){
+    //Function to Get the Profile from other User
+    async function GetProfileOther(){
             // Forçar pegar para enviar para a rota
-            let getuser = await AsyncStorage.getItem('userData');
-            let user = JSON.parse(getuser);
-            let response= await fetch('http://192.168.0.108:3000/getAvatar/'+user.id,{
+            let response= await fetch('http://192.168.0.108:3000/user/'+route.params?.user,{
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -51,24 +29,23 @@ export default function Profile({navigation}) {
             })
             //DEIXA O NOME DA IMAGEM DO JEITO QUE PRECISO
             let json=await response.json();
-            let idImage = JSON.stringify(json)
-            let newImage = idImage.substring(20, idImage.length - 3)
+            let idImage = json.profilePicture
             let picturePath = 'http://192.168.0.108:3000/Images/'
-            let finalPath = picturePath + newImage;
+            let finalPath = picturePath + idImage;
             let finalfinalpath = finalPath.toString();
             setPicture(finalfinalpath)
+            setName(json.completeName);
+            setUsername(json.username);
     }
 
     //UseEffet do Get Profile
     useEffect(()=>{
-        GetProfile();
-    },[]);
+        GetProfileOther();
+    },[route]);
 
     //Function Get the Recipe by Profile Id
     async function GetReceita(){
-        let getuser = await AsyncStorage.getItem('userData');
-        let user = JSON.parse(getuser);
-        let response = await fetch('http://192.168.0.108:3000/recipe/'+user.id,{
+        let response = await fetch('http://192.168.0.108:3000/recipe/'+route.params?.user,{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -84,41 +61,6 @@ export default function Profile({navigation}) {
         GetReceita();
     },[]);
 
-    //Selector Images
-    const openImagePickerAsync = async () => {
-    
-        let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (permissionResult.granted === false) {
-            alert("Permission to access camera roll is required!");
-            return;
-        }
-        let pickerResult = await ImagePicker.launchImageLibraryAsync({allowsEditing: true,});
-        console.log(pickerResult)
-        
-        if (!pickerResult.cancelled) {
-            // ImagePicker saves the taken photo to disk and returns a local URI to it
-                let localUri = pickerResult.uri;
-                let filename = localUri.split('/').pop();
-
-            // Infer the type of the image
-                let match = /\.(\w+)$/.exec(filename);
-                let type = match ? `image/${match[1]}` : `image`;
-
-            // Upload the image using the fetch and FormData APIs
-                let formData = new FormData();
-            // Assume "photo" is the name of the form field the server expects
-                formData.append('photo', { uri: localUri, name: filename, type });
-            await axios.post('http://192.168.0.108:3000/uploadPicture/'+user, formData, {headers: {
-                'Content-Type': 'multipart/form-data',
-             }})
-            .catch(function (error) {
-                console.log(error.toJSON());
-              });
-            GetProfile();
-        }
-    }
-
-
     //WAIT
     const wait = (timeout) => {
         return new Promise(resolve => setTimeout(resolve, timeout));
@@ -128,18 +70,20 @@ export default function Profile({navigation}) {
         setRefreshing(true);
         wait(2000).then(() => setRefreshing(false));
         GetProfile();
-        GetReceita();
+        GetReceitaOther();
         console.log('Refresh')
     };
-   
     //source={require('../../Images/'+picture)}
 
     return (
         <Animatable.View animation='fadeInUp' style={styles.container}>
             <View style={styles.header}>
-                <Ionicons name='exit-outline' style={{alignSelf:'center'}} size={40} color={'black'} onPress={Logout}/>
+                <TouchableOpacity style={{flexDirection:'row', alignSelf:'center'}}onPress={()=> navigation.goBack()}>
+                    <AntDesign style={{alignSelf:'center'}} name="left" size={24} color="black" />
+                    <Text style={{alignSelf:"center", fontSize: 20, fontWeight: 'bold'}}>Back</Text>
+                </TouchableOpacity>
                 <Text style={styles.HeaderTitle}>Profile</Text>
-                <Feather name="edit" style={{alignSelf:'center'}} size={32} color={"black"}/>
+                <View style={{width: 60, height: 1}}/>
             </View>
             {/*<TouchableOpacity onPress={openImagePickerAsync}><Text>Alterar Foto de Perfil</Text></TouchableOpacity>   */}    
             
@@ -177,19 +121,11 @@ header:{
     paddingTop: '8%',
     width: '96%',
     height: '10%',
+    marginBottom: '-2%'
 },
 HeaderTitle:{
     fontSize: 36,
     fontWeight: '700',
-},
-LogoutButton:{
-    margin: 20,
-    width: 90,
-    height:40,
-    borderRadius:20,
-    justifyContent:'center',
-    alignItems:'center',
-    backgroundColor: '#FFFFFF'
 },
 avatar: {
     marginTop: '5%',
@@ -201,7 +137,7 @@ avatar: {
 name:{
     alignSelf: 'center',
     textAlign: 'center',
-    marginTop: '2%',
+    marginTop: '1%',
     fontSize: 20,
     fontWeight: '700',
 },

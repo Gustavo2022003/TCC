@@ -32,13 +32,13 @@ export default function Home({navigation}) {
         if (shouldBeHandledHere) {
             // handle it
             return true
-          }
+            }
           // let the default thing happen
-          return false
+            return false
         })
 
     async function GetReceita(){
-        let response= await fetch('http://192.168.43.161:3000/feed',{
+        let response= await fetch('http://192.168.0.108:3000/feed',{
             method: 'POST',
             headers: {
                 Accept: 'application/json',

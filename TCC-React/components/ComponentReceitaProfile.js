@@ -11,7 +11,7 @@ export default function ComponentReceitaProfil({...item}){
             <TouchableOpacity onPress={()=> navigation.navigate('Recipe', {...item})}>
             <View style={styles.central}>
                 <Image style={styles.img}
-                source={{uri: 'http://192.168.43.161:3000/Images/912C5759-697C-42EB-AE5E-21239E8EB76E.jpg'}}
+                source={{uri: 'http://192.168.0.108:3000/Images/912C5759-697C-42EB-AE5E-21239E8EB76E.jpg'}}
                 />
             </View>
             <View style={styles.content}>

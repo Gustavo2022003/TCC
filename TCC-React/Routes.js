@@ -9,6 +9,7 @@ import Login from './Pages/Login';
 
 import Home from './Pages/UserArea/Home';
 import Profile from './Pages/UserArea/Profile';
+import OtherProfile from './Pages/UserArea/OtherProfile';
 import SearchRecipe from './Pages/UserArea/SearchRecipe';
 import SearchResult from './Pages/UserArea/SearchResult';
 import Recipe from './Pages/UserArea/Recipe';
@@ -39,6 +40,7 @@ function HomeStack(){
     }}>
     <HomePages.Screen name="Home" component={Home} />
     <HomePages.Screen name='Recipe' component={Recipe} />
+    <HomePages.Screen name='OtherProfile' component={OtherProfile} />
     </HomePages.Navigator>
 );}
 
@@ -67,7 +69,8 @@ function SearchStack(){
     }}>
     <SearchPages.Screen name="SearchStack" component={SearchRecipe} />
     <SearchPages.Screen name='SearchResult' component={SearchResult} />
-    <SearchPages.Screen name='Recipe' component={Recipe} />
+    <SearchPages.Screen name='Recipe' component={Recipe}/>
+    <HomePages.Screen name='OtherProfile' component={OtherProfile} />
     </SearchPages.Navigator>
 );}
 

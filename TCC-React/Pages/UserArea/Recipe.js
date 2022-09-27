@@ -25,7 +25,7 @@ export default function Recipe({route, navigation}) {
         async function getPictureReceita(){
                 
             let idImage = route.params?.profilePicture;
-            let picturePath = 'http://192.168.43.161:3000/Images/'
+            let picturePath = 'http://192.168.0.108:3000/Images/'
             let finalPath = picturePath + idImage
             let finalfinalpath = finalPath.toString();
             setPictureRecipe(finalfinalpath)
@@ -42,7 +42,7 @@ export default function Recipe({route, navigation}) {
                     <Text style={{alignSelf:"center", fontSize: 20, fontWeight: 'bold'}}>Back</Text>
                 </TouchableOpacity>
                 <Text style={styles.HeaderTitle}>Receitas</Text>
-                <Text style={{color: 'transparent'}}>TESTE</Text>
+                <View style={{width: 60}}/>
             </View>
             <View>
                 <View>

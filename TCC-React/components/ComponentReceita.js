@@ -12,8 +12,7 @@ export default function ComponentReceita({...item}){
             async function getPicture(){
                 
                     let idImage = item.User.profilePicture;
-                    console.log(idImage)
-                    let picturePath = 'http://192.168.43.161:3000/Images/'
+                    let picturePath = 'http://192.168.0.108:3000/Images/'
                     let finalPath = picturePath + idImage
                     let finalfinalpath = finalPath.toString();
                     setPicture(finalfinalpath)
@@ -27,14 +26,14 @@ export default function ComponentReceita({...item}){
         <View style={styles.container}>
             <TouchableOpacity onPress={()=> navigation.navigate('Recipe', {...item})}>
             <View style={styles.profileArea}>
-                <Image style={styles.imgProfile}
-                source={{uri: picture}}
-                />
-                <Text style={{alignSelf: 'center', marginLeft:'2%', fontSize: 15, fontWeight: 'bold'}}>{item.User.username}</Text>
+                <Image style={styles.imgProfile} source={{uri: picture}}/>
+                <TouchableOpacity style={{alignSelf:'center', marginLeft:'2%',}} onPress={() => navigation.navigate('OtherProfile', {user: item.User.id})}>
+                    <Text style={{fontSize: 17, fontWeight: 'bold', backgroundColor: "#FFFFFF"}}>{item.User.username}</Text>
+                </TouchableOpacity>
             </View>
             <View style={styles.central}>
                 <Image style={styles.img}
-                source={{uri: 'http://192.168.43.161:3000/Images/912C5759-697C-42EB-AE5E-21239E8EB76E.jpg'}}
+                source={{uri: 'http://192.168.0.108:3000/Images/912C5759-697C-42EB-AE5E-21239E8EB76E.jpg'}}
                 />
             </View>
             <View style={styles.content}>
@@ -90,11 +89,12 @@ const styles = StyleSheet.create({
     profileArea:{
         flexDirection:'row',
         width: '100%',
+        alignItems:'center'
     },
     imgProfile:{
-        width:40,
-        height: 40,
-        borderRadius:20,
-        marginLeft: '6%'
+        width:45,
+        height: 45,
+        borderRadius: 25,
+        marginLeft: '6%',
     }
 })
