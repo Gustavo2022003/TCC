@@ -42,7 +42,7 @@ export default function Profile({navigation}) {
             // Forçar pegar para enviar para a rota
             let getuser = await AsyncStorage.getItem('userData');
             let user = JSON.parse(getuser);
-            let response= await fetch('http://192.168.0.108:3000/getAvatar/'+user.id,{
+            let response= await fetch('http://192.168.43.92:3000/getAvatar/'+user.id,{
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -53,7 +53,7 @@ export default function Profile({navigation}) {
             let json=await response.json();
             let idImage = JSON.stringify(json)
             let newImage = idImage.substring(20, idImage.length - 3)
-            let picturePath = 'http://192.168.0.108:3000/Images/'
+            let picturePath = 'http://192.168.43.92:3000/Images/'
             let finalPath = picturePath + newImage;
             let finalfinalpath = finalPath.toString();
             setPicture(finalfinalpath)
@@ -68,7 +68,7 @@ export default function Profile({navigation}) {
     async function GetReceita(){
         let getuser = await AsyncStorage.getItem('userData');
         let user = JSON.parse(getuser);
-        let response = await fetch('http://192.168.0.108:3000/recipe/'+user.id,{
+        let response = await fetch('http://192.168.43.92:3000/recipe/'+user.id,{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -108,7 +108,7 @@ export default function Profile({navigation}) {
                 let formData = new FormData();
             // Assume "photo" is the name of the form field the server expects
                 formData.append('photo', { uri: localUri, name: filename, type });
-            await axios.post('http://192.168.0.108:3000/uploadPicture/'+user, formData, {headers: {
+            await axios.post('http://192.168.43.92:3000/uploadPicture/'+user, formData, {headers: {
                 'Content-Type': 'multipart/form-data',
              }})
             .catch(function (error) {

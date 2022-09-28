@@ -46,7 +46,7 @@ export default function SearchResult({route, navigation}) {
     })
 
     async function GetSearchedReceita(){
-        let response= await fetch('http://192.168.0.108:3000/searchedRecipes',{
+        let response= await fetch('http://192.168.43.92:3000/searchedRecipes',{
             method: 'POST',
             headers: {
                 Accept: 'application/json',

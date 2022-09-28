@@ -25,7 +25,7 @@ export default function Recipe({route, navigation}) {
         async function getPictureReceita(){
                 
             let idImage = route.params?.profilePicture;
-            let picturePath = 'http://192.168.0.108:3000/Images/'
+            let picturePath = 'http://192.168.43.92:3000/Images/'
             let finalPath = picturePath + idImage
             let finalfinalpath = finalPath.toString();
             setPictureRecipe(finalfinalpath)

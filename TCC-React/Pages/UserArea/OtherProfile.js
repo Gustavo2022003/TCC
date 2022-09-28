@@ -20,7 +20,7 @@ export default function Profile({route, navigation}) {
     //Function to Get the Profile from other User
     async function GetProfileOther(){
             // Forçar pegar para enviar para a rota
-            let response= await fetch('http://192.168.0.108:3000/user/'+route.params?.user,{
+            let response= await fetch('http://192.168.43.92:3000/user/'+route.params?.user,{
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -30,7 +30,7 @@ export default function Profile({route, navigation}) {
             //DEIXA O NOME DA IMAGEM DO JEITO QUE PRECISO
             let json=await response.json();
             let idImage = json.profilePicture
-            let picturePath = 'http://192.168.0.108:3000/Images/'
+            let picturePath = 'http://192.168.43.92:3000/Images/'
             let finalPath = picturePath + idImage;
             let finalfinalpath = finalPath.toString();
             setPicture(finalfinalpath)
@@ -45,7 +45,7 @@ export default function Profile({route, navigation}) {
 
     //Function Get the Recipe by Profile Id
     async function GetReceita(){
-        let response = await fetch('http://192.168.0.108:3000/recipe/'+route.params?.user,{
+        let response = await fetch('http://192.168.43.92:3000/recipe/'+route.params?.user,{
             method: 'POST',
             headers: {
                 Accept: 'application/json',

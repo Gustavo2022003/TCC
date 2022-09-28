@@ -26,7 +26,7 @@ export default function SearchRecipe({navigation, routes}) {
     const [alertMessage, setAlertMessage] = useState('');
 
     async function GetIngredients(){
-        let response= await fetch('http://192.168.0.108:3000/ingredients',{
+        let response= await fetch('http://192.168.43.92:3000/ingredients',{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -76,7 +76,7 @@ export default function SearchRecipe({navigation, routes}) {
                 setCounter(value);
                 return item.quantItem;
             });*/
-            let query = await fetch('http://192.168.0.108:3000/searchRecipe',{
+            let query = await fetch('http://192.168.43.92:3000/searchRecipe',{
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -165,8 +165,8 @@ export default function SearchRecipe({navigation, routes}) {
                 </TouchableOpacity>
             </View>
             : <View style={styles.bottom}>
-                <TouchableOpacity onPress={checkGeral}>
-                    <Text>OI DEUS, SOU EU DNV</Text>
+                <TouchableOpacity style={styles.btnPesquisa} onPress={checkGeral}>
+                    <Text style={{fontSize: 14, fontWeight: 'bold'}}>BUSCAR RECEITAS</Text>
                 </TouchableOpacity>
             <FlatList
                 data={ingredients}
@@ -230,7 +230,15 @@ buttonTxt:{
     fontSize: 17,
     fontWeight: '700',
     textAlign: 'center',
-}
-
-
+},
+btnPesquisa: {
+    backgroundColor: '#A0E2AF',
+    margin: 12,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    borderRadius: 20,
+    padding: 20,
+    height: '8%',
+    width: '45%'
+},
 });

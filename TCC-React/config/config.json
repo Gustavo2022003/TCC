@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "root",
-    "password": "071204",
+    "password": null,
     "database": "foodio",
     "host": "127.0.0.1",
     "dialect": "mysql"

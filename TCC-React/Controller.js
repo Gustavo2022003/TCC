@@ -22,7 +22,7 @@ let ingrediente = models.Ingrediente
 
 let port=process.env.PORT || 3000;
 
-const host = '192.168.0.108';
+const host = '192.168.43.92';
 
 
 
@@ -54,6 +54,7 @@ app.post('/register',async (req,res)=>{
         let register = await user.create({completeName: req.body.fullname, username: req.body.username,
         email: req.body.email, password: req.body.password, profilePicture: '17bcb88b-4881-4d42-bf97-2b8793c16a65.png' })
         console.log('Usuário cadastrado com ID: ', register.id)
+        res.send(JSON.stringify("Registered"))
     }else{ 
         if(response.dataValues.username == req.body.username){
             res.send(JSON.stringify('UserError'));
@@ -196,7 +197,8 @@ app.post('/searchedRecipes', async (req,res) => {
     let array = req.body.list
     console.log(array)
     let response = await recipe.findAll({where: { id: array},
-        order: Sequelize.literal("FIELD(Recipe.id,"+array.join(',')+")")});
+        order: Sequelize.literal("FIELD(Recipe.id,"+array.join(',')+")"),
+        include: [{model: user, required: true}]});
 
     if(response.length === 0){
         res.send(JSON.stringify('SearchError'));
