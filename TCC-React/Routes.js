@@ -137,7 +137,7 @@ function TabHome() {
   }
 
 
-  function LoginScreens(){
+function LoginScreens(){
     return(
       <LoginStack.Navigator 
       screenOptions={{
@@ -150,15 +150,15 @@ function TabHome() {
       <LoginStack.Screen name='Login' component={Login} />
       <LoginStack.Screen name='Register' component={Register} />
       </LoginStack.Navigator>
-  );}
+);}
 
 export default function Routes(){
     return (
         <NavigationContainer>
             <AppStack.Navigator screenOptions={{
-                cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
                 gestureEnabled: false,
-                headerShown: false
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
                 }}>
                 <AppStack.Screen name='LoginStack' component={LoginScreens} />
                 <AppStack.Screen name='UserStack' component={TabHome} />

@@ -12,7 +12,7 @@ export default function ComponentReceita({...item}){
             async function getPicture(){
                 
                     let idImage = item.User.profilePicture;
-                    let picturePath = 'http://192.168.43.92:3000/Images/'
+                    let picturePath = 'http://192.168.0.108:3000/Images/'
                     let finalPath = picturePath + idImage
                     let finalfinalpath = finalPath.toString();
                     setPicture(finalfinalpath)
@@ -33,7 +33,7 @@ export default function ComponentReceita({...item}){
             </View>
             <View style={styles.central}>
                 <Image style={styles.img}
-                source={{uri: 'http://192.168.43.92:3000/Images/912C5759-697C-42EB-AE5E-21239E8EB76E.jpg'}}
+                source={{uri: 'http://192.168.0.108:3000/Images/912C5759-697C-42EB-AE5E-21239E8EB76E.jpg'}}
                 />
             </View>
             <View style={styles.content}>

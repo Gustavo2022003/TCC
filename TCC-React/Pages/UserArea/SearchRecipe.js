@@ -1,9 +1,9 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { FlatList, StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { useNavigation } from '@react-navigation/native';
-
+import { AntDesign } from '@expo/vector-icons'; 
 import ComponentIngrediente from '../../components/ComponentIngrediente';
 import { Ionicons } from '@expo/vector-icons';
 import AlertCustom from '../../components/Alert';
@@ -19,6 +19,7 @@ export default function SearchRecipe({navigation, routes}) {
     const [counter, setCounter] = useState([]);
     const [queryResult, setQueryResult] = useState([]);
     const [errorFound, setErrorFound] = useState('')
+    const [shownButtonDown, setShownButtonDown] = useState(false)
 
     const [errorFeed, setErrorFeed] = useState(false);
     const [visibleAlert, setVisibleAlert] = useState(false);
@@ -26,7 +27,7 @@ export default function SearchRecipe({navigation, routes}) {
     const [alertMessage, setAlertMessage] = useState('');
 
     async function GetIngredients(){
-        let response= await fetch('http://192.168.43.92:3000/ingredients',{
+        let response= await fetch('http://192.168.0.108:3000/ingredients',{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -76,7 +77,7 @@ export default function SearchRecipe({navigation, routes}) {
                 setCounter(value);
                 return item.quantItem;
             });*/
-            let query = await fetch('http://192.168.43.92:3000/searchRecipe',{
+            let query = await fetch('http://192.168.0.108:3000/searchRecipe',{
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -142,6 +143,10 @@ export default function SearchRecipe({navigation, routes}) {
         setErrorFeed(false)
     };
 
+    const FlatIngredients = useRef();
+    const goDown = () => {
+        FlatIngredients.current.scrollToEnd({animated: true})
+    }
     return (
         <Animatable.View animation='fadeInUp' style={styles.container}>
             <View style={styles.header}>
@@ -154,7 +159,6 @@ export default function SearchRecipe({navigation, routes}) {
                 message = {alertMessage}
                 positiveButton={() => setVisibleAlert(false)}
             />
-            {/*<View style={{ width: '80%', backgroundColor: '#000000', height: 3,opacity: 0.1 ,borderRadius: 3, marginTop: '-3%'}}><Text>teste</Text></View>*/}
             {errorFeed == true ?
             <View style={styles.error}>
                 <Text style={styles.errorTxtTitle}>Feed loading error</Text>
@@ -164,16 +168,37 @@ export default function SearchRecipe({navigation, routes}) {
                     <Text style={styles.buttonTxt}>Refresh Feed</Text>
                 </TouchableOpacity>
             </View>
-            : <View style={styles.bottom}>
-                <TouchableOpacity style={styles.btnPesquisa} onPress={checkGeral}>
-                    <Text style={{fontSize: 14, fontWeight: 'bold'}}>BUSCAR RECEITAS</Text>
-                </TouchableOpacity>
+            :
+            <View>
             <FlatList
+                ref={FlatIngredients}
                 data={ingredients}
                 keyExtractor={(item, index) =>  index.toString()}
                 renderItem={RenderItem}
+                progressViewOffset={()=>console.log()}
+                onScrollBeginDrag={()=> setShownButtonDown(true)}
+                onEndReached={()=> setShownButtonDown(false)}
+                onEndReachedThreshold={0.1}
+                ListFooterComponent={
+                    <View style={styles.bottom}>
+                        <TouchableOpacity style={styles.btnPesquisa} onPress={checkGeral}>
+                            <Text style={{fontSize: 20, fontWeight: 'bold', textAlign: 'center'}}>Search Recipes</Text>
+                        </TouchableOpacity>
+                    </View>
+                }
             />
-            </View>}
+            </View>
+            }
+            {shownButtonDown == true ?
+            <TouchableOpacity style={styles.downButton} onPress={goDown}>
+                <AntDesign name="arrowdown" size={30} color="white" />
+            </TouchableOpacity>
+            :
+            //Nothing
+            <View>
+
+            </View>
+            }
         </Animatable.View>
     );
 }
@@ -199,7 +224,9 @@ HeaderTitle:{
     fontWeight: '700',
 },
 bottom:{
-    marginBottom:'40%',
+    marginBottom: '55%',
+    width: '100%',
+    height: '30%'
 },
 error:{
     flex: 0.8,
@@ -233,12 +260,25 @@ buttonTxt:{
 },
 btnPesquisa: {
     backgroundColor: '#A0E2AF',
-    margin: 12,
+    margin: 6,
     alignSelf: 'center',
     justifyContent: 'center',
     borderRadius: 20,
-    padding: 20,
-    height: '8%',
-    width: '45%'
+    padding: 10,
+    height: '35%',
+    width: '50%'
+},
+downButton: {
+    backgroundColor: '#5DB075',
+    position: 'absolute',
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+    width: 60,
+    height: 60,
+    borderRadius: 33,
+    bottom: '18%',
+    right: '11%'
 },
 });

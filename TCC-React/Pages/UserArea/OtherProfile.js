@@ -7,6 +7,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import ComponentReceitaProfile from '../../components/ComponentReceitaProfile';
+import { useBackHandler } from '@react-native-community/hooks';
 import { AntDesign } from '@expo/vector-icons'; 
 
 export default function Profile({route, navigation}) {
@@ -16,11 +17,33 @@ export default function Profile({route, navigation}) {
     const [picture, setPicture]=useState(null);
     const [refreshing, setRefreshing] = useState(false);
     const [receitas, setReceitas]=useState(null);
+    const [disable, setDisable] = useState(false);
+    
+    async function goBack(){
+        //Prevent double click
+        navigation.goBack()
+        setDisable(true);
+    }
+
+
+
+    let shouldBeHandledHere = true;
+
+    useBackHandler(() => {
+        if (shouldBeHandledHere){
+            navigation.goBack()
+            return false
+          }
+          // let the default thing happen
+          return true
+        })
+
+    
 
     //Function to Get the Profile from other User
     async function GetProfileOther(){
             // Forçar pegar para enviar para a rota
-            let response= await fetch('http://192.168.43.92:3000/user/'+route.params?.user,{
+            let response= await fetch('http://192.168.0.108:3000/user/'+route.params?.user,{
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -30,7 +53,7 @@ export default function Profile({route, navigation}) {
             //DEIXA O NOME DA IMAGEM DO JEITO QUE PRECISO
             let json=await response.json();
             let idImage = json.profilePicture
-            let picturePath = 'http://192.168.43.92:3000/Images/'
+            let picturePath = 'http://192.168.0.108:3000/Images/'
             let finalPath = picturePath + idImage;
             let finalfinalpath = finalPath.toString();
             setPicture(finalfinalpath)
@@ -45,7 +68,7 @@ export default function Profile({route, navigation}) {
 
     //Function Get the Recipe by Profile Id
     async function GetReceita(){
-        let response = await fetch('http://192.168.43.92:3000/recipe/'+route.params?.user,{
+        let response = await fetch('http://192.168.0.108:3000/recipe/'+route.params?.user,{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -78,12 +101,12 @@ export default function Profile({route, navigation}) {
     return (
         <Animatable.View animation='fadeInUp' style={styles.container}>
             <View style={styles.header}>
-                <TouchableOpacity style={{flexDirection:'row', alignSelf:'center'}}onPress={()=> navigation.goBack()}>
+                <TouchableOpacity disabled={disable} style={{flexDirection:'row', alignSelf:'center'}}onPress={()=> goBack()}>
                     <AntDesign style={{alignSelf:'center'}} name="left" size={24} color="black" />
                     <Text style={{alignSelf:"center", fontSize: 20, fontWeight: 'bold'}}>Back</Text>
                 </TouchableOpacity>
                 <Text style={styles.HeaderTitle}>Profile</Text>
-                <View style={{width: 60, height: 1}}/>
+                <View style={{width: '10%', height: 1}}/>
             </View>
             {/*<TouchableOpacity onPress={openImagePickerAsync}><Text>Alterar Foto de Perfil</Text></TouchableOpacity>   */}    
             
@@ -126,6 +149,7 @@ header:{
 HeaderTitle:{
     fontSize: 36,
     fontWeight: '700',
+    textAlign: 'center'
 },
 avatar: {
     marginTop: '5%',

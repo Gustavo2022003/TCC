@@ -2,30 +2,40 @@ import React, {useState, useEffect} from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableOpacity, Image, BackHandler} from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, NavigationActions } from '@react-navigation/native';
 import { useBackHandler } from '@react-native-community/hooks';
 import { AntDesign } from '@expo/vector-icons'; 
 
 
 export default function Recipe({route, navigation}) {
     const [pictureRecipe, setPictureRecipe] = useState(null);
-    let shouldBeHandledHere = true;
+    const [disable, setDisable] = useState(false);
+    
+    async function goBack(){
+        //Prevent double click
+        navigation.goBack()
+        setDisable(true);
+    }
 
     //Evitar voltar pelo android
+    let shouldBeHandledHere = true;
     useBackHandler(() => {
         if (shouldBeHandledHere) {
             navigation.goBack()
-            return true
-          }
+            return false
+        }
           // let the default thing happen
-          return false
-        })
+        return true
+    })
+
+        
+    
 
 
         async function getPictureReceita(){
                 
             let idImage = route.params?.profilePicture;
-            let picturePath = 'http://192.168.43.92:3000/Images/'
+            let picturePath = 'http://192.168.0.108:3000/Images/'
             let finalPath = picturePath + idImage
             let finalfinalpath = finalPath.toString();
             setPictureRecipe(finalfinalpath)
@@ -37,12 +47,12 @@ export default function Recipe({route, navigation}) {
     return (
         <Animatable.View animation='fadeInUp' style={styles.container}>
             <View style={styles.header}>
-                <TouchableOpacity style={{flexDirection:'row', alignSelf:'center'}}onPress={()=> navigation.goBack()}>
+                <TouchableOpacity disabled={disable} style={{flexDirection:'row', alignSelf:'center'}}onPress={()=> goBack()}>
                     <AntDesign style={{alignSelf:'center'}} name="left" size={24} color="black" />
                     <Text style={{alignSelf:"center", fontSize: 20, fontWeight: 'bold'}}>Back</Text>
                 </TouchableOpacity>
                 <Text style={styles.HeaderTitle}>Receitas</Text>
-                <View style={{width: 60}}/>
+                <View style={{width: '10%'}}/>
             </View>
             <View>
                 <View>
