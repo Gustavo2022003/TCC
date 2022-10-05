@@ -21,7 +21,6 @@ export default function ComponentIngrediente({counterId, increment, decrement, i
             <View style={styles.content}>
                 <View style={{width: '35%'}}>
                 <Text>{item.ingredienteName}</Text>
-                <Text>{index}</Text>
                 </View>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <TouchableOpacity style={styles.buttonControl}onPress={decrement}>

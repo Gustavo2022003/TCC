@@ -13,6 +13,7 @@ import OtherProfile from './Pages/UserArea/OtherProfile';
 import SearchRecipe from './Pages/UserArea/SearchRecipe';
 import SearchResult from './Pages/UserArea/SearchResult';
 import Recipe from './Pages/UserArea/Recipe';
+import CreateRecipe from './Pages/UserArea/CreateRecipe';
 import Search from './Pages/UserArea/Search';
 import Chat from './Pages/UserArea/Chat';
 
@@ -68,6 +69,7 @@ function SearchStack(){
       gestureDirection: 'vertical',
     }}>
     <SearchPages.Screen name="SearchStack" component={SearchRecipe} />
+    <SearchPages.Screen name="CreateRecipe"component={CreateRecipe} />
     <SearchPages.Screen name='SearchResult' component={SearchResult} />
     <SearchPages.Screen name='Recipe' component={Recipe}/>
     <HomePages.Screen name='OtherProfile' component={OtherProfile} />

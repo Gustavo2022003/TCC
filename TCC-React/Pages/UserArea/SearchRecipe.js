@@ -179,6 +179,14 @@ export default function SearchRecipe({navigation, routes}) {
                 onScrollBeginDrag={()=> setShownButtonDown(true)}
                 onEndReached={()=> setShownButtonDown(false)}
                 onEndReachedThreshold={0.1}
+                ListHeaderComponent={
+                    <View style={styles.yourRecipe}>
+                        <Text style={{textAlign: 'center', fontWeight:'bold', marginTop: 15, fontSize:22}}>Wanna create your own recipe?</Text>
+                        <TouchableOpacity style={styles.createButton} onPress={()=> navigation.navigate("CreateRecipe")}>
+                            <Text style={{color: 'white', fontSize: 22, fontWeight: 'bold'}}>Click Here!</Text>
+                        </TouchableOpacity>
+                    </View>
+                }
                 ListFooterComponent={
                     <View style={styles.bottom}>
                         <TouchableOpacity style={styles.btnPesquisa} onPress={checkGeral}>
@@ -281,4 +289,17 @@ downButton: {
     bottom: '18%',
     right: '11%'
 },
+yourRecipe:{
+    justifyContent: 'center',
+    alignItems:'center',
+    marginBottom: 15
+},
+createButton:{
+    backgroundColor: '#5DB075',
+    width: '60%',
+    alignItems:'center',
+    padding: '2%',
+    borderRadius: 50,
+    marginTop: '3%'
+}
 });
