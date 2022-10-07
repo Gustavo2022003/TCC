@@ -44,17 +44,23 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'flex-start',
+        alignContent: 'center'
     },
     central:{
         alignItems:'center',
+        justifyContent: 'center',
+        width: '25%',
+        height: '100%'
     },
     img:{
+        backgroundColor: 'white',
         margin: 20,
-        width: 50,
-        height: 50
+        width: '75%',
+        height: '75%',
+        borderRadius: 100,
     },
     content:{
-        width: '100%',
+        width: '80%',
         flexDirection: 'row',
         height: 99,
         alignItems: 'center'

@@ -8,13 +8,15 @@ import ComponentIngrediente from '../../components/ComponentIngrediente';
 import { Ionicons } from '@expo/vector-icons';
 import AlertCustom from '../../components/Alert';
 import { array } from 'yup';
+import { TextInput } from 'react-native-gesture-handler';
 
 const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
     }
 
 export default function SearchRecipe({navigation, routes}) {
-    const [ingredients, setIngredients]=useState(null);
+    const [ingredients, setIngredients]=useState([]);
+    const [SearchIngredientes, setSearchIngredients] = useState([])
     const [refreshing, setRefreshing] = useState(false);
     const [counter, setCounter] = useState([]);
     const [queryResult, setQueryResult] = useState([]);
@@ -47,6 +49,7 @@ export default function SearchRecipe({navigation, routes}) {
                 return { ...item, quantItem: 0};
             });
             setIngredients(newIngredients);
+            setSearchIngredients(newIngredients);
         }
     };
 
@@ -96,6 +99,22 @@ export default function SearchRecipe({navigation, routes}) {
                 setQueryResult(result);
                 navigation.navigate('SearchResult', {itens: result})
             }
+        }
+    }
+
+    //Search on Ingredients FlatList
+    async function FilterIngredients(s){
+        if (s){
+        let newData = ingredients.filter((item) => {
+            const itemData = item.ingredienteName ?
+                        item.ingredienteName.toUpperCase()
+                        : ''.toUpperCase();
+            const textData = s.toUpperCase()
+            return itemData.indexOf(textData) > -1;
+        });
+            setSearchIngredients(newData);
+        }else{
+            setSearchIngredients(ingredients)
         }
     }
     //Render item to Flat List
@@ -172,7 +191,7 @@ export default function SearchRecipe({navigation, routes}) {
             <View>
             <FlatList
                 ref={FlatIngredients}
-                data={ingredients}
+                data={SearchIngredientes}
                 keyExtractor={(item, index) =>  index.toString()}
                 renderItem={RenderItem}
                 progressViewOffset={()=>console.log()}
@@ -180,11 +199,16 @@ export default function SearchRecipe({navigation, routes}) {
                 onEndReached={()=> setShownButtonDown(false)}
                 onEndReachedThreshold={0.1}
                 ListHeaderComponent={
-                    <View style={styles.yourRecipe}>
-                        <Text style={{textAlign: 'center', fontWeight:'bold', marginTop: 15, fontSize:22}}>Wanna create your own recipe?</Text>
-                        <TouchableOpacity style={styles.createButton} onPress={()=> navigation.navigate("CreateRecipe")}>
-                            <Text style={{color: 'white', fontSize: 22, fontWeight: 'bold'}}>Click Here!</Text>
-                        </TouchableOpacity>
+                    <View>
+                        {/*<View style={styles.yourRecipe}>
+                            <Text style={{textAlign: 'center', fontWeight:'bold', marginTop: 15, fontSize:22}}>Wanna create your own recipe?</Text>
+                            <TouchableOpacity style={styles.createButton} onPress={()=> navigation.navigate("CreateRecipe")}>
+                                <Text style={{color: 'white', fontSize: 22, fontWeight: 'bold'}}>Click Here!</Text>
+                            </TouchableOpacity>
+                        </View>*/}
+                        <View style={styles.backSearch}>
+                            <TextInput style={styles.input} placeholder={"Search the ingredient here"} onChangeText={(s) => FilterIngredients(s)}/>
+                        </View>
                     </View>
                 }
                 ListFooterComponent={
@@ -232,7 +256,7 @@ HeaderTitle:{
     fontWeight: '700',
 },
 bottom:{
-    marginBottom: '55%',
+    marginBottom: '62%',
     width: '100%',
     height: '30%'
 },
@@ -272,8 +296,8 @@ btnPesquisa: {
     alignSelf: 'center',
     justifyContent: 'center',
     borderRadius: 20,
-    padding: 10,
-    height: '35%',
+    padding: '2%',
+    height: '30%',
     width: '50%'
 },
 downButton: {
@@ -286,8 +310,8 @@ downButton: {
     width: 60,
     height: 60,
     borderRadius: 33,
-    bottom: '18%',
-    right: '11%'
+    bottom: '15%',
+    right: '8%'
 },
 yourRecipe:{
     justifyContent: 'center',
@@ -301,5 +325,21 @@ createButton:{
     padding: '2%',
     borderRadius: 50,
     marginTop: '3%'
+},
+backSearch:{
+    backgroundColor: '#A0E2AF',
+    width: '100%',
+    flexDirection: 'row'
+},
+input:{
+    alignSelf:'center',
+    color: '#BDBDBD',
+    width: '80%',
+    borderWidth: 1,
+    borderColor: 'rgba(0, 0, 0, 0.21)',
+    paddingLeft: 20,
+    margin: '3%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 18,
 }
 });
