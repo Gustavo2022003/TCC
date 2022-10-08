@@ -195,7 +195,6 @@ app.post('/searchRecipe', async (req,res) => {
 
 app.post('/searchedRecipes', async (req,res) => {
     let array = req.body.list
-    console.log(array)
     let response = await recipe.findAll({where: { id: array},
         order: Sequelize.literal("FIELD(Recipe.id,"+array.join(',')+")"),
         include: [{model: user, required: true}]});
@@ -204,6 +203,16 @@ app.post('/searchedRecipes', async (req,res) => {
         res.send(JSON.stringify('SearchError'));
     }else{
         res.send(response);
+    }
+})
+
+//Ingredients from Current Recipe
+app.post("/recipeIngrediente/:idRecipe", async (req, res)=> {
+    let response = await db.sequelize.query("SELECT r.idIngrediente, r.quantidade, i.ingredienteName from receitatemingredientes r INNER JOIN ingredientes i ON r.idIngrediente = i.id and idReceita ="+req.params.idRecipe);
+    if (response.length === 0){
+        res.send(JSON.stringify('Error'))
+    }else{
+        res.send(response[0])
     }
 })
 

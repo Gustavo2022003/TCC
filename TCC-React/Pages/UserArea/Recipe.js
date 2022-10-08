@@ -5,12 +5,31 @@ import * as Animatable from 'react-native-animatable';
 import { useNavigation, NavigationActions } from '@react-navigation/native';
 import { useBackHandler } from '@react-native-community/hooks';
 import { AntDesign } from '@expo/vector-icons'; 
+import { FlatList, ScrollView } from 'react-native-gesture-handler';
+import { getIn } from 'formik';
 
 
 export default function Recipe({route, navigation}) {
-    const [pictureRecipe, setPictureRecipe] = useState(null);
+    const [ingredients, setIngredients] = useState(null);
+    const [pictureProfile, setPictureProfile] = useState(null);
     const [disable, setDisable] = useState(false);
     
+    async function getIngredients(){
+        let res = await fetch('http://192.168.0.108:3000/recipeIngrediente/'+route.params?.id,{
+            method: 'POST',
+            headers:{
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+        let json = await res.json();
+        setIngredients(json);
+    }
+    useEffect(()=>{
+        getIngredients();
+    },[route])
+
+
     async function goBack(){
         //Prevent double click
         navigation.goBack()
@@ -30,41 +49,74 @@ export default function Recipe({route, navigation}) {
 
         
     
-
-
-        async function getPictureReceita(){
-                
-            let idImage = route.params?.profilePicture;
+        async function getProfilePicture(){
+            let idImage = route.params?.User.profilePicture;
             let picturePath = 'http://192.168.0.108:3000/Images/'
             let finalPath = picturePath + idImage
             let finalfinalpath = finalPath.toString();
-            setPictureRecipe(finalfinalpath)
+            setPictureProfile(finalfinalpath)
         }
+
         useEffect(()=>{
-            getPictureReceita();
+            getProfilePicture();
         },[route])
+
+
+
+        let RenderItem = ({item, index}) => {
+            let quantidade = item.quantidade
+            return(
+                quantidade > 1 ?
+                <Text style={{color: '#31573A', fontSize: 16, fontWeight: 'bold'}}>{item.quantidade} {item.ingredienteName}s</Text>
+                : <Text style={{color: '#31573A', fontSize: 16, fontWeight: 'bold'}}>{item.quantidade} {item.ingredienteName}</Text>
+                )
+        }
+
 
     return (
         <Animatable.View animation='fadeInUp' style={styles.container}>
-            <View style={styles.header}>
-                <TouchableOpacity disabled={disable} style={{flexDirection:'row', alignSelf:'center'}}onPress={()=> goBack()}>
-                    <AntDesign style={{alignSelf:'center'}} name="left" size={24} color="black" />
-                    <Text style={{alignSelf:"center", fontSize: 20, fontWeight: 'bold'}}>Back</Text>
-                </TouchableOpacity>
-                <Text style={styles.HeaderTitle}>Receitas</Text>
-                <View style={{width: '10%'}}/>
-            </View>
-            <View>
-                <View>
-                    <Text>Receita</Text>
+                <View style={styles.header}>
+                        <TouchableOpacity disabled={disable} style={{ flexDirection: 'row', alignSelf: 'center' }} onPress={() => goBack()}>
+                            <AntDesign style={{ alignSelf: 'center' }} name="left" size={24} color="#3B944F" />
+                            <Text style={{ alignSelf: "center", fontSize: 16, fontWeight: '500', color: '#3B944F' }}>Back</Text>
+                        </TouchableOpacity>
                 </View>
-                    <Text>Receita: {route.params?.recipeName}</Text>
-                    <Text>Id: {route.params?.id}</Text>
-                    <Text>Type: {route.params?.category}</Text>
-                    <Text>Modo de Preparo: {route.params?.ModoPreparo}</Text>
-                    <Text>Criador da Receita: {route.params?.User.completeName}</Text>
-                    <Text>{route.params?.User.username}</Text>
-            </View>
+                <View style={styles.content}>
+                <FlatList
+                data={ingredients}
+                renderItem={RenderItem}
+                ListHeaderComponent={
+                        <View>
+                        <View style={styles.inline}>
+                                <Image source={{ uri: pictureProfile }} style={styles.imgRecipe} />
+                                <View style={styles.info}>
+                                    <Text style={styles.titleRecipe}>{route.params?.recipeName}</Text>
+                                    <Text style={styles.category}>{route.params?.category}</Text>
+                                    <TouchableOpacity onPress={() => navigation.navigate("OtherProfile", { user: route.params?.User.id })}>
+                                        <View style={styles.profileInfo}>
+                                            <Image source={{ uri: pictureProfile }} style={styles.profileImg} />
+                                            <View style={styles.userText}>
+                                                <Text style={{ fontSize: 14, fontWeight: 'bold' }}>{route.params?.User.completeName}</Text>
+                                                <Text style={{ fontSize: 14, fontWeight: '500', marginTop: '-3%' }}>@{route.params?.User.username}</Text>
+                                            </View>
+                                        </View>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                            <View>
+                                <Text style={{color: '#F6A444', fontSize: 18}}>Ingredientes</Text>
+                            </View>
+                        </View>
+
+                }
+                ListFooterComponent={
+                    <View style={{flex: 1, marginTop: '5%'}}>
+                        <Text style={{color: '#F6A444', fontSize: 18}}>Modo de Preparo:</Text>
+                        <Text> {route.params?.ModoPreparo}</Text>
+                    </View>
+                }
+                />
+                </View>
         </Animatable.View>
     );
 }
@@ -92,4 +144,48 @@ HeaderTitle:{
     fontWeight: '700',
     textAlign: 'center'
 },
+content:{
+    alignSelf: 'center',
+    flex: 1,
+    width: '95%',
+    height: '100%'
+},
+imgRecipe:{
+    width: '55%',
+    height: '100%',
+    backgroundColor: "#B3B3B3"
+},
+inline:{
+    display: 'flex',
+    flexDirection: 'row',
+},
+info:{
+    paddingVertical: '1%',
+    paddingHorizontal: '3%'
+},
+profileInfo:{
+    marginTop: '90%',
+    width: '100%',
+    flexDirection: 'row',
+},
+profileImg:{
+    alignSelf: 'center',
+    backgroundColor: '#C3C3C3',
+    borderRadius: 20,
+    width: 40,
+    height: 40,
+},
+userText:{
+    paddingLeft: '2%',
+    justifyContent: 'center'
+},
+titleRecipe:{
+    fontSize: 20,
+    color: '#31573A',
+    fontWeight: 'bold',
+},
+category:{
+    marginTop: '-2%',
+    fontSize: 14,
+}
 });

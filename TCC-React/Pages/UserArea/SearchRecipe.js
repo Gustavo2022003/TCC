@@ -162,6 +162,13 @@ export default function SearchRecipe({navigation, routes}) {
         setErrorFeed(false)
     };
 
+    const FilterSearch = useRef();
+    const clearSearch = () =>{
+        FilterSearch.current.clear();
+        let s;
+        FilterIngredients(s)
+    }
+
     const FlatIngredients = useRef();
     const goDown = () => {
         FlatIngredients.current.scrollToEnd({animated: true})
@@ -194,7 +201,6 @@ export default function SearchRecipe({navigation, routes}) {
                 data={SearchIngredientes}
                 keyExtractor={(item, index) =>  index.toString()}
                 renderItem={RenderItem}
-                progressViewOffset={()=>console.log()}
                 onScrollBeginDrag={()=> setShownButtonDown(true)}
                 onEndReached={()=> setShownButtonDown(false)}
                 onEndReachedThreshold={0.1}
@@ -207,7 +213,10 @@ export default function SearchRecipe({navigation, routes}) {
                             </TouchableOpacity>
                         </View>*/}
                         <View style={styles.backSearch}>
-                            <TextInput style={styles.input} placeholder={"Search the ingredient here"} onChangeText={(s) => FilterIngredients(s)}/>
+                            <TextInput ref={FilterSearch} style={styles.input} placeholder={"Search the ingredient here"} onChangeText={(s) => FilterIngredients(s)}/>
+                            <TouchableOpacity style={styles.resetSearch} onPress={clearSearch}>
+                                <Text>Reset</Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
                 }
@@ -256,7 +265,7 @@ HeaderTitle:{
     fontWeight: '700',
 },
 bottom:{
-    marginBottom: '62%',
+    marginBottom: '60%',
     width: '100%',
     height: '30%'
 },
@@ -297,7 +306,7 @@ btnPesquisa: {
     justifyContent: 'center',
     borderRadius: 20,
     padding: '2%',
-    height: '30%',
+    height: 45,
     width: '50%'
 },
 downButton: {
@@ -327,18 +336,34 @@ createButton:{
     marginTop: '3%'
 },
 backSearch:{
+    flex: 1,
     backgroundColor: '#A0E2AF',
     width: '100%',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+},
+resetSearch:{
+    alignSelf:'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: '#BDBDBD',
+    width: '18%',
+    height: '55%',
+    borderWidth: 1,
+    borderColor: 'rgba(0, 0, 0, 0.21)',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 18,
 },
 input:{
     alignSelf:'center',
     color: '#BDBDBD',
-    width: '80%',
+    width: '75%',
     borderWidth: 1,
     borderColor: 'rgba(0, 0, 0, 0.21)',
     paddingLeft: 20,
-    margin: '3%',
+    height: '55%',
+    marginVertical: '5%',
     backgroundColor: '#FFFFFF',
     borderRadius: 18,
 }

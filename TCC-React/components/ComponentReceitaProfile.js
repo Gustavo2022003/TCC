@@ -4,7 +4,7 @@ import {View, Text, StyleSheet,TouchableOpacity, Image} from 'react-native';
 
 
 
-export default function ComponentReceitaProfil({...item}){
+export default function ComponentReceitaProfile({...item}){
     const navigation = useNavigation();
     return(
         <View style={styles.container}>
