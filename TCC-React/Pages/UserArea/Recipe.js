@@ -5,8 +5,10 @@ import * as Animatable from 'react-native-animatable';
 import { useNavigation, NavigationActions } from '@react-navigation/native';
 import { useBackHandler } from '@react-native-community/hooks';
 import { AntDesign } from '@expo/vector-icons'; 
+import { MaterialCommunityIcons } from '@expo/vector-icons'; 
+import { MaterialIcons } from '@expo/vector-icons'; 
+import { Feather } from '@expo/vector-icons';
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
-import { getIn } from 'formik';
 
 
 export default function Recipe({route, navigation}) {
@@ -92,6 +94,17 @@ export default function Recipe({route, navigation}) {
                                 <View style={styles.info}>
                                     <Text style={styles.titleRecipe}>{route.params?.recipeName}</Text>
                                     <Text style={styles.category}>{route.params?.category}</Text>
+                                    <View style={styles.interation}>
+                                        <TouchableOpacity style={{marginHorizontal: '2%'}}>
+                                            <MaterialIcons name="favorite-outline" size={34} color="black" />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={{marginHorizontal: '2%'}}>
+                                        <MaterialCommunityIcons name="comment-text-outline" size={34} color="black" />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={{marginHorizontal: '2%'}}>
+                                            <Feather name="bookmark" size={34} color="black" />
+                                        </TouchableOpacity>
+                                    </View>
                                     <TouchableOpacity onPress={() => navigation.navigate("OtherProfile", { user: route.params?.User.id })}>
                                         <View style={styles.profileInfo}>
                                             <Image source={{ uri: pictureProfile }} style={styles.profileImg} />
@@ -163,8 +176,13 @@ info:{
     paddingVertical: '1%',
     paddingHorizontal: '3%'
 },
+interation:{
+    flexDirection: 'row',
+    marginTop: '80%',
+    marginHorizontal: '2%'
+},  
 profileInfo:{
-    marginTop: '90%',
+    marginTop: '5%',
     width: '100%',
     flexDirection: 'row',
 },

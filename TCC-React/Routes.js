@@ -131,7 +131,7 @@ function TabHome() {
             if(focused){
               return <Ionicons name='chatbox' size={45} color={'black'} />
             }
-            return <Ionicons name='chatbox-outline' size={40} color={'black'} />
+            return <Ionicons name="md-chatbubble-ellipses-outline" size={40} color="black" />
           }
         }} />
       </TabStack.Navigator>

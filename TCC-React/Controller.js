@@ -110,8 +110,14 @@ var storage = multer.diskStorage({
 
 //Create Image at server
 var upload = multer({
-  storage: storage
+    storage: storage
 }).single('photo')
+
+app.post('/UploadImg', upload, async(req, res)=>{
+    let response = JSON.stringify(req.file.filename)
+    console.log(response)
+    res.send(response)
+})
 
 //Get Profile Picture
 app.post('/getAvatar/:user', async (req,res)=>{

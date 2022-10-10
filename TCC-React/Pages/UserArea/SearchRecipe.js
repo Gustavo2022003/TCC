@@ -206,12 +206,12 @@ export default function SearchRecipe({navigation, routes}) {
                 onEndReachedThreshold={0.1}
                 ListHeaderComponent={
                     <View>
-                        {/*<View style={styles.yourRecipe}>
+                        {<View style={styles.yourRecipe}>
                             <Text style={{textAlign: 'center', fontWeight:'bold', marginTop: 15, fontSize:22}}>Wanna create your own recipe?</Text>
                             <TouchableOpacity style={styles.createButton} onPress={()=> navigation.navigate("CreateRecipe")}>
                                 <Text style={{color: 'white', fontSize: 22, fontWeight: 'bold'}}>Click Here!</Text>
                             </TouchableOpacity>
-                        </View>*/}
+                        </View>}
                         <View style={styles.backSearch}>
                             <TextInput ref={FilterSearch} style={styles.input} placeholder={"Search the ingredient here"} onChangeText={(s) => FilterIngredients(s)}/>
                             <TouchableOpacity style={styles.resetSearch} onPress={clearSearch}>
