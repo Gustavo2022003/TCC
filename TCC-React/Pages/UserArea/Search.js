@@ -109,7 +109,7 @@ export default function Search({route,navigation}) {
                         {touched.ModoPreparo && errors.ModoPreparo && <Text style={styles.error}>{errors.ModoPreparo}</Text>}
                         {errors.recipename || errors.username || errors.email || errors.password || errors.confirmPassword ?
                         <TouchableOpacity style={styles.RegButtonInvalid} disabled={!Formik.isValid}>
-                            <Text style={styles.RegTextInvalid}>CreateRecipe</Text> 
+                            <Text style={styles.RegTextInvalid}>Create Recipe</Text> 
                         </TouchableOpacity>
                         : <TouchableOpacity style={styles.RegButton} onPress={handleSubmit} disabled={!recipeSchema.isValid}>
                             <Text style={styles.RegText}>CreateRecipe</Text> 

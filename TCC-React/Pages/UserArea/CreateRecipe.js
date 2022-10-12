@@ -1,6 +1,6 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useContext} from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { FlatList, StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
+import { FlatList, StyleSheet, Text, View, TouchableOpacity, Image, TouchableWithoutFeedback, Keyboard} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { useNavigation } from '@react-navigation/native';
 import { AntDesign } from '@expo/vector-icons'; 
@@ -8,6 +8,8 @@ import ComponentIngrediente from '../../components/ComponentIngrediente';
 import { Ionicons } from '@expo/vector-icons';
 import AlertCustom from '../../components/Alert';
 import { TextInput } from 'react-native-gesture-handler';
+import { Form, Formik, useFormik, useFormikContext } from 'formik';
+import * as yup from 'yup';
 
 const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
@@ -20,6 +22,8 @@ export default function SearchRecipe({navigation, routes}) {
     const [counter, setCounter] = useState([]);
     const [queryResult, setQueryResult] = useState([]);
     const [shownButtonDown, setShownButtonDown] = useState(false)
+    const [formDataState, setFormData] = useState(null);
+    const RecipeInfo = {recipename: '', category: '', ModoPreparo: ''};
 
     const [visibleAlert, setVisibleAlert] = useState(false);
     const [alertTitle, setAlertTitle] = useState('');
@@ -63,19 +67,19 @@ export default function SearchRecipe({navigation, routes}) {
 
     
 
-    async function checkGeral(){
-        var ingredientQuery = ingredients.filter(ingredient => ingredient.quantItem > 0).map(ingredients => {return [ingredients.id, ingredients.quantItem]})
+    async function checkGeral(values){
+    var ingredientQuery = ingredients.filter(ingredient => ingredient.quantItem > 0).map(ingredients => {return [ingredients.id, ingredients.quantItem]})
         // Sempre numéros impares serão os IDS dos ingredientes e os Pares Quantidades
-        let flatQuery = ingredientQuery.flatMap(ingredients => ingredients)
-        if(flatQuery.length == 0){
+        let flatIngredients = ingredientQuery.flatMap(ingredients => ingredients)
+        if(flatIngredients.length == 0){
             setVisibleAlert(true)
             setAlertTitle('Erro ao fazer consulta')
             setAlertMessage('Você não pode realizar uma consulta sem inserir nenhum ingrediente')
         }
-        else if(flatQuery.length > 10){
+        else if(flatIngredients.length > 20){
             setVisibleAlert(true)
             setAlertTitle('Erro ao fazer consulta')
-            setAlertMessage('Me Desculpe, mas por enquanto você não pode realizar um consulta com mais de 5 ingredientes')
+            setAlertMessage('Me Desculpe, mas por enquanto você não pode crair uma receita com mais de 10 ingredientes')
         }
         else{
             /*ingredients.forEach(item => {
@@ -84,28 +88,29 @@ export default function SearchRecipe({navigation, routes}) {
                 setCounter(value);
                 return item.quantItem;
             });*/
-            let query = await fetch('http://192.168.0.108:3000/searchRecipe',{
+            /*let query = await fetch('http://192.168.0.108:3000/searchRecipe',{
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    itens: flatQuery
+                    ArrrayIngredient: flatIngredients,
+                    recipeName: '',
+                    category:'',
+                    ModoPreparo:'',
+                    PictureReceita:'',
                 })
             })
             let res = await query.json()
-            if (res == "NoFound"){
-                setErrorFound("NoFound")
-                navigation.navigate('SearchResult', {itens: 'NoFound'})
-            }else{    
-                let result = await res.map(receita =>receita.idReceita);
-                setQueryResult(result);
-                navigation.navigate('SearchResult', {itens: result})
-            }
+            console.log("----------- RECEITA CRIADA -----------")
+            console.log(res)*/
+            
         }
+        console.log(values.recipename)
+        console.log(values.category)
+        console.log(values.ModoPreparo)
     }
-
     //Search on Ingredients FlatList
     async function FilterIngredients(s){
         if (s){
@@ -123,7 +128,7 @@ export default function SearchRecipe({navigation, routes}) {
     }
 
     //Image Selector
-    /*const openImagePickerAsync = async () => {
+    const openImagePickerAsync = async () => {
     
         let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (permissionResult.granted === false) {
@@ -145,15 +150,28 @@ export default function SearchRecipe({navigation, routes}) {
                 let formData = new FormData();
             // Assume "photo" is the name of the form field the server expects
                 formData.append('photo', { uri: localUri, name: filename, type });
-            await axios.post('http://192.168.0.108:3000/uploadPicture/'+user, formData, {headers: {
-                'Content-Type': 'multipart/form-data',
-            }})
-            .catch(function (error) {
-                console.log(error.toJSON());
-            });
+                
+                //Send to the back-end
+                let response = await axios.post('http://192.168.0.108:3000/uploadImg', formData, {
+                    headers: {
+                    'Content-Type': 'multipart/form-data',
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error.toJSON());
+                });
+                //Return and set the name of Image
+                let json = await response.data;
+                setFormData(json);
         }
-    }*/
+    }
 
+    //Schema yup
+    const recipeSchema = yup.object().shape({
+        recipename: yup.string().trim().min(3, 'Recipe name too short!').required("Recipe name is necessary!"),
+        category: yup.string().trim().min(3, 'Category name too short!').required("Categoryis necessary!"),
+        ModoPreparo: yup.string().trim().min(40, 'Way of Preparation is too short!').required("Way of Preparation is necessary!")
+    })
 
 
     //Render item to Flat List
@@ -212,71 +230,96 @@ export default function SearchRecipe({navigation, routes}) {
     const goDown = () => {
         FlatIngredients.current.scrollToEnd({animated: true})
     }
-    return (
-        <Animatable.View animation='fadeInUp' style={styles.container}>
-            <View style={styles.header}>
-                <TouchableOpacity disabled={disable} style={{ flexDirection: 'row', alignSelf: 'center' }} onPress={() => goBack()}>
-                    <AntDesign style={{ alignSelf: 'center' }} name="left" size={24} color="#3B944F" />
-                    <Text style={{ alignSelf: "center", fontSize: 16, fontWeight: '500', color: '#3B944F' }}>Back</Text>
-                </TouchableOpacity>
-                <Text style={styles.HeaderTitle}>Recipe Creation</Text>
-                <View style={{width: '10%'}}/>
-            </View>
-            <AlertCustom 
-                visible={visibleAlert}
-                title = {alertTitle}
-                message = {alertMessage}
-                positiveButton={() => setVisibleAlert(false)}
-            />
-            <View>
-            <FlatList
-                ref={FlatIngredients}
-                data={SearchIngredientes}
-                keyExtractor={(item, index) =>  index.toString()}
-                renderItem={RenderItem}
-                onScrollBeginDrag={()=> setShownButtonDown(true)}
-                onEndReached={()=> setShownButtonDown(false)}
-                onEndReachedThreshold={0.1}
-                ListHeaderComponent={
-                    <View style={styles.container}>
-                        <View style={styles.form}>
-                            <TextInput style={styles.formInput} placeholder={'Digite o nome da receita'}/>
-                            <TextInput style={styles.formInput} placeholder={'Digite a categoria da receita'}/>
-                            <TouchableOpacity style={styles.selectImgBtn}onPress={openImagePickerAsync}>
-                                <Text style={{textAlign: 'center', color: '#FFFFFF', fontWeight: '700', fontSize: 20}}>Choose a Picture</Text>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={styles.backSearch}>
-                            <TextInput ref={FilterSearch} style={styles.input} placeholder={"Search the ingredient here"} onChangeText={(s) => FilterIngredients(s)}/>
-                            <TouchableOpacity style={styles.resetSearch} onPress={clearSearch}>
-                                <Text>Reset</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                }
-                ListFooterComponent={
-                    <View style={styles.bottom}>
-                        <View>
-                            <TextInput style={styles.formInput} placeholder={'Digite o Modo de Preparo'}/>
-                        </View>
-                        <TouchableOpacity style={styles.btnPesquisa} onPress={checkGeral}>
-                            <Text style={{fontSize: 20, fontWeight: 'bold', textAlign: 'center'}}>Search Recipes</Text>
-                        </TouchableOpacity>
-                    </View>
-                }
-            />
-            </View>
-            {shownButtonDown == true ?
-            <TouchableOpacity style={styles.downButton} onPress={goDown}>
-                <AntDesign name="arrowdown" size={30} color="white" />
-            </TouchableOpacity>
-            :
-            //Nothing
-            <View>
 
-            </View>
-            }
-        </Animatable.View>
+
+    const formik = useFormik({
+        initialValues: RecipeInfo,
+        onSubmit: {checkGeral},
+        validationSchema: recipeSchema
+    });
+
+    return (
+            <Animatable.View animation='fadeInUp' style={styles.container}>
+                <View style={styles.header}>
+                    <TouchableOpacity disabled={disable} style={{ flexDirection: 'row', alignSelf: 'center' }} onPress={() => goBack()}>
+                        <AntDesign style={{ alignSelf: 'center' }} name="left" size={24} color="#3B944F" />
+                        <Text style={{ alignSelf: "center", fontSize: 16, fontWeight: '500', color: '#3B944F' }}>Back</Text>
+                    </TouchableOpacity>
+                    <Text style={styles.HeaderTitle}>Recipe Creation</Text>
+                    <View style={{width: '10%'}}/>
+                </View>
+                <AlertCustom 
+                    visible={visibleAlert}
+                    title = {alertTitle}
+                    message = {alertMessage}
+                    positiveButton={() => setVisibleAlert(false)}
+                />
+                <View>
+                <FlatList
+                    ref={FlatIngredients}
+                    data={SearchIngredientes}
+                    keyExtractor={(item, index) =>  index.toString()}
+                    renderItem={RenderItem}
+                    onScrollBeginDrag={()=> setShownButtonDown(true)}
+                    onEndReached={()=> setShownButtonDown(false)}
+                    onEndReachedThreshold={0.1}
+                    ListHeaderComponent={
+                        <View style={styles.container}>
+                            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                            <View style={styles.form}>
+                                
+                
+                                        <TextInput style={styles.formInput} placeholder='Recipe name' value={formik.values.recipename} onBlur={formik.handleBlur('recipename')} onChangeText={formik.handleChange('recipename')}/>
+                                        {formik.touched.recipename && formik.errors.recipename && <Text style={styles.errorInput}>{formik.errors.recipename}</Text>}
+                                        
+                                        <TextInput style={styles.formInput} placeholder='Category' value={formik.values.category} onBlur={formik.handleBlur('category')} onChangeText={formik.handleChange('category')}/>
+                                        {formik.touched.category && formik.errors.category && <Text style={styles.errorInput}>{formik.errors.category}</Text>}
+
+                                        <Image/>
+                                        <TouchableOpacity style={styles.selectImgBtn}onPress={openImagePickerAsync}>
+                                            <Text style={{textAlign: 'center', fontWeight: '700', fontSize: 20}}>Choose a Picture</Text>
+                                        </TouchableOpacity>
+                                        
+                            </View>
+                            </TouchableWithoutFeedback>
+                            <View style={{justifyContent: 'flex-start', width: '90%', marginTop:'5%'}}>
+                                <Text style={{ fontSize: 20, fontWeight: 'bold'}}>Select the used ingredients</Text>
+                            </View>
+                            <View style={styles.backSearch}>
+                                <TextInput ref={FilterSearch} style={styles.input} placeholder={"Search the ingredient here"} onChangeText={(s) => FilterIngredients(s)}/>
+                                <TouchableOpacity style={styles.resetSearch} onPress={clearSearch}>
+                                    <Text>Reset</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    }
+                    ListFooterComponent={
+                        <View style={styles.bottom}>
+                            <TextInput style={styles.formInput} placeholder='Way of Preparation' multiline={true} value={formik.values.ModoPreparo} onBlur={formik.handleBlur('ModoPreparo')} onChangeText={formik.handleChange('ModoPreparo')}/>
+                            {formik.touched.ModoPreparo && formik.errors.ModoPreparo && <Text style={styles.errorInput}>{formik.errors.ModoPreparo}</Text>}
+                            
+                            {formik.errors.recipename || formik.errors.category || formik.errors.ModoPreparo ?
+                                <TouchableOpacity style={styles.RegButtonInvalid} disabled={!Formik.isValid}>
+                                    <Text style={styles.RegTextInvalid}>Create Recipe</Text> 
+                                </TouchableOpacity>
+                                : <TouchableOpacity style={styles.RegButton} onPress={formik.handleSubmit} disabled={!recipeSchema.isValid}>
+                                    <Text style={styles.RegText}>CreateRecipe</Text> 
+                                </TouchableOpacity>}
+                        </View>
+                    }
+                />
+                </View>
+                {shownButtonDown == true ?
+                <TouchableOpacity style={styles.downButton} onPress={goDown}>
+                    <AntDesign name="arrowdown" size={30} color="white" />
+                </TouchableOpacity>
+                :
+                //Nothing
+                <View>
+
+                </View>
+                }
+            </Animatable.View>
     );
 }
 //#A0E2AF
@@ -379,6 +422,7 @@ backSearch:{
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
+    marginTop: '-1%'
 },
 resetSearch:{
     alignSelf:'center',
@@ -408,20 +452,23 @@ form:{
     marginTop: '2%',
     flex: 1,
     width: '100%',
-    height: 200,
-    marginBottom: '-5%'
 },
 formInput:{
-    marginVertical: '2%',
-    alignSelf: 'center',
+    alignSelf:'center',
     color: '#BDBDBD',
-    width: '85%',
-    borderWidth: 1,
-    borderColor: 'rgba(0, 0, 0, 0.21)',
+    width: '80%',
+    height: 60,
     paddingLeft: 20,
-    height: '25%',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 10,
+    margin: '3%',
+    backgroundColor: '#EDEDED',
+    borderRadius: 18,
+},
+errorInput:{
+    marginTop: '-3%',
+    paddingBottom: 10,
+    color: 'red',
+    fontWeight: '700',
+    marginLeft: '14%',
 },
 selectImgBtn:{
     alignContent: 'center',
@@ -431,5 +478,35 @@ selectImgBtn:{
     backgroundColor: '#5DB075',
     alignSelf: 'center',
     borderRadius: 15,
+},
+RegButton:{
+    marginTop: '3%',
+    alignSelf:'center',
+    backgroundColor: '#5DB075',
+    width: '60%',
+    height: 55,
+    borderRadius: 112,
+    alignItems: 'center',
+    justifyContent: 'center',
+},
+RegButtonInvalid:{
+    marginTop: '3%',
+    alignSelf:'center',
+    backgroundColor: '#eaeaea',
+    width: '60%',
+    height: 55,
+    borderRadius: 112,
+    alignItems: 'center',
+    justifyContent: 'center',
+},
+RegText:{
+    fontSize: 26,
+    fontWeight: '700',
+    color: '#000000',
+},
+RegTextInvalid:{
+    fontSize: 26,
+    fontWeight: '700',
+    color: '#999999',
 }
 });
