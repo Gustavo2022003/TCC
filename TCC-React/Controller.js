@@ -100,13 +100,12 @@ app.post('/user/:userId', async (req,res)=>{
 
 //Store Path Multer
 var storage = multer.diskStorage({
-  destination: function(req, file, cb) {
+    destination: function(req, file, cb) {
     cb(null, 'Images');
-  },
-  filename: function(req, file, cb) {
+},
+filename: function(req, file, cb) {
     cb(null, file.originalname);
-  }
-});
+}});
 
 //Create Image at server
 var upload = multer({
@@ -223,6 +222,33 @@ app.post("/recipeIngrediente/:idRecipe", async (req, res)=> {
 })
 
 
+//Creating Recipe
+app.post("/CreateRecipe/:idUser", async (req, res)=>{
+    console.log("Testando")
+    let array = req.body.ArrayIngredient;
+    console.log(array)
+    
+    
+    //Group every 2 itens
+    let arrayTeste = []
+    for(var i = 0; i < array.length; i++){
+        b = i++
+        arrayTeste.push('('+ array[b] +','+ array[i] +')') 
+    }
+
+    //Mapear new array
+    let finalInsert = arrayTeste.map(item => {return item})
+    console.log(arrayTeste)
+    console.log('Insert into: ' + finalInsert)
+    res.send(JSON.stringify('Hello'))
+    /*console.log('----Recebi o seguinte aqui ó----------')
+    console.log("Id do user: " + req.params.idUser)
+    console.log("Recipe name: " + req.body.recipename)
+    console.log("Category: " + req.body.category)
+    console.log("Modo Preparo: " + req.body.ModoPreparo)
+    console.log("Picture: " + req.body.PictureReceita)
+    res.send(JSON.stringify('Chegou?'))*/
+})
 
 
 

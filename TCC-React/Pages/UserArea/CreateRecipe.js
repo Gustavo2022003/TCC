@@ -1,14 +1,14 @@
 import React, {useState, useEffect, useRef, useContext} from 'react';
-import { StatusBar } from 'expo-status-bar';
 import { FlatList, StyleSheet, Text, View, TouchableOpacity, Image, TouchableWithoutFeedback, Keyboard} from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import { useNavigation } from '@react-navigation/native';
 import { AntDesign } from '@expo/vector-icons'; 
 import ComponentIngrediente from '../../components/ComponentIngrediente';
-import { Ionicons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
 import AlertCustom from '../../components/Alert';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TextInput } from 'react-native-gesture-handler';
 import { Form, Formik, useFormik, useFormikContext } from 'formik';
+import axios from 'axios';
 import * as yup from 'yup';
 
 const wait = (timeout) => {
@@ -16,6 +16,7 @@ const wait = (timeout) => {
     }
 
 export default function SearchRecipe({navigation, routes}) {
+    const [user,setUser]=useState(null);
     const [ingredients, setIngredients]=useState([]);
     const [SearchIngredientes, setSearchIngredients] = useState([])
     const [refreshing, setRefreshing] = useState(false);
@@ -23,6 +24,7 @@ export default function SearchRecipe({navigation, routes}) {
     const [queryResult, setQueryResult] = useState([]);
     const [shownButtonDown, setShownButtonDown] = useState(false)
     const [formDataState, setFormData] = useState(null);
+    const [recipePreview ,setRecipePreview] = useState(null);
     const RecipeInfo = {recipename: '', category: '', ModoPreparo: ''};
 
     const [visibleAlert, setVisibleAlert] = useState(false);
@@ -30,12 +32,16 @@ export default function SearchRecipe({navigation, routes}) {
     const [alertMessage, setAlertMessage] = useState('');
 
     const [disable, setDisable] = useState(false);
+
+
     async function goBack(){
         //Prevent double click
         navigation.goBack()
         setDisable(true);
     }
 
+
+    //Get Ingredients from database
     async function GetIngredients(){
         let response= await fetch('http://192.168.0.108:3000/ingredients',{
             method: 'POST',
@@ -61,15 +67,35 @@ export default function SearchRecipe({navigation, routes}) {
         }
     };
 
+    //UseEffect to show ingredients
     useEffect(()=>{
         GetIngredients();
     },[navigation]);
 
-    
+    //Preview Picture Recipe
+    async function ShowRecipeImage(){
+        let idImage = formDataState
+        let picturePath = 'http://192.168.0.108:3000/Images/'
+        let finalPath = picturePath + idImage
+        let finalfinalpath = finalPath.toString();
+        setRecipePreview(finalfinalpath)
+    }
 
+    //Shown Preview Recipe Picture
+    useEffect(()=>{
+        ShowRecipeImage();
+    },[formDataState])
+
+    //Submit all the information to back-end
     async function checkGeral(values){
+    //Get current User
+    try{
+    let getuser = await AsyncStorage.getItem('userData');
+    let user = JSON.parse(getuser);
+    console.log (user.id)
+    //Filter only ingredients above 0
     var ingredientQuery = ingredients.filter(ingredient => ingredient.quantItem > 0).map(ingredients => {return [ingredients.id, ingredients.quantItem]})
-        // Sempre numéros impares serão os IDS dos ingredientes e os Pares Quantidades
+        // Sempre numéros impares serão os IDS dos ingredientes e os pares Quantidades
         let flatIngredients = ingredientQuery.flatMap(ingredients => ingredients)
         if(flatIngredients.length == 0){
             setVisibleAlert(true)
@@ -82,34 +108,35 @@ export default function SearchRecipe({navigation, routes}) {
             setAlertMessage('Me Desculpe, mas por enquanto você não pode crair uma receita com mais de 10 ingredientes')
         }
         else{
+            // Zera Contadores apos a busca
             /*ingredients.forEach(item => {
                 item.quantItem = 0
                 let value = item.quantItem;
                 setCounter(value);
                 return item.quantItem;
             });*/
-            /*let query = await fetch('http://192.168.0.108:3000/searchRecipe',{
+            let query = await fetch('http://192.168.0.108:3000/CreateRecipe/'+user.id,{
                 method: 'POST',
                 headers: {
-                    Accept: 'application/json',
+                    'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    ArrrayIngredient: flatIngredients,
-                    recipeName: '',
-                    category:'',
-                    ModoPreparo:'',
-                    PictureReceita:'',
+                    ArrayIngredient: flatIngredients,
+                    recipeName: values.recipename,
+                    category: values.category,
+                    ModoPreparo: values.ModoPreparo,
+                    PictureReceita: formDataState,
                 })
             })
             let res = await query.json()
             console.log("----------- RECEITA CRIADA -----------")
-            console.log(res)*/
-            
+            console.log(res)
         }
-        console.log(values.recipename)
-        console.log(values.category)
-        console.log(values.ModoPreparo)
+    } 
+    catch(e){
+        console.log(e)
+    }
     }
     //Search on Ingredients FlatList
     async function FilterIngredients(s){
@@ -169,7 +196,7 @@ export default function SearchRecipe({navigation, routes}) {
     //Schema yup
     const recipeSchema = yup.object().shape({
         recipename: yup.string().trim().min(3, 'Recipe name too short!').required("Recipe name is necessary!"),
-        category: yup.string().trim().min(3, 'Category name too short!').required("Categoryis necessary!"),
+        category: yup.string().trim().min(3, 'Category name too short!').required("Category is necessary!"),
         ModoPreparo: yup.string().trim().min(40, 'Way of Preparation is too short!').required("Way of Preparation is necessary!")
     })
 
@@ -211,6 +238,7 @@ export default function SearchRecipe({navigation, routes}) {
     </View>
     )}
 
+    //Refresh the page
     const onRefresh = async () => {
         setRefreshing(true);
         wait(2000).then(() => setRefreshing(false));
@@ -220,6 +248,8 @@ export default function SearchRecipe({navigation, routes}) {
     };
 
     const FilterSearch = useRef();
+    
+    //Reset Ingredient Search
     const clearSearch = () =>{
         FilterSearch.current.clear();
         let s;
@@ -227,14 +257,16 @@ export default function SearchRecipe({navigation, routes}) {
     }
 
     const FlatIngredients = useRef();
+    
+    //Go to the end of page
     const goDown = () => {
         FlatIngredients.current.scrollToEnd({animated: true})
     }
 
-
+    //Formik
     const formik = useFormik({
         initialValues: RecipeInfo,
-        onSubmit: {checkGeral},
+        onSubmit: checkGeral,
         validationSchema: recipeSchema
     });
 
@@ -275,7 +307,7 @@ export default function SearchRecipe({navigation, routes}) {
                                         <TextInput style={styles.formInput} placeholder='Category' value={formik.values.category} onBlur={formik.handleBlur('category')} onChangeText={formik.handleChange('category')}/>
                                         {formik.touched.category && formik.errors.category && <Text style={styles.errorInput}>{formik.errors.category}</Text>}
 
-                                        <Image/>
+                                        <Image source={{uri: recipePreview}} style={{height: 150, width: 150, backgroundColor: '#C3C3C3', alignSelf: 'center'}} />
                                         <TouchableOpacity style={styles.selectImgBtn}onPress={openImagePickerAsync}>
                                             <Text style={{textAlign: 'center', fontWeight: '700', fontSize: 20}}>Choose a Picture</Text>
                                         </TouchableOpacity>
@@ -457,9 +489,11 @@ formInput:{
     alignSelf:'center',
     color: '#BDBDBD',
     width: '80%',
-    height: 60,
+    height: 55,
     paddingLeft: 20,
     margin: '3%',
+    borderWidth: 1,
+    borderColor: 'rgba(0, 0, 0, 0.21)',
     backgroundColor: '#EDEDED',
     borderRadius: 18,
 },
@@ -475,6 +509,7 @@ selectImgBtn:{
     justifyContent: 'center',
     width: '50%',
     height: 40,
+    marginTop: 10,
     backgroundColor: '#5DB075',
     alignSelf: 'center',
     borderRadius: 15,
