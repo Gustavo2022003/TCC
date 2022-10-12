@@ -7,7 +7,6 @@ import { AntDesign } from '@expo/vector-icons';
 import ComponentIngrediente from '../../components/ComponentIngrediente';
 import { Ionicons } from '@expo/vector-icons';
 import AlertCustom from '../../components/Alert';
-import { array } from 'yup';
 import { TextInput } from 'react-native-gesture-handler';
 
 const wait = (timeout) => {

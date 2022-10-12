@@ -82,13 +82,13 @@ export default function Register() {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <Animatable.View animation='fadeInUp' style={styles.container}>
           <AlertCustom 
-      visible={visibleAlert}
-      title = {alertTitle}
-      message = {alertMessage}
-      positiveButton={() => [setVisibleAlert(false), navigation.replace('Login')]}
-      />
+            visible={visibleAlert}
+            title = {alertTitle}
+            message = {alertMessage}
+            positiveButton={() => [setVisibleAlert(false), navigation.replace('Login')]}
+          />
               <View style={styles.logo}>
-              <Image source={logo} style={styles.logoimg}/>
+                <Image source={logo} style={styles.logoimg}/>
               </View>
               <View style={styles.formBg}>
                   <View style={styles.forms}>
