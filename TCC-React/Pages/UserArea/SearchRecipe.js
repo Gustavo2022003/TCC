@@ -158,7 +158,6 @@ export default function SearchRecipe({navigation, routes}) {
         setRefreshing(true);
         wait(2000).then(() => setRefreshing(false));
         GetIngredients();
-        console.log('Refresh')
         setErrorFeed(false)
     };
 

@@ -14,6 +14,7 @@ import { FlatList, ScrollView } from 'react-native-gesture-handler';
 export default function Recipe({route, navigation}) {
     const [ingredients, setIngredients] = useState(null);
     const [pictureProfile, setPictureProfile] = useState(null);
+    const [pictureRecipe, setPictureRecipe] = useState(null);
     const [disable, setDisable] = useState(false);
     
     async function getIngredients(){
@@ -29,7 +30,7 @@ export default function Recipe({route, navigation}) {
     }
     useEffect(()=>{
         getIngredients();
-    },[route])
+    },[route,navigation])
 
 
     async function goBack(){
@@ -48,20 +49,24 @@ export default function Recipe({route, navigation}) {
           // let the default thing happen
         return true
     })
-
-        
     
-        async function getProfilePicture(){
-            let idImage = route.params?.User.profilePicture;
+        async function getPictures(){
+            //Profile Picture
+            let profile = route.params?.User.profilePicture;
             let picturePath = 'http://192.168.0.108:3000/Images/'
-            let finalPath = picturePath + idImage
-            let finalfinalpath = finalPath.toString();
-            setPictureProfile(finalfinalpath)
+            let profileimg = picturePath + profile
+            let profilefinal = profileimg.toString();
+            //Recipe Picture
+            let recipe = route.params?.pictureReceita
+            let recipeimg = picturePath + recipe
+            let recipefinal = recipeimg.toString()
+            setPictureProfile(profilefinal)
+            setPictureRecipe(recipefinal)
         }
 
         useEffect(()=>{
-            getProfilePicture();
-        },[route])
+            getPictures();
+        },[route, navigation])
 
 
 
@@ -90,7 +95,7 @@ export default function Recipe({route, navigation}) {
                 ListHeaderComponent={
                         <View>
                         <View style={styles.inline}>
-                                <Image source={{ uri: pictureProfile }} style={styles.imgRecipe} />
+                                <Image source={{ uri: pictureRecipe }} style={styles.imgRecipe} />
                                 <View style={styles.info}>
                                     <Text style={styles.titleRecipe}>{route.params?.recipeName}</Text>
                                     <Text style={styles.category}>{route.params?.category}</Text>

@@ -16,7 +16,7 @@ import AlertCustom from '../../components/Alert';
     
 
 
-export default function Home({navigation}) {
+export default function Home({navigation, routes}) {
     
     const [user,setUser]=useState(null);
     const [receitas, setReceitas]=useState(null);
@@ -52,7 +52,6 @@ export default function Home({navigation}) {
             setErrorFeed(true);
             setReceitas(null);
         }else{
-            console.log('Receitas Retornadas')
             setReceitas(json);
         }
     };
@@ -68,14 +67,13 @@ export default function Home({navigation}) {
     
     useEffect(()=>{
         GetReceita();
-    },[]);
+    },[navigation, routes]);
     
     
     const onRefresh = async () => {
     setRefreshing(true);
     wait(2000).then(() => setRefreshing(false));
     GetReceita();
-    console.log('Refresh')
     setErrorFeed(false)
     };
 

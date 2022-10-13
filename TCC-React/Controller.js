@@ -53,7 +53,6 @@ app.post('/register',async (req,res)=>{
     if(response === null){
         let register = await user.create({completeName: req.body.fullname, username: req.body.username,
         email: req.body.email, password: req.body.password, profilePicture: '17bcb88b-4881-4d42-bf97-2b8793c16a65.png' })
-        console.log('Usuário cadastrado com ID: ', register.id)
         res.send(JSON.stringify("Registered"))
     }else{ 
         if(response.dataValues.username == req.body.username){
@@ -224,30 +223,33 @@ app.post("/recipeIngrediente/:idRecipe", async (req, res)=> {
 
 //Creating Recipe
 app.post("/CreateRecipe/:idUser", async (req, res)=>{
-    console.log("Testando")
     let array = req.body.ArrayIngredient;
-    console.log(array)
     
     
+    
+    //Testing sending to database
+    let response = await recipe.create({recipeName: req.body.recipeName, pictureReceita: req.body.pictureReceita,
+        category: req.body.category, ModoPreparo: req.body.ModoPreparo, userId: req.params.idUser})
+    let recipeId = await response.id
+    console.log(recipeId)
+
     //Group every 2 itens
     let arrayTeste = []
     for(var i = 0; i < array.length; i++){
         b = i++
-        arrayTeste.push('('+ array[b] +','+ array[i] +')') 
+        arrayTeste.push("("+recipeId+","+ array[b] +","+ array[i] +")") 
     }
 
-    //Mapear new array
+    //Map new array
     let finalInsert = arrayTeste.map(item => {return item})
-    console.log(arrayTeste)
-    console.log('Insert into: ' + finalInsert)
-    res.send(JSON.stringify('Hello'))
-    /*console.log('----Recebi o seguinte aqui ó----------')
-    console.log("Id do user: " + req.params.idUser)
-    console.log("Recipe name: " + req.body.recipename)
-    console.log("Category: " + req.body.category)
-    console.log("Modo Preparo: " + req.body.ModoPreparo)
-    console.log("Picture: " + req.body.PictureReceita)
-    res.send(JSON.stringify('Chegou?'))*/
+    let query = 'Insert into receitatemingredientes (idReceita, idIngrediente, quantidade) values '+finalInsert
+
+    //Sending to the database ingredients from the recipe
+    let response2 = await db.sequelize.query(query)
+    console.log(response2)
+    res.send(JSON.stringify("RecipeCreated"))
+    
+    
 })
 
 

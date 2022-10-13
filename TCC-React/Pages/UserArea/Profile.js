@@ -10,7 +10,7 @@ import {Ionicons} from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons'; 
 import ComponentReceitaProfile from '../../components/ComponentReceitaProfile';
 
-export default function Profile({navigation}) {
+export default function Profile({navigation, routes}) {
     
     const [user,setUser]= useState(null);
     const [name, setName]= useState(null)
@@ -82,7 +82,7 @@ export default function Profile({navigation}) {
     //UseEffect GetReceita
     useEffect(()=>{
         GetReceita();
-    },[]);
+    },[navigation, routes]);
 
     //Selector Images
     const openImagePickerAsync = async () => {
@@ -93,7 +93,6 @@ export default function Profile({navigation}) {
             return;
         }
         let pickerResult = await ImagePicker.launchImageLibraryAsync({allowsEditing: true,});
-        console.log(pickerResult)
         
         if (!pickerResult.cancelled) {
             // ImagePicker saves the taken photo to disk and returns a local URI to it
@@ -129,7 +128,6 @@ export default function Profile({navigation}) {
         wait(2000).then(() => setRefreshing(false));
         GetProfile();
         GetReceita();
-        console.log('Refresh')
     };
    
     //source={require('../../Images/'+picture)}
@@ -156,7 +154,7 @@ export default function Profile({navigation}) {
                     refreshing={refreshing}
                     onRefresh={onRefresh}
                     />}
-                renderItem={({item}) =><ComponentReceitaProfile {...item}/>}
+                renderItem={({item}) =><ComponentReceitaProfile{...item}/>}
             />
             </View>
         </Animatable.View>

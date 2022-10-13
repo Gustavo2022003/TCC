@@ -49,18 +49,14 @@ export default function Register() {
       setVisibleAlert(true);
       setAlertTitle('Úsuario cadastrado')
       setAlertMessage('O Úsuario foi cadastrado com sucesso!')
-      console.log(visibleAlert);
-      console.log('Úsario Disponivel')
     }else if(json == 'UserError'){
       setVisibleAlert(true);
       setAlertTitle('Erro ao cadastrar úsuario')
       setAlertMessage('Erro ao cadastrar úsuario, pois esse username já foi cadastrado, utilize outro username')
-      console.log('Usuario com esse username já foi Cadastrado')
     }else{
       setVisibleAlert(true);
       setAlertTitle('Erro ao cadastrar úsuario')
       setAlertMessage('Erro ao cadastrar úsuario, pois esse email já foi cadastrado, utilize outro email')
-      console.log('Usuario com esse email já foi Cadastrado')
     }
     resetForm({values: ''})
   }

@@ -30,7 +30,7 @@ export default function SearchRecipe({navigation, routes}) {
     const [visibleAlert, setVisibleAlert] = useState(false);
     const [alertTitle, setAlertTitle] = useState('');
     const [alertMessage, setAlertMessage] = useState('');
-
+    const [alertButton, setAlertButton] = useState('')
     const [disable, setDisable] = useState(false);
 
 
@@ -57,7 +57,6 @@ export default function SearchRecipe({navigation, routes}) {
             setErrorFeed(true);
             setIngredients(null);
         }else{
-            console.log('Ingredientes Carregados')
             // Add quant to the object
             let newIngredients = json.map(item => {
                 return { ...item, quantItem: 0};
@@ -72,19 +71,7 @@ export default function SearchRecipe({navigation, routes}) {
         GetIngredients();
     },[navigation]);
 
-    //Preview Picture Recipe
-    async function ShowRecipeImage(){
-        let idImage = formDataState
-        let picturePath = 'http://192.168.0.108:3000/Images/'
-        let finalPath = picturePath + idImage
-        let finalfinalpath = finalPath.toString();
-        setRecipePreview(finalfinalpath)
-    }
-
-    //Shown Preview Recipe Picture
-    useEffect(()=>{
-        ShowRecipeImage();
-    },[formDataState])
+    
 
     //Submit all the information to back-end
     async function checkGeral(values){
@@ -92,7 +79,6 @@ export default function SearchRecipe({navigation, routes}) {
     try{
     let getuser = await AsyncStorage.getItem('userData');
     let user = JSON.parse(getuser);
-    console.log (user.id)
     //Filter only ingredients above 0
     var ingredientQuery = ingredients.filter(ingredient => ingredient.quantItem > 0).map(ingredients => {return [ingredients.id, ingredients.quantItem]})
         // Sempre numéros impares serão os IDS dos ingredientes e os pares Quantidades
@@ -101,11 +87,13 @@ export default function SearchRecipe({navigation, routes}) {
             setVisibleAlert(true)
             setAlertTitle('Erro ao fazer consulta')
             setAlertMessage('Você não pode realizar uma consulta sem inserir nenhum ingrediente')
+            setAlertButton('error')
         }
-        else if(flatIngredients.length > 20){
+        else if(flatIngredients.length > 10){
             setVisibleAlert(true)
             setAlertTitle('Erro ao fazer consulta')
             setAlertMessage('Me Desculpe, mas por enquanto você não pode crair uma receita com mais de 10 ingredientes')
+            setAlertButton('error')
         }
         else{
             // Zera Contadores apos a busca
@@ -126,15 +114,19 @@ export default function SearchRecipe({navigation, routes}) {
                     recipeName: values.recipename,
                     category: values.category,
                     ModoPreparo: values.ModoPreparo,
-                    PictureReceita: formDataState,
+                    pictureReceita: formDataState,
                 })
             })
             let res = await query.json()
-            console.log("----------- RECEITA CRIADA -----------")
-            console.log(res)
+            if (res != null){
+                setVisibleAlert(true)
+                setAlertTitle("Receita criada")
+                setAlertMessage('A Receita foi criada com sucesso, clique no botão para vê-la em seu perfil!')
+                setAlertButton('created')
+            }   
         }
     } 
-    catch(e){
+        catch(e){
         console.log(e)
     }
     }
@@ -183,15 +175,27 @@ export default function SearchRecipe({navigation, routes}) {
                     headers: {
                     'Content-Type': 'multipart/form-data',
                     }
-                })
+                }).then(response => setFormData(response.data))
                 .catch(function (error) {
                     console.log(error.toJSON());
                 });
-                //Return and set the name of Image
-                let json = await response.data;
-                setFormData(json);
         }
     }
+    
+    //Preview Picture Recipe
+    function ShowRecipeImage(){
+        console.log(formDataState)
+        let idImage = formDataState
+        let picturePath = 'http://192.168.0.108:3000/Images/'
+        let finalPath = picturePath + idImage
+        let finalfinalpath = finalPath.toString();
+        setRecipePreview(finalfinalpath)
+    }
+
+    //Shown Preview Recipe Picture
+    useEffect(()=>{
+        ShowRecipeImage();
+    },[formDataState, recipePreview, setRecipePreview, setFormData])
 
     //Schema yup
     const recipeSchema = yup.object().shape({
@@ -212,6 +216,7 @@ export default function SearchRecipe({navigation, routes}) {
                 setVisibleAlert(true)
                 setAlertTitle('Erro ao adicionar item')
                 setAlertMessage('Você não pode realizar uma consulta com mais de 5 itens')
+                setAlertButton('error')
                 setCounter([item.quantItem -= 1, item.id]);
                 return item.quantItem, item.id;
             }
@@ -243,7 +248,6 @@ export default function SearchRecipe({navigation, routes}) {
         setRefreshing(true);
         wait(2000).then(() => setRefreshing(false));
         GetIngredients();
-        console.log('Refresh')
         setErrorFeed(false)
     };
 
@@ -284,7 +288,14 @@ export default function SearchRecipe({navigation, routes}) {
                     visible={visibleAlert}
                     title = {alertTitle}
                     message = {alertMessage}
-                    positiveButton={() => setVisibleAlert(false)}
+                    positiveButton={() => {if (alertButton == 'error'){
+                        setVisibleAlert(false)}
+                        else{ 
+                        setVisibleAlert(false)
+                        navigation.goBack()
+                        navigation.navigate("Profile")
+                        }
+                    }}
                 />
                 <View>
                 <FlatList
@@ -327,7 +338,7 @@ export default function SearchRecipe({navigation, routes}) {
                     }
                     ListFooterComponent={
                         <View style={styles.bottom}>
-                            <TextInput style={styles.formInput} placeholder='Way of Preparation' multiline={true} value={formik.values.ModoPreparo} onBlur={formik.handleBlur('ModoPreparo')} onChangeText={formik.handleChange('ModoPreparo')}/>
+                            <TextInput style={styles.formInputPreparation} placeholder='Way of Preparation' multiline={true} value={formik.values.ModoPreparo} onBlur={formik.handleBlur('ModoPreparo')} onChangeText={formik.handleChange('ModoPreparo')}/>
                             {formik.touched.ModoPreparo && formik.errors.ModoPreparo && <Text style={styles.errorInput}>{formik.errors.ModoPreparo}</Text>}
                             
                             {formik.errors.recipename || formik.errors.category || formik.errors.ModoPreparo ?
@@ -490,7 +501,21 @@ formInput:{
     color: '#BDBDBD',
     width: '80%',
     height: 55,
-    paddingLeft: 20,
+    paddingHorizontal: 15,
+    margin: '3%',
+    borderWidth: 1,
+    borderColor: 'rgba(0, 0, 0, 0.21)',
+    backgroundColor: '#EDEDED',
+    borderRadius: 18,
+},
+formInputPreparation:{
+    textAlignVertical: 'top',
+    alignSelf:'center',
+    color: '#BDBDBD',
+    width: '80%',
+    height: 150,
+    paddingVertical: 5,
+    paddingHorizontal: 15,
     margin: '3%',
     borderWidth: 1,
     borderColor: 'rgba(0, 0, 0, 0.21)',

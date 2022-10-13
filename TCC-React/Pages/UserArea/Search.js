@@ -69,12 +69,6 @@ export default function Search({route,navigation}) {
         }
     }
 
-    async function TesteEnvio(values){
-        console.log("Nome da Receita: " + values.recipename)
-        console.log("Categoria: " + values.category)
-        console.log("Modo de Preparo: " + values.ModoPreparo)
-        console.log("FormData: " + formDataState)
-    }
 
     const recipeSchema = yup.object().shape({
         recipename: yup.string().trim().min(3, 'Recipe name too short!').required("Recipe name is necessary!"),

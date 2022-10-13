@@ -1,3 +1,4 @@
+import {useEffect, useState} from 'react';
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import {View, Text, StyleSheet,TouchableOpacity, Image} from 'react-native';
@@ -5,13 +6,30 @@ import {View, Text, StyleSheet,TouchableOpacity, Image} from 'react-native';
 
 
 export default function ComponentReceitaProfile({...item}){
+
+    const [pictureRecipe, setPictureRecipe] = useState(null);
+
+    async function getPictures(){
+        let picturePath = 'http://192.168.0.108:3000/Images/'
+        //Recipe Picture
+        console.log(item.pictureReceita)
+        let recipe = item.pictureReceita
+        let recipeimg = picturePath + recipe
+        let recipefinal = recipeimg.toString()
+        setPictureRecipe(recipefinal)
+    }
+
+    useEffect(()=>{
+        getPictures();
+    },[pictureRecipe])
+
     const navigation = useNavigation();
     return(
         <View style={styles.container}>
             <TouchableOpacity onPress={()=> navigation.navigate('Recipe', {...item})}>
             <View style={styles.central}>
                 <Image style={styles.img}
-                source={{uri: 'http://192.168.0.108:3000/Images/912C5759-697C-42EB-AE5E-21239E8EB76E.jpg'}}
+                source={{uri: pictureRecipe}}
                 />
             </View>
             <View style={styles.content}>

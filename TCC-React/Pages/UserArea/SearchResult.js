@@ -58,13 +58,11 @@ export default function SearchResult({route, navigation}) {
         })
         let json=await response.json();
         if (json == 'SearchError'){
-            console.log('Erro ao achar receita')
             setAlertTitle('Erro ao Procurar Receita')
             setAlertMessage('Nenhuma Receita foi encontrada com os itens inseridos!')
             setErrorFeed(true);
             setReceitas(null);
         }else{
-            console.log('Receitas Retornadas')
             setReceitas(json);
         }
     };
@@ -82,7 +80,6 @@ export default function SearchResult({route, navigation}) {
         setRefreshing(true);
         wait(2000).then(() => setRefreshing(false));
         GetSearchedReceita();
-        console.log('Refresh')
         setErrorFeed(false)
     };
 
