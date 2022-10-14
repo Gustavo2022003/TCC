@@ -106,7 +106,7 @@ export default function Profile({route, navigation}) {
                     <Text style={{alignSelf:"center", fontSize: 20, fontWeight: 'bold'}}>Back</Text>
                 </TouchableOpacity>
                 <Text style={styles.HeaderTitle}>Profile</Text>
-                <View style={{width: '10%', height: 1}}/>
+                <View style={{width: '18%', height: 1}}/>
             </View>
             {/*<TouchableOpacity onPress={openImagePickerAsync}><Text>Alterar Foto de Perfil</Text></TouchableOpacity>   */}    
             
@@ -140,16 +140,16 @@ container: {
 header:{
     flexDirection: 'row',
     alignItems: 'center',
+    alignContent: 'center',
     justifyContent: 'space-between',
     paddingTop: '8%',
     width: '96%',
     height: '10%',
-    marginBottom: '-2%'
+    marginBottom: '1%'
 },
 HeaderTitle:{
     fontSize: 36,
     fontWeight: '700',
-    textAlign: 'center'
 },
 avatar: {
     marginTop: '5%',

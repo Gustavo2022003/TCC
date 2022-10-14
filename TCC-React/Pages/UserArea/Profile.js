@@ -10,6 +10,7 @@ import {Ionicons} from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons'; 
 import ComponentReceitaProfile from '../../components/ComponentReceitaProfile';
 
+
 export default function Profile({navigation, routes}) {
     
     const [user,setUser]= useState(null);
@@ -82,6 +83,7 @@ export default function Profile({navigation, routes}) {
     //UseEffect GetReceita
     useEffect(()=>{
         GetReceita();
+        onRefresh();
     },[navigation, routes]);
 
     //Selector Images
@@ -129,8 +131,7 @@ export default function Profile({navigation, routes}) {
         GetProfile();
         GetReceita();
     };
-   
-    //source={require('../../Images/'+picture)}
+       //source={require('../../Images/'+picture)}
 
     return (
         <Animatable.View animation='fadeInUp' style={styles.container}>
@@ -149,12 +150,13 @@ export default function Profile({navigation, routes}) {
                     <Image source={{uri: picture}} style={styles.avatar} resizeMode={'cover'}/>
                     <Text  style={styles.name}>{name}</Text>
                     <Text  style={styles.username}>@{Username}</Text>
-                    </View>}
+                    </View>
+                    }
                     refreshControl={ <RefreshControl 
                     refreshing={refreshing}
                     onRefresh={onRefresh}
                     />}
-                renderItem={({item}) =><ComponentReceitaProfile{...item}/>}
+                renderItem={({item}) =><ComponentReceitaProfile refresh={onRefresh} {...item}/>}
             />
             </View>
         </Animatable.View>
@@ -171,6 +173,7 @@ container: {
 header:{
     flexDirection: 'row',
     alignItems: 'center',
+    alignContent: 'center',
     justifyContent: 'space-between',
     paddingTop: '8%',
     width: '96%',

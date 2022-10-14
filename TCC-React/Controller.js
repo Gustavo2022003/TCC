@@ -6,7 +6,7 @@ const models=require('./models');
 const multer = require('multer');
 const path = require('path');
 var Sequelize = require('sequelize');
-const { Op, where } = require("sequelize");
+const { Op, where, or } = require("sequelize");
 const { QueryTypes } = require('sequelize');
 const db = require('./models/index')
 
@@ -177,6 +177,33 @@ GROUP BY idReceita
 ORDER BY COUNT(idReceita) desc;
 */
 
+//Search User by name or username
+app.post('/searchUser/:text',async(req,res)=>{
+    let query = '%'+req.params.text+'%'
+    let response = await user.findAll({ where: {[Op.or]:[{username: {[Op.like]: query}}, {completeName: {[Op.like]: query}}]}})
+    if (response.length !== 0){
+        res.send(response)
+    }else{
+        res.send(JSON.stringify('noFound'))
+    }
+})
+
+//Search Recipe by Recipe name or category
+app.post('/searchRecipes/:text', async(req,res)=>{
+    let query = '%'+req.params.text+'%'
+    let response = await recipe.findAll({ where: {[Op.or]:[{recipeName: {[Op.like]: query}}, {category: {[Op.like]: query}}]},include: [{model: user, required: true}] })
+    if (response.length !== 0){
+        res.send(response)
+    }else{
+        res.send(JSON.stringify('noFound'))
+    }
+})
+
+
+
+
+
+
 //Search Recipe
 app.post('/searchRecipe', async (req,res) => {
     let array = req.body.itens;
@@ -196,7 +223,7 @@ app.post('/searchRecipe', async (req,res) => {
     }
     //res.send(recipes)
 });
-
+//
 app.post('/searchedRecipes', async (req,res) => {
     let array = req.body.list
     let response = await recipe.findAll({where: { id: array},
@@ -250,6 +277,14 @@ app.post("/CreateRecipe/:idUser", async (req, res)=>{
     res.send(JSON.stringify("RecipeCreated"))
     
     
+})
+
+//Delte Recipes
+app.post('/deleteRecipe/:idRecipe', async (req, res)=>{
+    let response = await recipe.destroy({where: {id: req.params.idRecipe}})
+    if (response != null){
+        res.send(JSON.stringify('Deleted'))
+    }
 })
 
 

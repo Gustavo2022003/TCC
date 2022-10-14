@@ -2,12 +2,25 @@ import {useEffect, useState} from 'react';
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import {View, Text, StyleSheet,TouchableOpacity, Image} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import RecipeMenu from '../components/RecipeMenu';
 
 
 
-export default function ComponentReceitaProfile({...item}){
+export default function ComponentReceitaProfile({refresh,...item}){
 
     const [pictureRecipe, setPictureRecipe] = useState(null);
+    const [menuVisible, setMenuVisible] = useState(false);
+    const [user, setUser] = useState(null)
+
+    useEffect(()=>{
+        async function getUser(){
+            let response = await AsyncStorage.getItem('userData');
+            let json=JSON.parse(response);
+            setUser(json.id);
+        }
+        getUser();
+    },[]);
 
     async function getPictures(){
         let picturePath = 'http://192.168.0.108:3000/Images/'
@@ -26,7 +39,8 @@ export default function ComponentReceitaProfile({...item}){
     const navigation = useNavigation();
     return(
         <View style={styles.container}>
-            <TouchableOpacity onPress={()=> navigation.navigate('Recipe', {...item})}>
+            <RecipeMenu visible={menuVisible} title={item.recipeName} recipeId={item.id} refresh={refresh} button={()=>setMenuVisible(false)}/>
+            <TouchableOpacity onPress={()=> navigation.navigate('Recipe', {...item})} onLongPress={()=>{user == item.userId ? setMenuVisible(true) : setMenuVisible(false)}}>
             <View style={styles.central}>
                 <Image style={styles.img}
                 source={{uri: pictureRecipe}}

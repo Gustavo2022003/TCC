@@ -17,7 +17,6 @@ export default function ComponentIngrediente({counterId, increment, decrement, i
             let ingredientfinal = ingredientimg.toString();
             setPictureIngredient(ingredientfinal)
         }
-        console.log(item)
 
         useEffect(() => {
             getPictures();
