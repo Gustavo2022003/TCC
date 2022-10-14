@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": "071204",
-    "database": "foodio",
+    "database": "easychefs",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },

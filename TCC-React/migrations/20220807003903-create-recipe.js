@@ -14,6 +14,9 @@ module.exports = {
       pictureReceita: {
         type: Sequelize.STRING
       },
+      desc:{
+        type: Sequelize.TEXT
+      },
       category: {
         type: Sequelize.STRING
       },

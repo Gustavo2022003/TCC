@@ -25,7 +25,7 @@ export default function SearchRecipe({navigation, routes}) {
     const [shownButtonDown, setShownButtonDown] = useState(false)
     const [formDataState, setFormData] = useState(null);
     const [recipePreview ,setRecipePreview] = useState(null);
-    const RecipeInfo = {recipename: '', category: '', ModoPreparo: ''};
+    const RecipeInfo = {recipename: '',desc:'', category: '', ModoPreparo: ''};
 
     const [visibleAlert, setVisibleAlert] = useState(false);
     const [alertTitle, setAlertTitle] = useState('');
@@ -112,6 +112,7 @@ export default function SearchRecipe({navigation, routes}) {
                 body: JSON.stringify({
                     ArrayIngredient: flatIngredients,
                     recipeName: values.recipename,
+                    desc: values.desc,
                     category: values.category,
                     ModoPreparo: values.ModoPreparo,
                     pictureReceita: formDataState,
@@ -201,6 +202,7 @@ export default function SearchRecipe({navigation, routes}) {
     const recipeSchema = yup.object().shape({
         recipename: yup.string().trim().min(3, 'Recipe name too short!').required("Recipe name is necessary!"),
         category: yup.string().trim().min(3, 'Category name too short!').required("Category is necessary!"),
+        desc: yup.string().trim().min(3, 'Description name too short!').required("Description is necessary!"),
         ModoPreparo: yup.string().trim().min(40, 'Way of Preparation is too short!').required("Way of Preparation is necessary!")
     })
 
@@ -222,17 +224,28 @@ export default function SearchRecipe({navigation, routes}) {
             }
         }
 
-        async function increment(){      
-            setCounter([item.quantItem += 1, item.id]);
-            checkQuant();
-            return item.quantItem, item.id;
+        async function increment(){  
+            if (item.tipo == 'Quantidade'){    
+                setCounter([item.quantItem += 1, item.id]);
+                checkQuant();
+                return item.quantItem, item.id;
+            }else{
+                setCounter([item.quantItem += 125, item.id]);
+                checkQuant();
+                return item.quantItem, item.id;
+            }
         }
         async function decrement(){
             if (item.quantItem <= 0){
                 console.log('Não consegue ser menor que 0')
-            }else{;
-                setCounter([item.quantItem -= 1, item.id])
-                return item.quantItem, item.id;
+            }else{
+                if (item.tipo == 'Quantidade'){    
+                    setCounter([item.quantItem -= 1, item.id])
+                    return item.quantItem, item.id;
+                }else{
+                    setCounter([item.quantItem -= 125, item.id])
+                    return item.quantItem, item.id;
+                }
             }
         }
         
@@ -318,6 +331,9 @@ export default function SearchRecipe({navigation, routes}) {
                                         <TextInput style={styles.formInput} placeholder='Category' value={formik.values.category} onBlur={formik.handleBlur('category')} onChangeText={formik.handleChange('category')}/>
                                         {formik.touched.category && formik.errors.category && <Text style={styles.errorInput}>{formik.errors.category}</Text>}
 
+                                        <TextInput style={styles.formInputPreparation} placeholder='Description' multiline={true} value={formik.values.desc} onBlur={formik.handleBlur('desc')} onChangeText={formik.handleChange('desc')}/>
+                                        {formik.touched.desc && formik.errors.desc && <Text style={styles.errorInput}>{formik.errors.desc}</Text>}
+
                                         <Image source={{uri: recipePreview}} style={{height: 150, width: 150, backgroundColor: '#C3C3C3', alignSelf: 'center'}} />
                                         <TouchableOpacity style={styles.selectImgBtn}onPress={openImagePickerAsync}>
                                             <Text style={{textAlign: 'center', fontWeight: '700', fontSize: 20}}>Choose a Picture</Text>
@@ -341,7 +357,7 @@ export default function SearchRecipe({navigation, routes}) {
                             <TextInput style={styles.formInputPreparation} placeholder='Way of Preparation' multiline={true} value={formik.values.ModoPreparo} onBlur={formik.handleBlur('ModoPreparo')} onChangeText={formik.handleChange('ModoPreparo')}/>
                             {formik.touched.ModoPreparo && formik.errors.ModoPreparo && <Text style={styles.errorInput}>{formik.errors.ModoPreparo}</Text>}
                             
-                            {formik.errors.recipename || formik.errors.category || formik.errors.ModoPreparo ?
+                            {formik.errors.recipename || formik.errors.category || formik.errors.ModoPreparo || formik.errors.desc?
                                 <TouchableOpacity style={styles.RegButtonInvalid} disabled={!Formik.isValid}>
                                     <Text style={styles.RegTextInvalid}>Create Recipe</Text> 
                                 </TouchableOpacity>

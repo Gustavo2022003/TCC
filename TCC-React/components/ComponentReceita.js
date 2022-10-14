@@ -46,7 +46,7 @@ export default function ComponentReceita({...item}){
             <View style={styles.content}>
             <Text style={styles.title}>{item.recipeName}</Text>
             <Text style={styles.category}>{item.category}</Text>
-            <Text numberOfLines={2} ellipsizeMode='tail' style={styles.textModo}>{item.ModoPreparo}</Text>
+            <Text numberOfLines={2} ellipsizeMode='tail' style={styles.textModo}>{item.desc}</Text>
             
             </View>
             </TouchableOpacity>

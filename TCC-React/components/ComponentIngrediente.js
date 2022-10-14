@@ -7,16 +7,40 @@ import {View, Text, StyleSheet,TouchableOpacity, Image} from 'react-native';
 export default function ComponentIngrediente({counterId, increment, decrement, index, ...item}){
 
         const [value, setValue] = useState(item.quantItem);
+        const [pictureIngredient, setPictureIngredient] = useState(null)
+
+        async function getPictures(){
+            //Ingredient Picture
+            let ingredient = item.pictureIngrediente;
+            let picturePath = 'http://192.168.0.108:3000/Images/Ingredients/'
+            let ingredientimg = picturePath + ingredient
+            let ingredientfinal = ingredientimg.toString();
+            setPictureIngredient(ingredientfinal)
+        }
+        console.log(item)
+
+        useEffect(() => {
+            getPictures();
+        },[setPictureIngredient, pictureIngredient])
         
         useEffect(() => {
             setValue(item.quantItem);
         },[increment, decrement,counterId])
 
+        function renderText(){
+            if(item.tipo == 'Quantidade'){
+                return <Text style={{fontSize: 28, marginHorizontal: '10%'}}>{value}</Text>
+            }else if(item.tipo == 'Liquido'){
+                return <Text style={{fontSize: 28, marginHorizontal: '5%'}}>{value}ml</Text>
+            }else{
+                return <Text style={{fontSize: 28, marginHorizontal: '5%'}}>{value}g</Text>
+            }
+        }
+
     return(
         <View style={styles.container}>
             <View style={styles.central}>
-                <Image style={styles.img}
-            />
+                <Image source={{uri: pictureIngredient}}style={styles.img}/>
             </View>
             <View style={styles.content}>
                 <View style={{width: '35%'}}>
@@ -26,7 +50,7 @@ export default function ComponentIngrediente({counterId, increment, decrement, i
                     <TouchableOpacity style={styles.buttonControl}onPress={decrement}>
                             <Text>-</Text>
                     </TouchableOpacity>
-                    <Text style={{fontSize: 28}}>{value}</Text>
+                    {renderText()}
                     <TouchableOpacity style={styles.buttonControl} onPress={increment}>
                             <Text>+</Text>
                     </TouchableOpacity>
@@ -72,6 +96,5 @@ const styles = StyleSheet.create({
         borderRadius: 19,
         alignItems: 'center',
         justifyContent: 'center',
-        marginHorizontal: '10%'
     }
 })

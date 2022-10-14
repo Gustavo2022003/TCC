@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { FlatList, StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
+import { FlatList,RefreshControl, StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { useNavigation } from '@react-navigation/native';
 import { AntDesign } from '@expo/vector-icons'; 
@@ -55,7 +55,7 @@ export default function SearchRecipe({navigation, routes}) {
 
     useEffect(()=>{
         GetIngredients();
-    },[navigation]);
+    },[navigation, routes]);
 
     
 
@@ -133,17 +133,28 @@ export default function SearchRecipe({navigation, routes}) {
             }
         }
 
-        async function increment(){      
-            setCounter([item.quantItem += 1, item.id]);
-            checkQuant();
-            return item.quantItem, item.id;
+        async function increment(){  
+            if (item.tipo == 'Quantidade'){    
+                setCounter([item.quantItem += 1, item.id]);
+                checkQuant();
+                return item.quantItem, item.id;
+            }else{
+                setCounter([item.quantItem += 125, item.id]);
+                checkQuant();
+                return item.quantItem, item.id;
+            }
         }
         async function decrement(){
             if (item.quantItem <= 0){
                 console.log('Não consegue ser menor que 0')
-            }else{;
-                setCounter([item.quantItem -= 1, item.id])
-                return item.quantItem, item.id;
+            }else{
+                if (item.tipo == 'Quantidade'){    
+                    setCounter([item.quantItem -= 1, item.id])
+                    return item.quantItem, item.id;
+                }else{
+                    setCounter([item.quantItem -= 125, item.id])
+                    return item.quantItem, item.id;
+                }
             }
         }
         
@@ -200,6 +211,11 @@ export default function SearchRecipe({navigation, routes}) {
                 data={SearchIngredientes}
                 keyExtractor={(item, index) =>  index.toString()}
                 renderItem={RenderItem}
+                refreshControl={
+                    <RefreshControl 
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                />}
                 onScrollBeginDrag={()=> setShownButtonDown(true)}
                 onEndReached={()=> setShownButtonDown(false)}
                 onEndReachedThreshold={0.1}

@@ -18,10 +18,13 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Ingrediente.init({
-    ingredienteName: DataTypes.STRING
+    ingredienteName: DataTypes.STRING,
+    tipo: DataTypes.ENUM('Quantidade','Liquido','Peso'),
+    pictureIngrediente: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Ingrediente',
+    timestamps: false
   });
   return Ingrediente;
 };

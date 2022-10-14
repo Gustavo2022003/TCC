@@ -12,16 +12,11 @@ module.exports = {
         type: Sequelize.STRING
       },
       tipo:{
+        type: Sequelize.ENUM('Quantidade','Liquido','Peso')
+      },
+      pictureIngrediente:{
         type: Sequelize.STRING
       },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      }
     });
   },
   async down(queryInterface, Sequelize) {

@@ -82,42 +82,12 @@ export default function Search({route,navigation}) {
             <View style={styles.header}>
                 <Text style={styles.HeaderTitle}>Search</Text>
             </View>
-            <View style={{width: '80%', height:'75%', justifyContent:'center', alignItems:'center', alignSelf:'center'}}>
-                <TouchableOpacity onPress={openImagePickerAsync}><Text>Alterar Foto de Perfil</Text></TouchableOpacity>
-                <Formik
-                    initialValues={RecipeInfo}
-                    onSubmit={TesteEnvio}
-                    validationSchema={recipeSchema}
-                >
-                    {({handleSubmit, errors, touched, handleChange, handleBlur, values})=> {
-                        const {recipename, category, ModoPreparo} = values
-                    return (
-                        <>
-                        <TextInput style={styles.input} placeholder='Recipe name' value={recipename} onBlur={handleBlur('recipename')} onChangeText={handleChange('recipename')}/>
-                        {touched.recipename && errors.recipename && <Text style={styles.error}>{errors.recipename}</Text>}
-                        
-                        <TextInput style={styles.input} placeholder='Category' value={category} onBlur={handleBlur('category')} onChangeText={handleChange('category')}/>
-                        {touched.category && errors.category && <Text style={styles.error}>{errors.category}</Text>}
-
-                        <TextInput style={styles.input} placeholder='Way of Preparation' multiline={true} value={ModoPreparo} onBlur={handleBlur('ModoPreparo')} onChangeText={handleChange('ModoPreparo')}/>
-                        {touched.ModoPreparo && errors.ModoPreparo && <Text style={styles.error}>{errors.ModoPreparo}</Text>}
-                        {errors.recipename || errors.username || errors.email || errors.password || errors.confirmPassword ?
-                        <TouchableOpacity style={styles.RegButtonInvalid} disabled={!Formik.isValid}>
-                            <Text style={styles.RegTextInvalid}>Create Recipe</Text> 
-                        </TouchableOpacity>
-                        : <TouchableOpacity style={styles.RegButton} onPress={handleSubmit} disabled={!recipeSchema.isValid}>
-                            <Text style={styles.RegText}>CreateRecipe</Text> 
-                            </TouchableOpacity>}
-                        </>
-                    )}}
-                </Formik>
-                
-                
-                {/*<Text style={{textAlign:"center", fontSize: 20, fontWeight:'bold'}}> This page is under development!</Text>
+            <View>
+                <Text style={{textAlign:"center", fontSize: 20, fontWeight:'bold'}}> This page is under development!</Text>
                 <Octicons name="alert" size={100} style={{margin: 15}} color="black" />
                 <TouchableOpacity disabled={disable} onPress={()=> goBack()}>
                     <Text numberOfLines={2} style={{fontSize: 16, fontWeight: 'bold', textAlign:"center"}}>Click Here to back to the Feed</Text>
-                </TouchableOpacity>*/}
+                </TouchableOpacity>
             </View>
         </Animatable.View>
         </TouchableWithoutFeedback>
@@ -129,66 +99,6 @@ container: {
     flex: 1,
     backgroundColor: 'white',
     alignItems: 'center',
-    justifyContent: 'flex-start'
+    justifyContent: 'center'
 },
-header:{
-    backgroundColor: '#ffffff',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: '8%',
-    width: '100%',
-    height: '10%',
-},
-HeaderTitle:{
-    fontSize: 36,
-    fontWeight: '700',
-},
-input:{
-    alignSelf:'center',
-    color: '#BDBDBD',
-    width: '80%',
-    height: 60,
-    paddingLeft: 20,
-    margin: '3%',
-    backgroundColor: '#EDEDED',
-    borderRadius: 18,
-},
-error:{
-    marginTop: '-3%',
-    paddingBottom: 10,
-    color: 'red',
-    fontWeight: '700',
-    marginLeft: '14%',
-},
-RegButton:{
-    marginTop: '3%',
-    alignSelf:'center',
-    backgroundColor: '#A0E2AF',
-    width: '60%',
-    height: 55,
-    borderRadius: 112,
-    alignItems: 'center',
-    justifyContent: 'center',
-},
-RegButtonInvalid:{
-    marginTop: '3%',
-    alignSelf:'center',
-    backgroundColor: '#eaeaea',
-    width: '60%',
-    height: 55,
-    borderRadius: 112,
-    alignItems: 'center',
-    justifyContent: 'center',
-},
-RegText:{
-    fontSize: 26,
-    fontWeight: '700',
-    color: '#000000',
-},
-RegTextInvalid:{
-    fontSize: 26,
-    fontWeight: '700',
-    color: '#999999',
-}
 });

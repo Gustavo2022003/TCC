@@ -226,9 +226,9 @@ app.post("/CreateRecipe/:idUser", async (req, res)=>{
     let array = req.body.ArrayIngredient;
     
     
-    
+    console.log(req.body.desc)
     //Testing sending to database
-    let response = await recipe.create({recipeName: req.body.recipeName, pictureReceita: req.body.pictureReceita,
+    let response = await recipe.create({recipeName: req.body.recipeName, desc: req.body.desc, pictureReceita: req.body.pictureReceita,
         category: req.body.category, ModoPreparo: req.body.ModoPreparo, userId: req.params.idUser})
     let recipeId = await response.id
     console.log(recipeId)
