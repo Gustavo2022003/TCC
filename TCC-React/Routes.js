@@ -9,6 +9,7 @@ import Login from './Pages/Login';
 
 import Home from './Pages/UserArea/Home';
 import Profile from './Pages/UserArea/Profile';
+import EditProfile from './Pages/UserArea/EditProfile';
 import OtherProfile from './Pages/UserArea/OtherProfile';
 import SearchRecipe from './Pages/UserArea/SearchRecipe';
 import SearchResult from './Pages/UserArea/SearchResult';
@@ -56,6 +57,7 @@ function ProfileStack(){
     }}>
     <HomePages.Screen name="ProfileScreen" component={Profile} />
     <HomePages.Screen name='Recipe' component={Recipe} />
+    <HomePages.Screen name='EditProfile' component={EditProfile} />
     </HomePages.Navigator>
 );}
 

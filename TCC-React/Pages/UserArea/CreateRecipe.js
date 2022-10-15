@@ -15,7 +15,7 @@ const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
     }
 
-export default function SearchRecipe({navigation, routes}) {
+export default function SearchRecipe({navigation, route}) {
     const [user,setUser]=useState(null);
     const [ingredients, setIngredients]=useState([]);
     const [SearchIngredientes, setSearchIngredients] = useState([])

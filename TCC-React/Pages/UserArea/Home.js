@@ -16,7 +16,7 @@ import AlertCustom from '../../components/Alert';
     
 
 
-export default function Home({navigation, routes}) {
+export default function Home({navigation, route}) {
     
     const [user,setUser]=useState(null);
     const [receitas, setReceitas]=useState(null);
@@ -67,7 +67,7 @@ export default function Home({navigation, routes}) {
     
     useEffect(()=>{
         GetReceita();
-    },[navigation, routes]);
+    },[navigation, route]);
     
     
     const onRefresh = async () => {

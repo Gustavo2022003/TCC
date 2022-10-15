@@ -117,6 +117,28 @@ app.post('/UploadImg', upload, async(req, res)=>{
     res.send(response)
 })
 
+//Get all the profile
+app.post('/getProfile/:idUser', async(req,res)=>{
+    let response = await user.findOne({
+        where: {id: req.params.idUser}
+    })
+    if (response != null){
+        res.send(response)
+    }
+})
+
+//Update Profile
+app.post('/updateProfile/:idUser', async(req,res)=>{
+    let response = await user.findOne({where: {username: req.body.username}})
+    if (response == null || response.id == req.params.idUser){
+        let update = await user.update({completeName: req.body.completeName, username: req.body.username, profilePicture: req.body.profilePicture},{where: {id: req.params.idUser}})
+        res.send(JSON.stringify('Updated'))
+    }else{
+        res.send(JSON.stringify('UsernameExist'))
+    }
+    console.log(response)
+})
+
 //Get Profile Picture
 app.post('/getAvatar/:user', async (req,res)=>{
     let response =await user.findAll({

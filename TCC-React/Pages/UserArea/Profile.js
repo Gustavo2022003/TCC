@@ -11,9 +11,10 @@ import { Feather } from '@expo/vector-icons';
 import ComponentReceitaProfile from '../../components/ComponentReceitaProfile';
 
 
-export default function Profile({navigation, routes}) {
+export default function Profile({navigation, route}) {
     
     const [user,setUser]= useState(null);
+    const [loading, setLoading] = useState(true);
     const [name, setName]= useState(null)
     const [Username, setUsername]= useState(null);
     const [picture, setPicture]=useState(null);
@@ -21,16 +22,6 @@ export default function Profile({navigation, routes}) {
     const [receitas, setReceitas]=useState(null);
     
     //UseEffect to Get the User
-    useEffect(()=>{
-        async function getUser(){
-            let response = await AsyncStorage.getItem('userData');
-            let json=JSON.parse(response);
-            setUser(json.id);
-            setName(json.completeName);
-            setUsername(json.username);
-        }
-        getUser();
-    },[]);
 
     //Function to Logout
     async function Logout(){
@@ -43,27 +34,28 @@ export default function Profile({navigation, routes}) {
             // Forçar pegar para enviar para a rota
             let getuser = await AsyncStorage.getItem('userData');
             let user = JSON.parse(getuser);
-            let response= await fetch('http://192.168.0.108:3000/getAvatar/'+user.id,{
+            let response= await fetch('http://192.168.0.108:3000/getProfile/'+user.id,{
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json'
                 },
             })
-            //DEIXA O NOME DA IMAGEM DO JEITO QUE PRECISO
             let json=await response.json();
-            let idImage = JSON.stringify(json)
-            let newImage = idImage.substring(20, idImage.length - 3)
+            setUser(json)
+            //DEIXA O NOME DA IMAGEM DO JEITO QUE PRECISO
+            let idImage = json.profilePicture
             let picturePath = 'http://192.168.0.108:3000/Images/'
-            let finalPath = picturePath + newImage;
+            let finalPath = picturePath + idImage;
             let finalfinalpath = finalPath.toString();
             setPicture(finalfinalpath)
+            setLoading(false)
     }
 
     //UseEffet do Get Profile
     useEffect(()=>{
         GetProfile();
-    },[]);
+    },[setPicture, picture]);
 
     //Function Get the Recipe by Profile Id
     async function GetReceita(){
@@ -83,42 +75,9 @@ export default function Profile({navigation, routes}) {
     //UseEffect GetReceita
     useEffect(()=>{
         GetReceita();
+        GetProfile();
         onRefresh();
-    },[navigation, routes]);
-
-    //Selector Images
-    const openImagePickerAsync = async () => {
-    
-        let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (permissionResult.granted === false) {
-            alert("Permission to access camera roll is required!");
-            return;
-        }
-        let pickerResult = await ImagePicker.launchImageLibraryAsync({allowsEditing: true,});
-        
-        if (!pickerResult.cancelled) {
-            // ImagePicker saves the taken photo to disk and returns a local URI to it
-                let localUri = pickerResult.uri;
-                let filename = localUri.split('/').pop();
-
-            // Infer the type of the image
-                let match = /\.(\w+)$/.exec(filename);
-                let type = match ? `image/${match[1]}` : `image`;
-
-            // Upload the image using the fetch and FormData APIs
-                let formData = new FormData();
-            // Assume "photo" is the name of the form field the server expects
-                formData.append('photo', { uri: localUri, name: filename, type });
-            await axios.post('http://192.168.0.108:3000/uploadPicture/'+user, formData, {headers: {
-                'Content-Type': 'multipart/form-data',
-             }})
-            .catch(function (error) {
-                console.log(error.toJSON());
-              });
-            GetProfile();
-        }
-    }
-
+    },[navigation, route]);
 
     //WAIT
     const wait = (timeout) => {
@@ -138,18 +97,20 @@ export default function Profile({navigation, routes}) {
             <View style={styles.header}>
                 <Ionicons name='exit-outline' style={{alignSelf:'center'}} size={40} color={'black'} onPress={Logout}/>
                 <Text style={styles.HeaderTitle}>Profile</Text>
+                <TouchableOpacity onPress={()=>navigation.navigate('EditProfile', {userId: user.id})}>
                 <Feather name="edit" style={{alignSelf:'center'}} size={32} color={"black"}/>
+                </TouchableOpacity>
             </View>
-            {/*<TouchableOpacity onPress={openImagePickerAsync}><Text>Alterar Foto de Perfil</Text></TouchableOpacity>   */}    
-            
+            {loading == true ? <View><Text>Loading</Text></View>
+            :
             <View style={styles.bottom}>
             <FlatList
                 data={receitas}
                 ListHeaderComponent={
                     <View>
                     <Image source={{uri: picture}} style={styles.avatar} resizeMode={'cover'}/>
-                    <Text  style={styles.name}>{name}</Text>
-                    <Text  style={styles.username}>@{Username}</Text>
+                    <Text  style={styles.name}>{user.completeName}</Text>
+                    <Text  style={styles.username}>@{user.username}</Text>
                     </View>
                     }
                     refreshControl={ <RefreshControl 
@@ -158,7 +119,7 @@ export default function Profile({navigation, routes}) {
                     />}
                 renderItem={({item}) =><ComponentReceitaProfile refresh={onRefresh} {...item}/>}
             />
-            </View>
+            </View>}
         </Animatable.View>
         );
 }
