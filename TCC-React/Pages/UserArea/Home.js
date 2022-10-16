@@ -1,12 +1,12 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useMemo} from 'react';
 import { StatusBar } from 'expo-status-bar';
 import {FlatList, RefreshControl, StyleSheet, Text, View, TouchableOpacity, Image, BackHandler, ActivityIndicator} from 'react-native';
-import SelectList from 'react-native-dropdown-select-list'
+import { Dropdown } from 'react-native-element-dropdown';
 import * as Animatable from 'react-native-animatable';
-import { FontAwesome } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import BigList from "react-native-big-list";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ComponentReceita from '../../components/ComponentReceita';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import { useBackHandler } from '@react-native-community/hooks';
 
 import { Ionicons } from '@expo/vector-icons'; 
@@ -22,15 +22,18 @@ export default function Home({navigation, route}) {
     const [user,setUser]=useState(null);
     const [receitas, setReceitas]=useState([]);
     const [loading, setLoading] = useState(false);
-    const [order, setOrder] = useState()
+    const [order, setOrder] = useState('DESC');
+    const [field, setField] = useState('createdAt');
+    const [value, setValue] = useState('Newest');
+    const [isFocus, setIsFocus] = useState(false);
     const [page, setPage] = useState(0)
     const [refreshing, setRefreshing] = useState(false);
 
     const data = [
-        {key:'1',value:'Newest Recipes'},
-        {key:'2',value:'Oldest Recipes'},
-        {key:'3',value:'A - Z Recipes '},
-        {key:'4',value:'Z - A Recipes'},
+        {field:'createdAt', order:'DESC', value:'Newest',label:'Newest Recipes'},
+        {field:'createdAt', order:'ASC', value:'Oldest',label:'Oldest Recipes'},
+        {field:'recipeName', order:'ASC', value:'A-Z',label:'A - Z Recipes '},
+        {field:'recipeName', order:'DESC', value:'Z-A',label:'Z - A Recipes'},
       ]
     
     // Alert
@@ -55,7 +58,11 @@ export default function Home({navigation, route}) {
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json'
-            }
+            },
+            body: JSON.stringify({
+                field: field,
+                order: order
+            })
         })
         let json=await response.json();
         if (json == 'FeedError'){
@@ -80,8 +87,10 @@ export default function Home({navigation, route}) {
     },[]);
     
     useEffect(()=>{
+        setReceitas([]);
+        setPage(0);
         GetReceita();
-    },[navigation, route]);
+    },[navigation, route, value]);
     
     
     const onRefresh = async () => {
@@ -91,7 +100,9 @@ export default function Home({navigation, route}) {
     setErrorFeed(false)
     };
 
-
+    function renderItem({item}){
+        return <TouchableOpacity onPress={()=> navigation.navigate('Recipe', {...item})}><ComponentReceita {...item}/></TouchableOpacity>
+    }
 
 
     return (
@@ -99,14 +110,38 @@ export default function Home({navigation, route}) {
             <View style={styles.header}>
                 <Text style={styles.HeaderTitle}>Feed</Text>
             </View>
-            <SelectList 
-                    data = {data}
-                    onSelect={() => setOrder()}
-                    arrowicon={<FontAwesome name="chevron-down" size={12} color={'black'} style={{marginLeft: 5}} />} 
-                    setSelected={setOrder}
-                    boxStyles={{borderWidth: 0}}
-                    dropdownStyles={{flex: 1, position: 'absolute', width: 100, elevation: -1}}
+            <View style={{width: '96%', justifyContent: 'flex-start', flexDirection: 'row'}}>
+                <Dropdown
+                    style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+                    placeholderStyle={styles.placeholderStyle}
+                    selectedTextStyle={styles.selectedTextStyle}
+                    iconStyle={styles.iconStyle}
+                    data={data}
+                    maxHeight={300}
+                    labelField="label"
+                    valueField="value"
+                    placeholder={'Filter'}
+                    value={value}
+                    onFocus={() => setIsFocus(true)}
+                    onBlur={() => setIsFocus(false)}
+                    onChange={item => {
+                        setValue(item.value);
+                        setOrder(item.order);
+                        setField(item.field);
+                        setReceitas([]);
+                        setPage(0);
+                        setIsFocus(false);
+                    }}
+                    renderLeftIcon={() => (
+                        <AntDesign
+                        style={styles.icon}
+                        color={'#3B944F'}
+                        name="filter"
+                        size={20}
+                        />
+                    )}
                 />
+            </View>
             {/*<View style={{ width: '80%', backgroundColor: '#000000', height: 3,opacity: 0.1 ,borderRadius: 3, marginTop: '-3%'}}><Text>teste</Text></View>*/}
             {errorFeed == true ?
             <View style={styles.error}>
@@ -120,6 +155,7 @@ export default function Home({navigation, route}) {
             : <View style={styles.bottom}>
             <FlatList
                 data={receitas}
+                initialNumToRender={5}
                 refreshControl={
                     <RefreshControl 
                     refreshing={refreshing}
@@ -128,11 +164,11 @@ export default function Home({navigation, route}) {
                 ItemSeparatorComponent={() => (
                     <View style={{ backgroundColor:'black', width:'90%', height: 2.5, opacity: 0.05, alignSelf: 'center'}}/>
                 )}
-                onEndReachedThreshold={0.2}
+                onEndReachedThreshold={0.1}
                 onEndReached={GetReceita}
-                ListFooterComponent={<ActivityIndicator size={'large'} color={'#A0E2AF'}/>}
-                renderItem={({item}) =><ComponentReceita {...item}/>}
-            />
+                renderItem={renderItem}
+                />
+
             </View>}
         </Animatable.View>
     );
@@ -190,5 +226,37 @@ buttonTxt:{
     fontSize: 17,
     fontWeight: '700',
     textAlign: 'center',
-}
+},
+dropdown: {
+    height: 50,
+    width: 180,
+    borderColor: 'gray',
+    borderRadius: 8,
+    paddingHorizontal: 8,
+},
+icon: {
+    marginRight: 5,
+},
+label: {
+    position: 'absolute',
+    backgroundColor: 'white',
+    color: '#3B944F',
+    left: 22,
+    top: 8,
+    zIndex: 999,
+    paddingHorizontal: 8,
+    fontSize: 14,
+},
+placeholderStyle: {
+    fontSize: 14,
+    color: '#3B944F',
+},
+selectedTextStyle: {
+    fontSize: 14,
+    color: '#3B944F',
+},
+iconStyle: {
+    width: 20,
+    height: 20,
+},
 });

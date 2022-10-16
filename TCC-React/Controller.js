@@ -67,8 +67,8 @@ app.post('/register',async (req,res)=>{
 
 //Recipes feed
 app.post('/feed/:page', async (req,res)=>{
-    page = Number(req.params.page) * 10
-    let response = await recipe.findAll({order: [['createdAt', 'DESC']], include: [{model: user, required: true}], limit: 10, offset: page});
+    page = Number(req.params.page) * 5
+    let response = await recipe.findAll({order: [[req.body.field, req.body.order]], include: [{model: user, required: true}], limit: 5, offset: page});
     if(response.length == null){
         res.send(JSON.stringify('FeedError'));
     }else{
