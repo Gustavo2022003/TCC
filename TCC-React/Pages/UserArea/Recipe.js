@@ -74,8 +74,8 @@ export default function Recipe({route, navigation}) {
             let quantidade = item.quantidade
             return(
                 quantidade > 1 ?
-                <Text style={{color: '#31573A', fontSize: 16, fontWeight: 'bold'}}>{item.quantidade} {item.ingredienteName}s</Text>
-                : <Text style={{color: '#31573A', fontSize: 16, fontWeight: 'bold'}}>{item.quantidade} {item.ingredienteName}</Text>
+                <Text style={{color: '#31573A', fontSize: 16, fontWeight: 'bold'}}>{item.quantidade}{item.tipo == 'Liquido' ? <Text>ml</Text> : item.tipo == 'Peso' ? <Text>g</Text> : <Text></Text>} {item.ingredienteName}s</Text>
+                : <Text style={{color: '#31573A', fontSize: 16, fontWeight: 'bold'}}>{item.quantidade}{item.tipo == 'Liquido' ? <Text>ml</Text> : item.tipo == 'Peso' ? <Text>g</Text> : <Text></Text>} {item.ingredienteName}</Text>
                 )
         }
 

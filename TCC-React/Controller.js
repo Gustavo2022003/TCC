@@ -262,7 +262,7 @@ app.post('/searchedRecipes', async (req,res) => {
 
 //Ingredients from Current Recipe
 app.post("/recipeIngrediente/:idRecipe", async (req, res)=> {
-    let response = await db.sequelize.query("SELECT r.idIngrediente, r.quantidade, i.ingredienteName from receitatemingredientes r INNER JOIN ingredientes i ON r.idIngrediente = i.id and idReceita ="+req.params.idRecipe);
+    let response = await db.sequelize.query("SELECT i.tipo, r.idIngrediente, r.quantidade, i.ingredienteName from receitatemingredientes r INNER JOIN ingredientes i ON r.idIngrediente = i.id and idReceita ="+req.params.idRecipe);
     if (response.length === 0){
         res.send(JSON.stringify('Error'))
     }else{
