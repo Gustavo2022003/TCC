@@ -1,14 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { FlatList, RefreshControl, StyleSheet, Text, View, TouchableOpacity, Image, BackHandler} from 'react-native';
+import {FlatList, RefreshControl, StyleSheet, Text, View, TouchableOpacity, Image, BackHandler, ActivityIndicator} from 'react-native';
+import SelectList from 'react-native-dropdown-select-list'
 import * as Animatable from 'react-native-animatable';
+import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ComponentReceita from '../../components/ComponentReceita';
 import { useBackHandler } from '@react-native-community/hooks';
 
 import { Ionicons } from '@expo/vector-icons'; 
-import AlertCustom from '../../components/Alert';
 
     const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
@@ -19,8 +20,18 @@ import AlertCustom from '../../components/Alert';
 export default function Home({navigation, route}) {
     
     const [user,setUser]=useState(null);
-    const [receitas, setReceitas]=useState(null);
+    const [receitas, setReceitas]=useState([]);
+    const [loading, setLoading] = useState(false);
+    const [order, setOrder] = useState()
+    const [page, setPage] = useState(0)
     const [refreshing, setRefreshing] = useState(false);
+
+    const data = [
+        {key:'1',value:'Newest Recipes'},
+        {key:'2',value:'Oldest Recipes'},
+        {key:'3',value:'A - Z Recipes '},
+        {key:'4',value:'Z - A Recipes'},
+      ]
     
     // Alert
     const [errorFeed, setErrorFeed] = useState(false);
@@ -38,7 +49,8 @@ export default function Home({navigation, route}) {
         })
 
     async function GetReceita(){
-        let response= await fetch('http://192.168.0.108:3000/feed',{
+        setLoading(true)
+        let response= await fetch('http://192.168.0.108:3000/feed/'+page,{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -52,7 +64,9 @@ export default function Home({navigation, route}) {
             setErrorFeed(true);
             setReceitas(null);
         }else{
-            setReceitas(json);
+            setReceitas([...receitas, ...json]);
+            setPage(page + 1)
+            setLoading(false)
         }
     };
     
@@ -85,6 +99,14 @@ export default function Home({navigation, route}) {
             <View style={styles.header}>
                 <Text style={styles.HeaderTitle}>Feed</Text>
             </View>
+            <SelectList 
+                    data = {data}
+                    onSelect={() => setOrder()}
+                    arrowicon={<FontAwesome name="chevron-down" size={12} color={'black'} style={{marginLeft: 5}} />} 
+                    setSelected={setOrder}
+                    boxStyles={{borderWidth: 0}}
+                    dropdownStyles={{flex: 1, position: 'absolute', width: 100, elevation: -1}}
+                />
             {/*<View style={{ width: '80%', backgroundColor: '#000000', height: 3,opacity: 0.1 ,borderRadius: 3, marginTop: '-3%'}}><Text>teste</Text></View>*/}
             {errorFeed == true ?
             <View style={styles.error}>
@@ -105,7 +127,10 @@ export default function Home({navigation, route}) {
                     />}
                 ItemSeparatorComponent={() => (
                     <View style={{ backgroundColor:'black', width:'90%', height: 2.5, opacity: 0.05, alignSelf: 'center'}}/>
-                )}    
+                )}
+                onEndReachedThreshold={0.2}
+                onEndReached={GetReceita}
+                ListFooterComponent={<ActivityIndicator size={'large'} color={'#A0E2AF'}/>}
                 renderItem={({item}) =><ComponentReceita {...item}/>}
             />
             </View>}

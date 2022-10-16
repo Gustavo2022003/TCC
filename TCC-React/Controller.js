@@ -66,9 +66,10 @@ app.post('/register',async (req,res)=>{
 });
 
 //Recipes feed
-app.post('/feed', async (req,res)=>{
-    let response = await recipe.findAll({order:[Sequelize.literal('RAND()')], include: [{model: user, required: true}]});
-    if(response.length === 0){
+app.post('/feed/:page', async (req,res)=>{
+    page = Number(req.params.page) * 10
+    let response = await recipe.findAll({order: [['createdAt', 'DESC']], include: [{model: user, required: true}], limit: 10, offset: page});
+    if(response.length == null){
         res.send(JSON.stringify('FeedError'));
     }else{
         res.send(response);
