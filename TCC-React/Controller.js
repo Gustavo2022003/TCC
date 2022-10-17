@@ -275,10 +275,10 @@ app.post("/recipeIngrediente/:idRecipe", async (req, res)=> {
 app.post("/CreateRecipe/:idUser", async (req, res)=>{
     let array = req.body.ArrayIngredient;
     
-    
-    console.log(req.body.desc)
+    let pictureRecipe;
+    req.body.pictureReceita != null || undefined ? pictureRecipe = req.body.pictureReceita : pictureRecipe = 'Image_not_available.png'
     //Testing sending to database
-    let response = await recipe.create({recipeName: req.body.recipeName, desc: req.body.desc, pictureReceita: req.body.pictureReceita,
+    let response = await recipe.create({recipeName: req.body.recipeName, desc: req.body.desc, pictureReceita: pictureRecipe,
         category: req.body.category, ModoPreparo: req.body.ModoPreparo, userId: req.params.idUser})
     let recipeId = await response.id
     console.log(recipeId)
@@ -286,7 +286,7 @@ app.post("/CreateRecipe/:idUser", async (req, res)=>{
     //Group every 2 itens
     let arrayTeste = []
     for(var i = 0; i < array.length; i++){
-        b = i++
+        b = i++ //incremento aqui e na definição do for
         arrayTeste.push("("+recipeId+","+ array[b] +","+ array[i] +")") 
     }
 

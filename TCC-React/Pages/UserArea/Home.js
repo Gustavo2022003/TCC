@@ -96,6 +96,8 @@ export default function Home({navigation, route}) {
     const onRefresh = async () => {
     setRefreshing(true);
     wait(2000).then(() => setRefreshing(false));
+    setReceitas([]);
+    setPage(0);
     GetReceita();
     setErrorFeed(false)
     };
