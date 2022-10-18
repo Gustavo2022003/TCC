@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { useNavigation } from '@react-navigation/native';
-import logo from './Images/Foodio.png';
+import logo from './Images/logo.png';
 import google from './Images/google.png';
 import facebook from './Images/facebook.png';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -31,7 +31,7 @@ export default function Login({navigation}) {
 
     //Envio Form de Login
     async function sendForm(values){
-      let response= await fetch('http://192.168.0.108:3000/login',{
+      let response= await fetch('http://192.168.221.92:3000/login',{
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -140,6 +140,8 @@ const styles = StyleSheet.create({
   },
   logoimg:{
     top: '20%',
+    width: 360,
+    height: 110,
   },
   title:{
     fontWeight: '700',

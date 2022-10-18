@@ -14,7 +14,7 @@ import {
 import * as Animatable from 'react-native-animatable';
 import { useNavigation } from '@react-navigation/native';
 import { ScrollView } from 'react-native-gesture-handler';
-import logo from './Images/Foodio.png';
+import logo from './Images/logo.png';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 
@@ -30,7 +30,7 @@ export default function Register() {
 
   // Function to Register
   async function sendFormRegister(values,{resetForm}){
-    let response= await fetch('http://192.168.0.108:3000/register',{
+    let response= await fetch('http://192.168.221.92:3000/register',{
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -84,7 +84,7 @@ export default function Register() {
             positiveButton={() => [setVisibleAlert(false), navigation.replace('Login')]}
           />
               <View style={styles.logo}>
-                <Image source={logo} style={styles.logoimg}/>
+                <Image source={logo} style={{width: 360,height: 110}}/>
               </View>
               <View style={styles.formBg}>
                   <View style={styles.forms}>
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
   },
   logo:{
     marginTop:'45%',
-    marginBottom: '15%'
+    marginBottom: '15%',
   },
   bottom:{
     marginBottom: '25%'

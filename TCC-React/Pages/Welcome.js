@@ -3,7 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { useNavigation } from '@react-navigation/native';
-import logo from './Images/Foodio.png';
+import logo from './Images/logo.png';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -48,6 +48,8 @@ const styles = StyleSheet.create({
   },
   logoimg:{
     top: '30%',
+    width: 360,
+    height: 110,
   },
   Textbutton:{
     fontSize: 25,

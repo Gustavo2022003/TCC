@@ -23,7 +23,7 @@ export default function ComponentReceitaProfile({refresh,...item}){
     },[]);
 
     async function getPictures(){
-        let picturePath = 'http://192.168.0.108:3000/Images/'
+        let picturePath = 'http://192.168.221.92:3000/Images/'
         //Recipe Picture
         console.log(item.pictureReceita)
         let recipe = item.pictureReceita

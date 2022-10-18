@@ -22,7 +22,7 @@ let ingrediente = models.Ingrediente
 
 let port=process.env.PORT || 3000;
 
-const host = '192.168.0.108';
+const host = '192.168.221.92';
 
 
 

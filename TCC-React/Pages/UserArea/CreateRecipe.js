@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef, useContext} from 'react';
-import { FlatList, StyleSheet, Text, View, TouchableOpacity, Image, TouchableWithoutFeedback, Keyboard} from 'react-native';
+import { FlatList, StyleSheet, Text, View, TouchableOpacity, Image, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { AntDesign } from '@expo/vector-icons'; 
 import ComponentIngrediente from '../../components/ComponentIngrediente';
@@ -43,7 +43,7 @@ export default function SearchRecipe({navigation, route}) {
 
     //Get Ingredients from database
     async function GetIngredients(){
-        let response= await fetch('http://192.168.0.108:3000/ingredients',{
+        let response= await fetch('http://192.168.221.92:3000/ingredients',{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -89,10 +89,10 @@ export default function SearchRecipe({navigation, route}) {
             setAlertMessage('Você não pode realizar uma consulta sem inserir nenhum ingrediente')
             setAlertButton('error')
         }
-        else if(flatIngredients.length > 10){
+        else if(flatIngredients.length > 30){
             setVisibleAlert(true)
             setAlertTitle('Erro ao fazer consulta')
-            setAlertMessage('Me Desculpe, mas por enquanto você não pode crair uma receita com mais de 10 ingredientes')
+            setAlertMessage('Me Desculpe, mas por enquanto você não pode criar uma receita com mais de 15 ingredientes')
             setAlertButton('error')
         }
         else{
@@ -103,7 +103,7 @@ export default function SearchRecipe({navigation, route}) {
                 setCounter(value);
                 return item.quantItem;
             });*/
-            let query = await fetch('http://192.168.0.108:3000/CreateRecipe/'+user.id,{
+            let query = await fetch('http://192.168.221.92:3000/CreateRecipe/'+user.id,{
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -172,7 +172,7 @@ export default function SearchRecipe({navigation, route}) {
                 formData.append('photo', { uri: localUri, name: filename, type });
                 
                 //Send to the back-end
-                let response = await axios.post('http://192.168.0.108:3000/uploadImg', formData, {
+                let response = await axios.post('http://192.168.221.92:3000/uploadImg', formData, {
                     headers: {
                     'Content-Type': 'multipart/form-data',
                     }
@@ -187,7 +187,7 @@ export default function SearchRecipe({navigation, route}) {
     function ShowRecipeImage(){
         console.log(formDataState)
         let idImage = formDataState
-        let picturePath = 'http://192.168.0.108:3000/Images/'
+        let picturePath = 'http://192.168.221.92:3000/Images/'
         let finalPath = picturePath + idImage
         let finalfinalpath = finalPath.toString();
         setRecipePreview(finalfinalpath)
@@ -214,10 +214,10 @@ export default function SearchRecipe({navigation, route}) {
             var ingredientQuery = ingredients.filter(ingredient => ingredient.quantItem > 0).map(ingredients => {return [ingredients.id, ingredients.quantItem]})
             // Sempre numéros impares serão os IDS dos ingredientes e os Pares Quantidades
             let flatQuery = ingredientQuery.flatMap(ingredients => ingredients)
-            if(flatQuery.length > 10){
+            if(flatQuery.length > 30){
                 setVisibleAlert(true)
                 setAlertTitle('Erro ao adicionar item')
-                setAlertMessage('Você não pode realizar uma consulta com mais de 5 itens')
+                setAlertMessage('Você não pode realizar uma consulta com mais de 15 itens')
                 setAlertButton('error')
                 setCounter([item.quantItem -= 1, item.id]);
                 return item.quantItem, item.id;
@@ -227,11 +227,9 @@ export default function SearchRecipe({navigation, route}) {
         async function increment(){  
             if (item.tipo == 'Quantidade'){    
                 setCounter([item.quantItem += 1, item.id]);
-                checkQuant();
                 return item.quantItem, item.id;
             }else{
                 setCounter([item.quantItem += 125, item.id]);
-                checkQuant();
                 return item.quantItem, item.id;
             }
         }
@@ -288,6 +286,11 @@ export default function SearchRecipe({navigation, route}) {
     });
 
     return (
+        <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{flex: 1}}
+        >
+        
             <Animatable.View animation='fadeInUp' style={styles.container}>
                 <View style={styles.header}>
                     <TouchableOpacity disabled={disable} style={{ flexDirection: 'row', alignSelf: 'center' }} onPress={() => goBack()}>
@@ -353,6 +356,7 @@ export default function SearchRecipe({navigation, route}) {
                         </View>
                     }
                     ListFooterComponent={
+                        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                         <View style={styles.bottom}>
                             <TextInput style={styles.formInputPreparation} placeholder='Way of Preparation' multiline={true} value={formik.values.ModoPreparo} onBlur={formik.handleBlur('ModoPreparo')} onChangeText={formik.handleChange('ModoPreparo')}/>
                             {formik.touched.ModoPreparo && formik.errors.ModoPreparo && <Text style={styles.errorInput}>{formik.errors.ModoPreparo}</Text>}
@@ -365,6 +369,7 @@ export default function SearchRecipe({navigation, route}) {
                                     <Text style={styles.RegText}>CreateRecipe</Text> 
                                 </TouchableOpacity>}
                         </View>
+                        </TouchableWithoutFeedback>
                     }
                 />
                 </View>
@@ -378,7 +383,10 @@ export default function SearchRecipe({navigation, route}) {
 
                 </View>
                 }
+                
             </Animatable.View>
+            
+            </KeyboardAvoidingView>
     );
 }
 //#A0E2AF
@@ -387,7 +395,7 @@ container: {
     flex: 1,
     backgroundColor: '#A0E2AF',
     alignItems: 'center',
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
 },
 header:{
     backgroundColor: '#ffffff',
@@ -397,7 +405,8 @@ header:{
     justifyContent: 'space-between',
     paddingTop: '8%',
     width: '100%',
-    height: '10%',
+    height: 90,
+    position: 'relative',
 },
 HeaderTitle:{
     fontSize: 32,

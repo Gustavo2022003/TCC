@@ -18,7 +18,7 @@ export default function Recipe({route, navigation}) {
     const [disable, setDisable] = useState(false);
     
     async function getIngredients(){
-        let res = await fetch('http://192.168.0.108:3000/recipeIngrediente/'+route.params?.id,{
+        let res = await fetch('http://192.168.221.92:3000/recipeIngrediente/'+route.params?.id,{
             method: 'POST',
             headers:{
                 Accept: 'application/json',
@@ -53,7 +53,7 @@ export default function Recipe({route, navigation}) {
         async function getPictures(){
             //Profile Picture
             let profile = route.params?.User.profilePicture;
-            let picturePath = 'http://192.168.0.108:3000/Images/'
+            let picturePath = 'http://192.168.221.92:3000/Images/'
             let profileimg = picturePath + profile
             let profilefinal = profileimg.toString();
             //Recipe Picture
@@ -99,6 +99,9 @@ export default function Recipe({route, navigation}) {
                                 <View style={styles.info}>
                                     <Text style={styles.titleRecipe}>{route.params?.recipeName}</Text>
                                     <Text style={styles.category}>{route.params?.category}</Text>
+                                    <View style={{width: 180, marginTop: 10}}>
+                                        <Text adjustsFontSizeToFit>{route.params?.desc}</Text>
+                                    </View>
                                     <View style={styles.interation}>
                                         <TouchableOpacity style={{marginHorizontal: '2%'}}>
                                             <MaterialIcons name="favorite-outline" size={34} color="black" />
@@ -128,9 +131,9 @@ export default function Recipe({route, navigation}) {
 
                 }
                 ListFooterComponent={
-                    <View style={{flex: 1, marginTop: '5%'}}>
-                        <Text style={{color: '#F6A444', fontSize: 18}}>Modo de Preparo:</Text>
-                        <Text> {route.params?.ModoPreparo}</Text>
+                    <View style={{flex: 1, marginTop: '5%', marginBottom: '40%'}}>
+                        <Text style={{color: '#F6A444', fontSize: 18, fontWeight: '700'}}>Modo de Preparo:</Text>
+                        <Text style={{color: '#31573A', fontSize: 18, fontWeight: '700'}}> {route.params?.ModoPreparo}</Text>
                     </View>
                 }
                 />
@@ -171,6 +174,7 @@ content:{
 imgRecipe:{
     width: '55%',
     height: '100%',
+    borderRadius: 20,
     backgroundColor: "#B3B3B3"
 },
 inline:{
@@ -183,7 +187,7 @@ info:{
 },
 interation:{
     flexDirection: 'row',
-    marginTop: '80%',
+    marginTop: '50%',
     marginHorizontal: '2%'
 },  
 profileInfo:{
@@ -203,7 +207,7 @@ userText:{
     justifyContent: 'center'
 },
 titleRecipe:{
-    fontSize: 20,
+    fontSize: 16,
     color: '#31573A',
     fontWeight: 'bold',
 },

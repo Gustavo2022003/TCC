@@ -5,7 +5,7 @@ import {View, Text, StyleSheet,TouchableOpacity, Image} from 'react-native';
 
 
 export default function UserList({...item}){
-
+    const navigation = useNavigation()
         const [pictureProfile, setPictureProfile] = useState(null)
         console.log(item.completeName)
         console.log(pictureProfile)
@@ -13,7 +13,7 @@ export default function UserList({...item}){
         async function getPictures(){
             //Ingredient Picture
             let profile = item.profilePicture;
-            let picturePath = 'http://192.168.0.108:3000/Images/'
+            let picturePath = 'http://192.168.221.92:3000/Images/'
             let profileimg = picturePath + profile
             let profilefinal = profileimg.toString();
             setPictureProfile(profilefinal)
@@ -25,6 +25,7 @@ export default function UserList({...item}){
         
     return(
         <View style={styles.container}>
+            <TouchableOpacity onPress={()=>navigation.navigate('OtherProfile', {user: item.id})}>
             <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', width:'100%'}}>
                 <Image source={{uri: pictureProfile}}style={styles.img}/>
                 <View style={{justifyContent: 'center'}}>
@@ -32,6 +33,7 @@ export default function UserList({...item}){
                 <Text style={{ fontSize: 14, fontWeight: '500', marginTop: '-1%' }}>{item.username}</Text>
                 </View>
             </View>
+            </TouchableOpacity>
         </View>
 
 
