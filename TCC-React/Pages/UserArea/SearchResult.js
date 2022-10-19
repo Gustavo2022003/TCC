@@ -109,7 +109,7 @@ export default function SearchResult({route, navigation}) {
                     refreshing={refreshing}
                     onRefresh={onRefresh}
                     />}
-                renderItem={({item}) =><ComponentReceita {...item}/>}
+                renderItem={({item}) =><TouchableOpacity onPress={()=>navigation.navigate('Recipe', {...item})}><ComponentReceita {...item}/></TouchableOpacity>}
             />
             </View>}
         </Animatable.View>

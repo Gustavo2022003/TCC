@@ -34,7 +34,7 @@ export default function Home({navigation, route}) {
         {field:'createdAt', order:'ASC', value:'Oldest',label:'Oldest Recipes'},
         {field:'recipeName', order:'ASC', value:'A-Z',label:'A - Z Recipes '},
         {field:'recipeName', order:'DESC', value:'Z-A',label:'Z - A Recipes'},
-      ]
+    ]
     
     // Alert
     const [errorFeed, setErrorFeed] = useState(false);
@@ -90,15 +90,15 @@ export default function Home({navigation, route}) {
         setReceitas([]);
         setPage(0);
         GetReceita();
-    },[navigation, route, value]);
+    },[navigation, route, value, RefreshControl, onRefresh]);
     
     
     const onRefresh = async () => {
     setRefreshing(true);
-    wait(2000).then(() => setRefreshing(false));
     setReceitas([]);
     setPage(0);
     GetReceita();
+    wait(2000).then(() => setRefreshing(false));
     setErrorFeed(false)
     };
 

@@ -229,7 +229,7 @@ export default function SearchRecipe({navigation, route}) {
                 setCounter([item.quantItem += 1, item.id]);
                 return item.quantItem, item.id;
             }else{
-                setCounter([item.quantItem += 125, item.id]);
+                setCounter([item.quantItem += 100, item.id]);
                 return item.quantItem, item.id;
             }
         }
@@ -241,7 +241,7 @@ export default function SearchRecipe({navigation, route}) {
                     setCounter([item.quantItem -= 1, item.id])
                     return item.quantItem, item.id;
                 }else{
-                    setCounter([item.quantItem -= 125, item.id])
+                    setCounter([item.quantItem -= 100, item.id])
                     return item.quantItem, item.id;
                 }
             }

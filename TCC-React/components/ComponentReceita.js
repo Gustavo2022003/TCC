@@ -8,6 +8,7 @@ import {View, Text, StyleSheet,TouchableOpacity, Image} from 'react-native';
 export default function ComponentReceita({...item}){
             const [pictureProfile, setPictureProfile] = useState(null);
             const [pictureRecipe, setPictureRecipe] = useState(null);
+            const [data, setData] = useState(null);
 
             async function getPictures(){
                 //Profile Picture
@@ -23,9 +24,17 @@ export default function ComponentReceita({...item}){
                 let recipefinal = recipeimg.toString()
                 setPictureRecipe(recipefinal)
             }
+            function dataAtualFormatada(){
+                var data = new Date(item.createdAt),
+                    dia  = data.getDate().toString().padStart(2, '0'),
+                    mes  = (data.getMonth()+1).toString().padStart(2, '0'), //+1 pois no getMonth Janeiro começa com zero.
+                    ano  = data.getFullYear();
+                setData(dia+"/"+mes+"/"+ano)
+            }
     
             useEffect(()=>{
                 getPictures();
+                dataAtualFormatada();
             },[])
     
 
@@ -46,6 +55,7 @@ export default function ComponentReceita({...item}){
             <Text style={styles.title}>{item.recipeName}</Text>
             <Text style={styles.category}>{item.category}</Text>
             <Text numberOfLines={2} style={styles.textModo}>{item.desc}</Text>
+            <Text style={{marginTop: 10}}>{data}</Text>
             </View>
         </View>
     )

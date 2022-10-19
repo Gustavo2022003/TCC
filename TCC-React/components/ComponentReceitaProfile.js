@@ -12,6 +12,7 @@ export default function ComponentReceitaProfile({refresh,...item}){
     const [pictureRecipe, setPictureRecipe] = useState(null);
     const [menuVisible, setMenuVisible] = useState(false);
     const [user, setUser] = useState(null)
+    const [data, setData] = useState(null);
 
     useEffect(()=>{
         async function getUser(){
@@ -21,6 +22,14 @@ export default function ComponentReceitaProfile({refresh,...item}){
         }
         getUser();
     },[]);
+
+    function dataAtualFormatada(){
+        var data = new Date(item.createdAt),
+            dia  = data.getDate().toString().padStart(2, '0'),
+            mes  = (data.getMonth()+1).toString().padStart(2, '0'), //+1 pois no getMonth Janeiro começa com zero.
+            ano  = data.getFullYear();
+        setData(dia+"/"+mes+"/"+ano)
+    }
 
     async function getPictures(){
         let picturePath = 'http://192.168.221.92:3000/Images/'
@@ -34,6 +43,7 @@ export default function ComponentReceitaProfile({refresh,...item}){
 
     useEffect(()=>{
         getPictures();
+        dataAtualFormatada();
     },[pictureRecipe])
 
     const navigation = useNavigation();
@@ -50,6 +60,7 @@ export default function ComponentReceitaProfile({refresh,...item}){
             <Text style={styles.title}>{item.recipeName}</Text>
             <Text style={styles.category}>{item.category}</Text>
             <Text numberOfLines={2} ellipsizeMode='tail' style={styles.textModo}>{item.desc}</Text>
+            <Text style={{marginTop: 10}}>{data}</Text>
             </View>
             </TouchableOpacity>
         </View>

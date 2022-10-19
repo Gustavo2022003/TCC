@@ -235,9 +235,9 @@ app.post('/searchRecipe', async (req,res) => {
             array.push(0);
         }
     }
-    const recipes = await db.sequelize.query("SELECT `idReceita` FROM `receitatemingredientes` where ((`idIngrediente` = " + array[0] + " and `quantidade` > 0 <= "+ array[1] +") or (`idIngrediente` = " + 
-    array[2] + " and `quantidade` > 0 <=" + array[3] +") or (`idIngrediente` =" + array[4] + " and `quantidade` > 0 <= "+ array[5] +") or (`idIngrediente` ="+ array[6]+ " and `quantidade` > 0 <=" + 
-    array[7] + ") or (`idIngrediente` =" +array[8]+ " and quantidade > 0 <=" + array[9] +"))GROUP BY idReceita ORDER BY COUNT(idReceita) desc;", { raw: false, type: QueryTypes.SELECT });
+    const recipes = await db.sequelize.query("SELECT `idReceita` FROM `receitatemingredientes` where ((`idIngrediente` = " + array[0] + " and `quantidade` <= "+ array[1] +") or (`idIngrediente` = " + 
+    array[2] + " and `quantidade` <=" + array[3] +") or (`idIngrediente` =" + array[4] + " and `quantidade` <= "+ array[5] +") or (`idIngrediente` ="+ array[6]+ " and `quantidade` <=" + 
+    array[7] + ") or (`idIngrediente` =" +array[8]+ " and quantidade <=" + array[9] +"))GROUP BY idReceita ORDER BY COUNT(idReceita) desc;", { raw: false, type: QueryTypes.SELECT });
     if (recipes.length === 0){
         res.send(JSON.stringify('NoFound'))
     }

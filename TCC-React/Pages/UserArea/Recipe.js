@@ -74,8 +74,8 @@ export default function Recipe({route, navigation}) {
             let quantidade = item.quantidade
             return(
                 quantidade > 1 ?
-                <Text style={{color: '#31573A', fontSize: 16, fontWeight: 'bold'}}>{item.quantidade}{item.tipo == 'Liquido' ? <Text>ml</Text> : item.tipo == 'Peso' ? <Text>g</Text> : <Text></Text>} {item.ingredienteName}s</Text>
-                : <Text style={{color: '#31573A', fontSize: 16, fontWeight: 'bold'}}>{item.quantidade}{item.tipo == 'Liquido' ? <Text>ml</Text> : item.tipo == 'Peso' ? <Text>g</Text> : <Text></Text>} {item.ingredienteName}</Text>
+                <Text style={{color: '#31573A', fontSize: 16, fontWeight: 'bold'}}>{item.quantidade}{item.tipo == 'Liquido' ? <Text>ml de {item.ingredienteName}</Text> : item.tipo == 'Peso' ? <Text>g de {item.ingredienteName}</Text> : <Text> {item.ingredienteName}s</Text>}</Text>
+                : <Text style={{color: '#31573A', fontSize: 16, fontWeight: 'bold'}}>{item.quantidade}{item.tipo == 'Liquido' ? <Text>ml de {item.ingredienteName}</Text> : item.tipo == 'Peso' ? <Text>g de {item.ingredienteName}</Text> : <Text> {item.ingredienteName}</Text>}</Text>
                 )
         }
 
@@ -97,7 +97,7 @@ export default function Recipe({route, navigation}) {
                         <View style={styles.inline}>
                                 <Image source={{ uri: pictureRecipe }} style={styles.imgRecipe} />
                                 <View style={styles.info}>
-                                    <Text style={styles.titleRecipe}>{route.params?.recipeName}</Text>
+                                    <Text adjustsFontSizeToFit style={styles.titleRecipe}>{route.params?.recipeName}</Text>
                                     <Text style={styles.category}>{route.params?.category}</Text>
                                     <View style={{width: 180, marginTop: 10}}>
                                         <Text adjustsFontSizeToFit>{route.params?.desc}</Text>
@@ -125,7 +125,7 @@ export default function Recipe({route, navigation}) {
                                 </View>
                             </View>
                             <View>
-                                <Text style={{color: '#F6A444', fontSize: 18}}>Ingredientes</Text>
+                                <Text style={{color: '#F6A444', fontSize: 18, fontWeight: '700', marginTop: 5}}>Ingredientes</Text>
                             </View>
                         </View>
 
@@ -133,7 +133,7 @@ export default function Recipe({route, navigation}) {
                 ListFooterComponent={
                     <View style={{flex: 1, marginTop: '5%', marginBottom: '40%'}}>
                         <Text style={{color: '#F6A444', fontSize: 18, fontWeight: '700'}}>Modo de Preparo:</Text>
-                        <Text style={{color: '#31573A', fontSize: 18, fontWeight: '700'}}> {route.params?.ModoPreparo}</Text>
+                        <Text style={{color: '#31573A', fontSize: 16, fontWeight: '700'}}> {route.params?.ModoPreparo}</Text>
                     </View>
                 }
                 />
@@ -183,7 +183,8 @@ inline:{
 },
 info:{
     paddingVertical: '1%',
-    paddingHorizontal: '3%'
+    paddingHorizontal: '3%',
+    maxWidth: '50%'
 },
 interation:{
     flexDirection: 'row',
@@ -207,7 +208,7 @@ userText:{
     justifyContent: 'center'
 },
 titleRecipe:{
-    fontSize: 16,
+    fontSize: 14,
     color: '#31573A',
     fontWeight: 'bold',
 },
