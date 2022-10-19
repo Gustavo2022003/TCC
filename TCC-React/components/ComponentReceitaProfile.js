@@ -8,7 +8,6 @@ import RecipeMenu from '../components/RecipeMenu';
 
 
 export default function ComponentReceitaProfile({refresh,...item}){
-
     const [pictureRecipe, setPictureRecipe] = useState(null);
     const [menuVisible, setMenuVisible] = useState(false);
     const [user, setUser] = useState(null)
@@ -31,10 +30,9 @@ export default function ComponentReceitaProfile({refresh,...item}){
         setData(dia+"/"+mes+"/"+ano)
     }
 
-    async function getPictures(){
+    function getPictures(){
         let picturePath = 'http://192.168.221.92:3000/Images/'
         //Recipe Picture
-        console.log(item.pictureReceita)
         let recipe = item.pictureReceita
         let recipeimg = picturePath + recipe
         let recipefinal = recipeimg.toString()
@@ -44,7 +42,7 @@ export default function ComponentReceitaProfile({refresh,...item}){
     useEffect(()=>{
         getPictures();
         dataAtualFormatada();
-    },[pictureRecipe])
+    },[])
 
     const navigation = useNavigation();
     return(

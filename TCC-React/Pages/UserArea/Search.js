@@ -57,7 +57,7 @@ export default function Search({route,navigation}) {
         //<Text>Start Searching clicking on the input!!</Text>
 
     return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        
         
         <Animatable.View animation='fadeInUp' style={styles.container}>
             <AlertCustom 
@@ -66,28 +66,34 @@ export default function Search({route,navigation}) {
                 message = {alertMessage}
                 positiveButton={() => setVisibleAlert(false)}
             />
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.header}>
-                <Text style={styles.HeaderTitle}>Search</Text>
+                
+                    <Text style={styles.HeaderTitle}>Search</Text>
+                
             </View>
+            </TouchableWithoutFeedback>
             <View style={styles.search}>
-                <TextInput style={styles.input} placeholder='Search Users or Recipes here!' value={search} onChangeText={setSearch}/>
-                <TouchableOpacity onPress={SearchGeral}>
-                    <Fontisto name="search" size={24} color="black" />
-                </TouchableOpacity>
+                
+                    <TextInput style={styles.input} placeholder='Search Users or Recipes here!' value={search} onChangeText={setSearch}/>
+                    <TouchableOpacity onPress={SearchGeral}>
+                        <Fontisto name="search" size={24} color="black" />
+                    </TouchableOpacity>
+                
             </View>
             <View style={{width: '95%'}}>
-                {users.length == 0 && recipes.length == 0 ?<View><Text>Start Searching clicking on the input!!</Text></View>
+                {users.length == 0 && recipes.length == 0 ?<TouchableWithoutFeedback onPress={Keyboard.dismiss}><View><Text>Start Searching clicking on the input!!</Text></View></TouchableWithoutFeedback>
                 : <SectionList 
                     renderSectionHeader={({ section: { title } }) =><View style={{width: '100%', backgroundColor: 'white', alignItems: 'center', paddingTop: '2%'}}><Text style={{ fontWeight: 'bold', fontSize: 30, marginTop: '2%' }}>{title}</Text></View>} 
                     sections={[ 
                         { title: 'Users', data: users, renderItem: ({ item, index }) => <UserList {...item}/> }, 
-                        { title: 'Recipes', data: recipes, renderItem: ({ item, index}) => <ComponentReceita {...item} /> }, 
+                        { title: 'Recipes', data: recipes, renderItem: ({ item, index}) => <TouchableOpacity onPress={()=> navigation.navigate('Recipe', {...item})}><ComponentReceita {...item} /></TouchableOpacity>}, 
                         ]} 
-                    keyExtractor={(item, index) => item.id + index} 
+                    keyExtractor={(item, index) => item.id +'&'+ index} 
                 />}
             </View>
         </Animatable.View>
-        </TouchableWithoutFeedback>
+
     );
 }
 

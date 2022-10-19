@@ -37,7 +37,7 @@ export default function ComponentReceita({...item}){
                 dataAtualFormatada();
             },[])
     
-
+            const navigation = useNavigation();
     return(
         <View style={styles.container}>
             <View style={styles.profileArea}>

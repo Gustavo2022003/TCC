@@ -86,9 +86,9 @@ export default function Profile({navigation, route}) {
     //Function to refresh the apge
     const onRefresh = async () => {
         setRefreshing(true);
-        wait(2000).then(() => setRefreshing(false));
         GetProfile();
         GetReceita();
+        wait(2000).then(() => setRefreshing(false));
     };
        //source={require('../../Images/'+picture)}
 
