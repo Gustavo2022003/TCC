@@ -53,7 +53,7 @@ export default function Home({navigation, route}) {
 
     async function GetReceita(){
         setLoading(true)
-        let response= await fetch('http://192.168.221.92:3000/feed/'+page,{
+        let response= await fetch('http://192.168.43.92:3000/feed/'+page,{
             method: 'POST',
             headers: {
                 Accept: 'application/json',

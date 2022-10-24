@@ -25,14 +25,14 @@ export default function Search({route,navigation}) {
                 setAlertMessage('Você não pode fazer buscas sem inserir nada no campo de pesquisa!!')
             }
             else{
-                let responseUser= await fetch('http://192.168.221.92:3000/searchUser/'+search,{
+                let responseUser= await fetch('http://192.168.43.92:3000/searchUser/'+search,{
                     method: 'POST',
                     headers: {
                         Accept: 'application/json',
                         'Content-Type': 'application/json'
                     }
                 })
-                let responseRecipe= await fetch('http://192.168.221.92:3000/searchRecipes/'+search,{
+                let responseRecipe= await fetch('http://192.168.43.92:3000/searchRecipes/'+search,{
                     method: 'POST',
                     headers: {
                         Accept: 'application/json',

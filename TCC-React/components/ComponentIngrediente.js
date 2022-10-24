@@ -12,7 +12,7 @@ export default function ComponentIngrediente({counterId, increment, decrement, i
         async function getPictures(){
             //Ingredient Picture
             let ingredient = item.pictureIngrediente;
-            let picturePath = 'http://192.168.221.92:3000/Images/Ingredients/'
+            let picturePath = 'http://192.168.43.92:3000/Images/Ingredients/'
             let ingredientimg = picturePath + ingredient
             let ingredientfinal = ingredientimg.toString();
             setPictureIngredient(ingredientfinal)

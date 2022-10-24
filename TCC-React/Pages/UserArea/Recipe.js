@@ -18,7 +18,7 @@ export default function Recipe({route, navigation}) {
     const [disable, setDisable] = useState(false);
     
     async function getIngredients(){
-        let res = await fetch('http://192.168.221.92:3000/recipeIngrediente/'+route.params?.id,{
+        let res = await fetch('http://192.168.43.92:3000/recipeIngrediente/'+route.params?.id,{
             method: 'POST',
             headers:{
                 Accept: 'application/json',
@@ -53,7 +53,7 @@ export default function Recipe({route, navigation}) {
         async function getPictures(){
             //Profile Picture
             let profile = route.params?.User.profilePicture;
-            let picturePath = 'http://192.168.221.92:3000/Images/'
+            let picturePath = 'http://192.168.43.92:3000/Images/'
             let profileimg = picturePath + profile
             let profilefinal = profileimg.toString();
             //Recipe Picture
