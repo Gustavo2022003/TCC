@@ -30,13 +30,8 @@ export default function ComponentReceitaProfile({refresh,...item}){
         setData(dia+"/"+mes+"/"+ano)
     }
 
-<<<<<<< Updated upstream
     function getPictures(){
-        let picturePath = 'http://192.168.221.92:3000/Images/'
-=======
-    async function getPictures(){
         let picturePath = 'http://192.168.43.92:3000/Images/'
->>>>>>> Stashed changes
         //Recipe Picture
         let recipe = item.pictureReceita
         let recipeimg = picturePath + recipe
