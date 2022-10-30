@@ -38,7 +38,7 @@ export default function EditProfile({navigation, route}) {
     async function GetProfile(){
         let getuser = await AsyncStorage.getItem('userData');
         let user = JSON.parse(getuser);
-        let response= await fetch('http://192.168.43.92:3000/getProfile/'+user.id,{
+        let response= await fetch('http://192.168.0.126:3000/getProfile/'+user.id,{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -61,7 +61,7 @@ export default function EditProfile({navigation, route}) {
     async function updateProfile(values){
         let getuser = await AsyncStorage.getItem('userData');
         let user = JSON.parse(getuser);
-        let response= await fetch('http://192.168.43.92:3000/updateProfile/'+profile.id,{
+        let response= await fetch('http://192.168.0.126:3000/updateProfile/'+profile.id,{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -112,7 +112,7 @@ export default function EditProfile({navigation, route}) {
                 formData.append('photo', { uri: localUri, name: filename, type });
                 
                 //Send to the back-end
-                let response = await axios.post('http://192.168.43.92:3000/uploadImg', formData, {
+                let response = await axios.post('http://192.168.0.126:3000/uploadImg', formData, {
                     headers: {
                     'Content-Type': 'multipart/form-data',
                     }
@@ -126,7 +126,7 @@ export default function EditProfile({navigation, route}) {
     //Preview Picture Recipe
     function ShowRecipeImage(){
         let idImage = formDataState
-        let picturePath = 'http://192.168.43.92:3000/Images/'
+        let picturePath = 'http://192.168.0.126:3000/Images/'
         let finalPath = picturePath + idImage
         let finalfinalpath = finalPath.toString();
         setPictureProfile(finalfinalpath)

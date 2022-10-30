@@ -29,7 +29,7 @@ export default function SearchRecipe({navigation, route}) {
     const [alertMessage, setAlertMessage] = useState('');
 
     async function GetIngredients(){
-        let response= await fetch('http://192.168.43.92:3000/ingredients',{
+        let response= await fetch('http://192.168.0.126:3000/ingredients',{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -80,7 +80,7 @@ export default function SearchRecipe({navigation, route}) {
                 setCounter(value);
                 return item.quantItem;
             });*/
-            let query = await fetch('http://192.168.43.92:3000/searchRecipe',{
+            let query = await fetch('http://192.168.0.126:3000/searchRecipe',{
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -161,7 +161,7 @@ export default function SearchRecipe({navigation, route}) {
 
     return(
     <View style={{backgroundColor: index++ % 2 === 0 ? '#83B98F' :'#A0E2AF' }}>
-        <ComponentIngrediente {...item} index={index} counterId={counter} increment={increment} decrement={decrement}/>
+        <ComponentIngrediente {...item} index={index} counterId={counter} filter={SearchIngredientes} increment={increment} decrement={decrement}/>
     </View>
     )}
 

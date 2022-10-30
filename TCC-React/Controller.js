@@ -10,7 +10,7 @@ const { Op, where, or } = require("sequelize");
 const { QueryTypes } = require('sequelize');
 const db = require('./models/index')
 
-
+//Pc do chris no wifi do avalone 192.168.43.92
 
 const app = express();
 app.use(cors());
@@ -19,10 +19,10 @@ app.use(bodyParser.json());
 let user=models.User;
 let recipe=models.Recipe;
 let ingrediente = models.Ingrediente
-
+let follow = models.UserSegueUser
 let port=process.env.PORT || 3000;
 
-const host = '192.168.43.92';
+const host = '192.168.0.126';
 
 
 
@@ -114,7 +114,6 @@ var upload = multer({
 
 app.post('/UploadImg', upload, async(req, res)=>{
     let response = JSON.stringify(req.file.filename)
-    console.log(response)
     res.send(response)
 })
 
@@ -137,7 +136,6 @@ app.post('/updateProfile/:idUser', async(req,res)=>{
     }else{
         res.send(JSON.stringify('UsernameExist'))
     }
-    console.log(response)
 })
 
 //Get Profile Picture
@@ -166,7 +164,6 @@ app.post('/uploadPicture/:userId',upload, async (req,res)=>{
             id: userid
         }
     });
-    console.log(updatepicture)
     if(updatepicture === null){
         res.send(JSON.stringify('Deu Erro'));
     }else{
@@ -281,7 +278,6 @@ app.post("/CreateRecipe/:idUser", async (req, res)=>{
     let response = await recipe.create({recipeName: req.body.recipeName, desc: req.body.desc, pictureReceita: pictureRecipe,
         category: req.body.category, ModoPreparo: req.body.ModoPreparo, userId: req.params.idUser})
     let recipeId = await response.id
-    console.log(recipeId)
 
     //Group every 2 itens
     let arrayTeste = []
@@ -296,7 +292,6 @@ app.post("/CreateRecipe/:idUser", async (req, res)=>{
 
     //Sending to the database ingredients from the recipe
     let response2 = await db.sequelize.query(query)
-    console.log(response2)
     res.send(JSON.stringify("RecipeCreated"))
     
     
@@ -308,6 +303,51 @@ app.post('/deleteRecipe/:idRecipe', async (req, res)=>{
     if (response != null){
         res.send(JSON.stringify('Deleted'))
     }
+})
+
+app.post('/follows', async (req, res) =>{
+    let response = await follow.create({idUserFollows: req.body.userFollow, idUserFollowed: req.body.userFollowed})
+    if (response != null){
+        res.send(JSON.stringify('true'))
+    }
+})  
+
+app.post('/unfollow', async (req, res) =>{
+    let response = await follow.destroy({where: {idUserFollows: req.body.userFollow, idUserFollowed: req.body.userFollowed}})
+    if (response != null){
+        res.send(JSON.stringify('true'))
+    }
+})
+
+app.post('/checkFollow', async (req, res) =>{
+    let response = await follow.findOne({where: {idUserFollows: req.body.userFollow, idUserFollowed: req.body.userFollowed}})
+    if (response == null){
+        res.send(JSON.stringify('false'))
+    }else{
+        res.send(JSON.stringify('true'))
+    }
+})
+
+app.post('/followInfoOther', async(req, res) =>{
+    let publicacoes = await db.sequelize.query(`SELECT count(id) as publicacoes from recipes where userId = ${req.body.userFollowed}`) 
+    let seguidores = await db.sequelize.query(`SELECT count(idUserFollowed) AS seguidores from usersegueusers where idUserFollowed = ${req.body.userFollowed}`)
+    let seguindo = await db.sequelize.query(`SELECT count(idUserFollows) AS seguindo from usersegueusers where idUserFollows = ${req.body.userFollowed}`)
+    res.send({
+        publicacoes: publicacoes[0][0].publicacoes,
+        seguindo: seguindo[0][0].seguindo,
+        seguidores: seguidores[0][0].seguidores
+    })
+})
+
+app.post('/followInfo', async(req, res) =>{
+    let publicacoes = await db.sequelize.query(`SELECT count(id) as publicacoes from recipes where userId = ${req.body.user}`) 
+    let seguidores = await db.sequelize.query(`SELECT count(idUserFollowed) AS seguidores from usersegueusers where idUserFollowed = ${req.body.user}`)
+    let seguindo = await db.sequelize.query(`SELECT count(idUserFollows) AS seguindo from usersegueusers where idUserFollows = ${req.body.user}`)
+    res.send({
+        publicacoes: publicacoes[0][0].publicacoes,
+        seguindo: seguindo[0][0].seguindo,
+        seguidores: seguidores[0][0].seguidores
+    })
 })
 
 

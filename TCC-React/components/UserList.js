@@ -7,13 +7,11 @@ import {View, Text, StyleSheet,TouchableOpacity, Image} from 'react-native';
 export default function UserList({...item}){
     const navigation = useNavigation()
         const [pictureProfile, setPictureProfile] = useState(null)
-        console.log(item.completeName)
-        console.log(pictureProfile)
 
         async function getPictures(){
             //Ingredient Picture
             let profile = item.profilePicture;
-            let picturePath = 'http://192.168.43.92:3000/Images/'
+            let picturePath = 'http://192.168.0.126:3000/Images/'
             let profileimg = picturePath + profile
             let profilefinal = profileimg.toString();
             setPictureProfile(profilefinal)

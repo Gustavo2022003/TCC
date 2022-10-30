@@ -20,6 +20,7 @@ export default function Profile({navigation, route}) {
     const [picture, setPicture]=useState(null);
     const [refreshing, setRefreshing] = useState(false);
     const [receitas, setReceitas]=useState(null);
+    const [followInfo, setFollowInfo]=useState(null);
     
     //UseEffect to Get the User
 
@@ -34,18 +35,30 @@ export default function Profile({navigation, route}) {
             // Forçar pegar para enviar para a rota
             let getuser = await AsyncStorage.getItem('userData');
             let user = JSON.parse(getuser);
-            let response= await fetch('http://192.168.43.92:3000/getProfile/'+user.id,{
+            let response= await fetch('http://192.168.0.126:3000/getProfile/'+user.id,{
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json'
                 },
             })
+            let response1 = await await fetch('http://192.168.0.126:3000/followInfo', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body:JSON.stringify({
+                    user: user.id,
+                })
+            })
+            let infoFollow = await response1.json();
             let json=await response.json();
+            setFollowInfo(infoFollow)
             setUser(json)
             //DEIXA O NOME DA IMAGEM DO JEITO QUE PRECISO
             let idImage = json.profilePicture
-            let picturePath = 'http://192.168.43.92:3000/Images/'
+            let picturePath = 'http://192.168.0.126:3000/Images/'
             let finalPath = picturePath + idImage;
             let finalfinalpath = finalPath.toString();
             setPicture(finalfinalpath)
@@ -61,7 +74,7 @@ export default function Profile({navigation, route}) {
     async function GetReceita(){
         let getuser = await AsyncStorage.getItem('userData');
         let user = JSON.parse(getuser);
-        let response = await fetch('http://192.168.43.92:3000/recipe/'+user.id,{
+        let response = await fetch('http://192.168.0.126:3000/recipe/'+user.id,{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -111,6 +124,22 @@ export default function Profile({navigation, route}) {
                     <Image source={{uri: picture}} style={styles.avatar} resizeMode={'cover'}/>
                     <Text  style={styles.name}>{user.completeName}</Text>
                     <Text  style={styles.username}>@{user.username}</Text>
+                    <View style={{marginVertical: '4%', flexDirection:'row', justifyContent:'center', width: '96%'}}>
+                        <View style={{alignItems: 'center'}}>
+                            <Text>{followInfo.publicacoes}</Text>
+                            <Text>Publicações</Text>
+                        </View>
+                        <View style ={{borderRightWidth: 1.2, borderRightColor: '#bdbdbd',marginHorizontal: '5%'}}></View>
+                        <View style={{alignItems: 'center'}}>
+                            <Text>{followInfo.seguidores}</Text>
+                            <Text>Seguidores</Text>
+                        </View>
+                        <View style ={{borderRightWidth: 1.2, borderRightColor: '#bdbdbd', marginHorizontal: '5%'}}></View>
+                        <View style={{alignItems: 'center'}}>
+                            <Text>{followInfo.seguindo}</Text>
+                            <Text>Seguindo</Text>
+                        </View>
+                    </View>
                     </View>
                     }
                     refreshControl={ <RefreshControl 

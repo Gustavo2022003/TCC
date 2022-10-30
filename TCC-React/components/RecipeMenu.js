@@ -10,7 +10,7 @@ export default function RecipeMenu({visible,title,recipeId,refresh, button}){
             const [alertMessage, setAlertMessage] = useState('');
 
             async function deleteRecipe(){
-                let response =await fetch('http://192.168.43.92:3000/deleteRecipe/'+recipeId,{
+                let response =await fetch('http://192.168.0.126:3000/deleteRecipe/'+recipeId,{
                     method: 'POST',
                     headers:{
                         Accept: 'application/json',

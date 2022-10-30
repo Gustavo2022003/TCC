@@ -12,12 +12,35 @@ import { AntDesign } from '@expo/vector-icons';
 
 export default function Profile({route, navigation}) {
     
+    const [userAtual, setUserAtual] = useState(null);
     const [name, setName]= useState(null)
     const [Username, setUsername]= useState(null);
     const [picture, setPicture]=useState(null);
     const [refreshing, setRefreshing] = useState(false);
     const [receitas, setReceitas]=useState(null);
     const [disable, setDisable] = useState(false);
+    const [followTrue, setFollowTrue] = useState(false);
+    const [followInfo, setFollowInfo] = useState('')
+    
+    let follows = () => {
+        if(userAtual == route.params?.user){
+            return (<View></View>)
+        }else{
+            if(followTrue == false){
+                return (
+                <TouchableOpacity style={styles.followButton} onPress={() => follow()}>
+                    <Text style={{color: '#ffffff', fontWeight: '600'}}>Follow</Text>
+                </TouchableOpacity>
+                )
+            }else{
+                return(
+                <TouchableOpacity style={styles.unfollowButton} onPress={() => unfollow()}>
+                    <Text style={{fontWeight: '600'}}>Unfollow</Text>
+                </TouchableOpacity>
+                )
+            }
+        }
+    }
     
     async function goBack(){
         //Prevent double click
@@ -25,6 +48,41 @@ export default function Profile({route, navigation}) {
         setDisable(true);
     }
 
+    async function follow(){
+        let response = await fetch('http://192.168.0.126:3000/follows', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body:JSON.stringify({
+                userFollow: userAtual,
+                userFollowed: route.params?.user
+            })
+        })
+        let json = await response.json()
+        if(json = 'true'){
+            setFollowTrue(true)
+        }
+    }
+
+    async function unfollow(){
+        let response = await fetch('http://192.168.0.126:3000/unfollow', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body:JSON.stringify({
+                userFollow: userAtual,
+                userFollowed: route.params?.user
+            })
+        })
+        let json = await response.json()
+        if(json = 'true'){
+            setFollowTrue(false)
+        }
+    }
 
 
     let shouldBeHandledHere = true;
@@ -42,33 +100,71 @@ export default function Profile({route, navigation}) {
 
     //Function to Get the Profile from other User
     async function GetProfileOther(){
+            let getuser = await AsyncStorage.getItem('userData')
+            let user = JSON.parse(getuser)
+            setUserAtual(user.id)
             // Forçar pegar para enviar para a rota
-            let response= await fetch('http://192.168.43.92:3000/user/'+route.params?.user,{
+            let response= await fetch('http://192.168.0.126:3000/user/'+route.params?.user,{
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json'
                 },
             })
+            let response1 = await fetch('http://192.168.0.126:3000/checkFollow', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body:JSON.stringify({
+                    userFollow: user.id,
+                    userFollowed: route.params?.user
+                })
+            })
+            let response2 = await fetch('http://192.168.0.126:3000/followInfoOther', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body:JSON.stringify({
+                    userFollow: user.id,
+                    userFollowed: route.params?.user
+                })
+            })
             //DEIXA O NOME DA IMAGEM DO JEITO QUE PRECISO
+            let checkFollow = await response1.json()
+            let followInfo = await response2.json()
             let json=await response.json();
             let idImage = json.profilePicture
-            let picturePath = 'http://192.168.43.92:3000/Images/'
+            let picturePath = 'http://192.168.0.126:3000/Images/'
             let finalPath = picturePath + idImage;
             let finalfinalpath = finalPath.toString();
-            setPicture(finalfinalpath)
-            setName(json.completeName);
-            setUsername(json.username);
+            if(checkFollow == 'false'){
+                setFollowTrue(false);
+                setFollowInfo(followInfo);
+                setPicture(finalfinalpath)
+                setName(json.completeName);
+                setUsername(json.username);
+            }else{
+                setFollowTrue(true);
+                setFollowInfo(followInfo);
+                setPicture(finalfinalpath)
+                setName(json.completeName);
+                setUsername(json.username);
+            }
+            
     }
 
     //UseEffet do Get Profile
     useEffect(()=>{
         GetProfileOther();
-    },[route]);
+    },[route, followTrue]);
 
     //Function Get the Recipe by Profile Id
     async function GetReceita(){
-        let response = await fetch('http://192.168.43.92:3000/recipe/'+route.params?.user,{
+        let response = await fetch('http://192.168.0.126:3000/recipe/'+route.params?.user,{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -118,6 +214,25 @@ export default function Profile({route, navigation}) {
                     <Image source={{uri: picture}} style={styles.avatar} resizeMode={'cover'}/>
                     <Text  style={styles.name}>{name}</Text>
                     <Text  style={styles.username}>@{Username}</Text>
+                    <View style={{marginVertical: '4%', flexDirection:'row', justifyContent:'center', width: '96%'}}>
+                        <View style={{alignItems: 'center'}}>
+                            <Text>{followInfo.publicacoes}</Text>
+                            <Text>Publicações</Text>
+                        </View>
+                        <View style ={{borderRightWidth: 1.2, borderRightColor: '#bdbdbd',marginHorizontal: '5%'}}></View>
+                        <View style={{alignItems: 'center'}}>
+                            <Text>{followInfo.seguidores}</Text>
+                            <Text>Seguidores</Text>
+                        </View>
+                        <View style ={{borderRightWidth: 1.2, borderRightColor: '#bdbdbd', marginHorizontal: '5%'}}></View>
+                        <View style={{alignItems: 'center'}}>
+                            <Text>{followInfo.seguindo}</Text>
+                            <Text>Seguindo</Text>
+                        </View>
+                    </View>
+                    <View style={{alignSelf: 'center', marginVertical: '3%', width: '100%'}}>
+                        {follows()}
+                    </View>
                     </View>}
                     refreshControl={ <RefreshControl 
                     refreshing={refreshing}
@@ -172,6 +287,23 @@ username:{
 },
 bottom:{
     marginBottom:'42%',
+},
+followButton:{
+    alignSelf: 'center',
+    backgroundColor: '#5DB075',
+    width: '75%',
+    height: '33%',
+    justifyContent: 'center',
+    borderRadius: 13,
+    alignItems: 'center'
+},
+unfollowButton:{
+    alignSelf: 'center',
+    backgroundColor: '#E0E0E0',
+    width: '75%',
+    height: '33%',
+    justifyContent: 'center',
+    borderRadius: 13,
+    alignItems: 'center'
 }
-
 });
