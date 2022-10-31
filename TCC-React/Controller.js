@@ -22,7 +22,7 @@ let ingrediente = models.Ingrediente
 let follow = models.UserSegueUser
 let port=process.env.PORT || 3000;
 
-const host = '192.168.0.126';
+const host = '192.168.43.92';
 
 
 

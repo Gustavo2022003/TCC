@@ -35,14 +35,14 @@ export default function Profile({navigation, route}) {
             // Forçar pegar para enviar para a rota
             let getuser = await AsyncStorage.getItem('userData');
             let user = JSON.parse(getuser);
-            let response= await fetch('http://192.168.0.126:3000/getProfile/'+user.id,{
+            let response= await fetch('http://192.168.43.92:3000/getProfile/'+user.id,{
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json'
                 },
             })
-            let response1 = await await fetch('http://192.168.0.126:3000/followInfo', {
+            let response1 = await await fetch('http://192.168.43.92:3000/followInfo', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -58,7 +58,7 @@ export default function Profile({navigation, route}) {
             setUser(json)
             //DEIXA O NOME DA IMAGEM DO JEITO QUE PRECISO
             let idImage = json.profilePicture
-            let picturePath = 'http://192.168.0.126:3000/Images/'
+            let picturePath = 'http://192.168.43.92:3000/Images/'
             let finalPath = picturePath + idImage;
             let finalfinalpath = finalPath.toString();
             setPicture(finalfinalpath)
@@ -74,7 +74,7 @@ export default function Profile({navigation, route}) {
     async function GetReceita(){
         let getuser = await AsyncStorage.getItem('userData');
         let user = JSON.parse(getuser);
-        let response = await fetch('http://192.168.0.126:3000/recipe/'+user.id,{
+        let response = await fetch('http://192.168.43.92:3000/recipe/'+user.id,{
             method: 'POST',
             headers: {
                 Accept: 'application/json',

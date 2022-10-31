@@ -28,15 +28,15 @@ export default function Profile({route, navigation}) {
         }else{
             if(followTrue == false){
                 return (
-                <TouchableOpacity style={styles.followButton} onPress={() => follow()}>
-                    <Text style={{color: '#ffffff', fontWeight: '600'}}>Follow</Text>
-                </TouchableOpacity>
+                    <TouchableOpacity style={styles.followButton} onPress={() => follow()}>
+                        <Text style={{color: '#ffffff', fontWeight: '600'}}>Follow</Text>
+                    </TouchableOpacity>
                 )
             }else{
                 return(
-                <TouchableOpacity style={styles.unfollowButton} onPress={() => unfollow()}>
-                    <Text style={{fontWeight: '600'}}>Unfollow</Text>
-                </TouchableOpacity>
+                    <TouchableOpacity style={styles.unfollowButton} onPress={() => unfollow()}>
+                        <Text style={{fontWeight: '600'}}>Unfollow</Text>
+                    </TouchableOpacity>
                 )
             }
         }
@@ -49,7 +49,7 @@ export default function Profile({route, navigation}) {
     }
 
     async function follow(){
-        let response = await fetch('http://192.168.0.126:3000/follows', {
+        let response = await fetch('http://192.168.43.92:3000/follows', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -67,7 +67,7 @@ export default function Profile({route, navigation}) {
     }
 
     async function unfollow(){
-        let response = await fetch('http://192.168.0.126:3000/unfollow', {
+        let response = await fetch('http://192.168.43.92:3000/unfollow', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -104,14 +104,14 @@ export default function Profile({route, navigation}) {
             let user = JSON.parse(getuser)
             setUserAtual(user.id)
             // Forçar pegar para enviar para a rota
-            let response= await fetch('http://192.168.0.126:3000/user/'+route.params?.user,{
+            let response= await fetch('http://192.168.43.92:3000/user/'+route.params?.user,{
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json'
                 },
             })
-            let response1 = await fetch('http://192.168.0.126:3000/checkFollow', {
+            let response1 = await fetch('http://192.168.43.92:3000/checkFollow', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -122,7 +122,7 @@ export default function Profile({route, navigation}) {
                     userFollowed: route.params?.user
                 })
             })
-            let response2 = await fetch('http://192.168.0.126:3000/followInfoOther', {
+            let response2 = await fetch('http://192.168.43.92:3000/followInfoOther', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -138,7 +138,7 @@ export default function Profile({route, navigation}) {
             let followInfo = await response2.json()
             let json=await response.json();
             let idImage = json.profilePicture
-            let picturePath = 'http://192.168.0.126:3000/Images/'
+            let picturePath = 'http://192.168.43.92:3000/Images/'
             let finalPath = picturePath + idImage;
             let finalfinalpath = finalPath.toString();
             if(checkFollow == 'false'){
@@ -164,7 +164,7 @@ export default function Profile({route, navigation}) {
 
     //Function Get the Recipe by Profile Id
     async function GetReceita(){
-        let response = await fetch('http://192.168.0.126:3000/recipe/'+route.params?.user,{
+        let response = await fetch('http://192.168.43.92:3000/recipe/'+route.params?.user,{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -210,7 +210,7 @@ export default function Profile({route, navigation}) {
             <FlatList
                 data={receitas}
                 ListHeaderComponent={
-                    <View>
+                    <View style>
                     <Image source={{uri: picture}} style={styles.avatar} resizeMode={'cover'}/>
                     <Text  style={styles.name}>{name}</Text>
                     <Text  style={styles.username}>@{Username}</Text>
@@ -230,9 +230,10 @@ export default function Profile({route, navigation}) {
                             <Text>Seguindo</Text>
                         </View>
                     </View>
-                    <View style={{alignSelf: 'center', marginVertical: '3%', width: '100%'}}>
-                        {follows()}
+                    <View style={{height: 100}}>
+                    {follows()}
                     </View>
+                    <Text style={{textAlign: 'center', marginTop: '-5%', fontWeight: '700', fontSize: 36}}>Recipes</Text>
                     </View>}
                     refreshControl={ <RefreshControl 
                     refreshing={refreshing}
@@ -292,7 +293,7 @@ followButton:{
     alignSelf: 'center',
     backgroundColor: '#5DB075',
     width: '75%',
-    height: '33%',
+    height: '55%',
     justifyContent: 'center',
     borderRadius: 13,
     alignItems: 'center'
@@ -301,7 +302,7 @@ unfollowButton:{
     alignSelf: 'center',
     backgroundColor: '#E0E0E0',
     width: '75%',
-    height: '33%',
+    height: '55%',
     justifyContent: 'center',
     borderRadius: 13,
     alignItems: 'center'

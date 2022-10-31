@@ -31,7 +31,7 @@ export default function Login({navigation}) {
 
     //Envio Form de Login
     async function sendForm(values){
-      let response= await fetch('http://192.168.0.126:3000/login',{
+      let response= await fetch('http://192.168.43.92:3000/login',{
         method: 'POST',
         headers: {
           Accept: 'application/json',

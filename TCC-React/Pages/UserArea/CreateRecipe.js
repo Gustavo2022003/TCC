@@ -43,7 +43,7 @@ export default function SearchRecipe({navigation, route}) {
 
     //Get Ingredients from database
     async function GetIngredients(){
-        let response= await fetch('http://192.168.0.126:3000/ingredients',{
+        let response= await fetch('http://192.168.43.92:3000/ingredients',{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -103,7 +103,7 @@ export default function SearchRecipe({navigation, route}) {
                 setCounter(value);
                 return item.quantItem;
             });*/
-            let query = await fetch('http://192.168.0.126:3000/CreateRecipe/'+user.id,{
+            let query = await fetch('http://192.168.43.92:3000/CreateRecipe/'+user.id,{
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -172,7 +172,7 @@ export default function SearchRecipe({navigation, route}) {
                 formData.append('photo', { uri: localUri, name: filename, type });
                 
                 //Send to the back-end
-                let response = await axios.post('http://192.168.0.126:3000/uploadImg', formData, {
+                let response = await axios.post('http://192.168.43.92:3000/uploadImg', formData, {
                     headers: {
                     'Content-Type': 'multipart/form-data',
                     }
@@ -186,7 +186,7 @@ export default function SearchRecipe({navigation, route}) {
     //Preview Picture Recipe
     function ShowRecipeImage(){
         let idImage = formDataState
-        let picturePath = 'http://192.168.0.126:3000/Images/'
+        let picturePath = 'http://192.168.43.92:3000/Images/'
         let finalPath = picturePath + idImage
         let finalfinalpath = finalPath.toString();
         setRecipePreview(finalfinalpath)
