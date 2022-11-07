@@ -24,6 +24,7 @@ export default function ComponentReceita({...item}){
                 let recipefinal = recipeimg.toString()
                 setPictureRecipe(recipefinal)
             }
+
             function dataAtualFormatada(){
                 var data = new Date(item.createdAt),
                     dia  = data.getDate().toString().padStart(2, '0'),

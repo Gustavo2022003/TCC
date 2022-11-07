@@ -16,6 +16,7 @@ export default function Recipe({route, navigation}) {
     const [pictureProfile, setPictureProfile] = useState(null);
     const [pictureRecipe, setPictureRecipe] = useState(null);
     const [disable, setDisable] = useState(false);
+    const [like, setLike] = useState(false);
     
     async function getIngredients(){
         let res = await fetch('http://192.168.43.92:3000/recipeIngrediente/'+route.params?.id,{
@@ -28,8 +29,20 @@ export default function Recipe({route, navigation}) {
         let json = await res.json();
         setIngredients(json);
     }
+
+    async function likeRecipe(){
+        setLike(true);
+        console.log('Like')
+    }
+
+    async function dislikeRecipe(){
+        setLike(false);
+        console.log('Dislike')
+    }
+    
     useEffect(()=>{
         getIngredients();
+        getPictures();
     },[route,navigation])
 
 
@@ -50,7 +63,7 @@ export default function Recipe({route, navigation}) {
         return true
     })
     
-        async function getPictures(){
+    async function getPictures(){
             //Profile Picture
             let profile = route.params?.User.profilePicture;
             let picturePath = 'http://192.168.43.92:3000/Images/'
@@ -62,22 +75,16 @@ export default function Recipe({route, navigation}) {
             let recipefinal = recipeimg.toString()
             setPictureProfile(profilefinal)
             setPictureRecipe(recipefinal)
-        }
+    }
 
-        useEffect(()=>{
-            getPictures();
-        },[route, navigation])
-
-
-
-        let RenderItem = ({item, index}) => {
+    let RenderItem = ({item, index}) => {
             let quantidade = item.quantidade
             return(
                 quantidade > 1 ?
                 <Text style={{color: '#31573A', fontSize: 16, fontWeight: 'bold'}}>{item.quantidade}{item.tipo == 'Liquido' ? <Text>ml de {item.ingredienteName}</Text> : item.tipo == 'Peso' ? <Text>g de {item.ingredienteName}</Text> : <Text> {item.ingredienteName}s</Text>}</Text>
                 : <Text style={{color: '#31573A', fontSize: 16, fontWeight: 'bold'}}>{item.quantidade}{item.tipo == 'Liquido' ? <Text>ml de {item.ingredienteName}</Text> : item.tipo == 'Peso' ? <Text>g de {item.ingredienteName}</Text> : <Text> {item.ingredienteName}</Text>}</Text>
                 )
-        }
+    }
 
 
     return (
@@ -103,9 +110,15 @@ export default function Recipe({route, navigation}) {
                                         <Text adjustsFontSizeToFit>{route.params?.desc}</Text>
                                     </View>
                                     <View style={styles.interation}>
-                                        <TouchableOpacity style={{marginHorizontal: '2%'}}>
-                                            <MaterialIcons name="favorite-outline" size={34} color="black" />
-                                        </TouchableOpacity>
+                                        {like == false ? 
+                                            <TouchableOpacity style={{marginHorizontal: '2%'}} onPress={likeRecipe}>
+                                                <MaterialIcons name="favorite-outline" size={34} color="black" />
+                                            </TouchableOpacity>
+                                        :
+                                            <TouchableOpacity style={{marginHorizontal: '2%'}} onPress={dislikeRecipe}>
+                                                <MaterialIcons name="favorite" size={34} color="green" />
+                                            </TouchableOpacity>
+                                        }
                                         <TouchableOpacity style={{marginHorizontal: '2%'}}>
                                         <MaterialCommunityIcons name="comment-text-outline" size={34} color="black" />
                                         </TouchableOpacity>

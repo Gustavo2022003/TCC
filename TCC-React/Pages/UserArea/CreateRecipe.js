@@ -74,7 +74,7 @@ export default function SearchRecipe({navigation, route}) {
     
 
     //Submit all the information to back-end
-    async function checkGeral(values){
+    async function checkGeral(values,{resetForm}){
     //Get current User
     try{
     let getuser = await AsyncStorage.getItem('userData');
@@ -124,7 +124,8 @@ export default function SearchRecipe({navigation, route}) {
                 setAlertTitle("Receita criada")
                 setAlertMessage('A Receita foi criada com sucesso, clique no botão para vê-la em seu perfil!')
                 setAlertButton('created')
-            }   
+            }
+            resetForm({values: ''})
         }
     } 
         catch(e){
