@@ -10,7 +10,7 @@ const { Op, where, or } = require("sequelize");
 const { QueryTypes } = require('sequelize');
 const db = require('./models/index')
 
-//Pc do chris no wifi do avalone 192.168.43.92
+//Pc do chris no wifi do avalone 192.168.0.108
 
 const app = express();
 app.use(cors());
@@ -22,7 +22,7 @@ let ingrediente = models.Ingrediente
 let follow = models.UserSegueUser
 let port=process.env.PORT || 3000;
 
-const host = '192.168.43.92';
+const host = '192.168.0.108';
 
 
 
@@ -348,6 +348,10 @@ app.post('/followInfo', async(req, res) =>{
         seguindo: seguindo[0][0].seguindo,
         seguidores: seguidores[0][0].seguidores
     })
+})
+
+app.post('getLike/:idRecipe', async(req, res)=>{
+    let qntLike = await db.sequelize.query(`SELECT count(id) as likes from userlikerecipes where recipeId = ${req.params.idRecipe}`)
 })
 
 

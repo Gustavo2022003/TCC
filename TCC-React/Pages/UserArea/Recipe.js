@@ -17,9 +17,10 @@ export default function Recipe({route, navigation}) {
     const [pictureRecipe, setPictureRecipe] = useState(null);
     const [disable, setDisable] = useState(false);
     const [like, setLike] = useState(false);
+    const [qntLike, setQntLike] = useState(null)
     
     async function getIngredients(){
-        let res = await fetch('http://192.168.43.92:3000/recipeIngrediente/'+route.params?.id,{
+        let res = await fetch('http://192.168.0.108:3000/recipeIngrediente/'+route.params?.id,{
             method: 'POST',
             headers:{
                 Accept: 'application/json',
@@ -30,14 +31,30 @@ export default function Recipe({route, navigation}) {
         setIngredients(json);
     }
 
+    async function getLikes(){
+        let res = await fetch('http://192.168.0.108:3000/getLike/'+route.params?.id,{
+            method: 'POST',
+            headers:{
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+        let json = await res.json()
+        setQntLike(json)
+    }
+
     async function likeRecipe(){
-        setLike(true);
-        console.log('Like')
+        if (like == false){
+            setLike(true);
+            console.log('Like')
+        }
     }
 
     async function dislikeRecipe(){
-        setLike(false);
-        console.log('Dislike')
+        if (like == true){
+            setLike(false);
+            console.log('Dislike')
+        }
     }
     
     useEffect(()=>{
@@ -66,7 +83,7 @@ export default function Recipe({route, navigation}) {
     async function getPictures(){
             //Profile Picture
             let profile = route.params?.User.profilePicture;
-            let picturePath = 'http://192.168.43.92:3000/Images/'
+            let picturePath = 'http://192.168.0.108:3000/Images/'
             let profileimg = picturePath + profile
             let profilefinal = profileimg.toString();
             //Recipe Picture

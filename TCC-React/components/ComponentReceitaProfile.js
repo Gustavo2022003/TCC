@@ -31,7 +31,7 @@ export default function ComponentReceitaProfile({refresh,...item}){
     }
 
     function getPictures(){
-        let picturePath = 'http://192.168.43.92:3000/Images/'
+        let picturePath = 'http://192.168.0.108:3000/Images/'
         //Recipe Picture
         let recipe = item.pictureReceita
         let recipeimg = picturePath + recipe

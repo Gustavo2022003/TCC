@@ -49,7 +49,7 @@ export default function Profile({route, navigation}) {
     }
 
     async function follow(){
-        let response = await fetch('http://192.168.43.92:3000/follows', {
+        let response = await fetch('http://192.168.0.108:3000/follows', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -67,7 +67,7 @@ export default function Profile({route, navigation}) {
     }
 
     async function unfollow(){
-        let response = await fetch('http://192.168.43.92:3000/unfollow', {
+        let response = await fetch('http://192.168.0.108:3000/unfollow', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -104,14 +104,14 @@ export default function Profile({route, navigation}) {
             let user = JSON.parse(getuser)
             setUserAtual(user.id)
             // Forçar pegar para enviar para a rota
-            let response= await fetch('http://192.168.43.92:3000/user/'+route.params?.user,{
+            let response= await fetch('http://192.168.0.108:3000/user/'+route.params?.user,{
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json'
                 },
             })
-            let response1 = await fetch('http://192.168.43.92:3000/checkFollow', {
+            let response1 = await fetch('http://192.168.0.108:3000/checkFollow', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -122,7 +122,7 @@ export default function Profile({route, navigation}) {
                     userFollowed: route.params?.user
                 })
             })
-            let response2 = await fetch('http://192.168.43.92:3000/followInfoOther', {
+            let response2 = await fetch('http://192.168.0.108:3000/followInfoOther', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -138,7 +138,7 @@ export default function Profile({route, navigation}) {
             let followInfo = await response2.json()
             let json=await response.json();
             let idImage = json.profilePicture
-            let picturePath = 'http://192.168.43.92:3000/Images/'
+            let picturePath = 'http://192.168.0.108:3000/Images/'
             let finalPath = picturePath + idImage;
             let finalfinalpath = finalPath.toString();
             if(checkFollow == 'false'){
@@ -164,7 +164,7 @@ export default function Profile({route, navigation}) {
 
     //Function Get the Recipe by Profile Id
     async function GetReceita(){
-        let response = await fetch('http://192.168.43.92:3000/recipe/'+route.params?.user,{
+        let response = await fetch('http://192.168.0.108:3000/recipe/'+route.params?.user,{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
