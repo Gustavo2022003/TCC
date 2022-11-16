@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableOpacity, Image, BackHandler} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Animatable from 'react-native-animatable';
 import { useNavigation, NavigationActions } from '@react-navigation/native';
 import { useBackHandler } from '@react-native-community/hooks';
@@ -13,14 +14,19 @@ import { FlatList, ScrollView } from 'react-native-gesture-handler';
 
 export default function Recipe({route, navigation}) {
     const [ingredients, setIngredients] = useState(null);
+    const [userAtual, setUserAtual] = useState(null);
     const [pictureProfile, setPictureProfile] = useState(null);
     const [pictureRecipe, setPictureRecipe] = useState(null);
     const [disable, setDisable] = useState(false);
     const [like, setLike] = useState(false);
-    const [qntLike, setQntLike] = useState(null)
+    const [qntLike, setQntLike] = useState(0)
     
+
     async function getIngredients(){
-        let res = await fetch('http://192.168.0.108:3000/recipeIngrediente/'+route.params?.id,{
+        let getuser = await AsyncStorage.getItem('userData')
+        let user = JSON.parse(getuser)
+        setUserAtual(user.id)
+        let res = await fetch('http://192.168.43.92:3000/recipeIngrediente/'+route.params?.id,{
             method: 'POST',
             headers:{
                 Accept: 'application/json',
@@ -31,8 +37,31 @@ export default function Recipe({route, navigation}) {
         setIngredients(json);
     }
 
+    async function isLiked(){
+        let getuser = await AsyncStorage.getItem('userData')
+        let user = JSON.parse(getuser)
+        setUserAtual(user.id)
+        let res = await fetch('http://192.168.43.92:3000/checkLike/'+route.params?.id,{
+            method: 'POST',
+            headers:{
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body:JSON.stringify({
+                userId: user.id
+            })
+        })
+        let json = await res.json()
+        console.log(json)
+        if (json == 'liked'){
+            setLike(true)
+        }else{
+            setLike(false)
+        }
+    }
+
     async function getLikes(){
-        let res = await fetch('http://192.168.0.108:3000/getLike/'+route.params?.id,{
+        let res = await fetch('http://192.168.43.92:3000/getLike/'+route.params?.id,{
             method: 'POST',
             headers:{
                 Accept: 'application/json',
@@ -40,27 +69,50 @@ export default function Recipe({route, navigation}) {
             }
         })
         let json = await res.json()
-        setQntLike(json)
+        setQntLike(json.likes)
     }
 
     async function likeRecipe(){
-        if (like == false){
-            setLike(true);
-            console.log('Like')
-        }
+            setLike(true)
+            let res = await fetch('http://192.168.43.92:3000/like/'+route.params?.id,{
+                method: 'POST',
+                headers:{
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body:JSON.stringify({
+                    userId: userAtual
+                })
+            })
+            isLiked();
     }
 
     async function dislikeRecipe(){
-        if (like == true){
-            setLike(false);
-            console.log('Dislike')
-        }
+            setLike(false)
+            let res = await fetch('http://192.168.43.92:3000/dislike/'+route.params?.id,{
+                method: 'POST',
+                headers:{
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body:JSON.stringify({
+                    userId: userAtual
+                })
+            })
+            isLiked()
     }
     
     useEffect(()=>{
         getIngredients();
         getPictures();
+        getLikes();
+        isLiked();
     },[route,navigation])
+
+    useEffect(()=>{
+        getLikes();
+    },[like])
+
 
 
     async function goBack(){
@@ -83,7 +135,7 @@ export default function Recipe({route, navigation}) {
     async function getPictures(){
             //Profile Picture
             let profile = route.params?.User.profilePicture;
-            let picturePath = 'http://192.168.0.108:3000/Images/'
+            let picturePath = 'http://192.168.43.92:3000/Images/'
             let profileimg = picturePath + profile
             let profilefinal = profileimg.toString();
             //Recipe Picture
@@ -125,6 +177,9 @@ export default function Recipe({route, navigation}) {
                                     <Text style={styles.category}>{route.params?.category}</Text>
                                     <View style={{width: 180, marginTop: 10}}>
                                         <Text adjustsFontSizeToFit>{route.params?.desc}</Text>
+                                    </View>
+                                    <View style={{marginTop: '50%',marginBottom: '2%', paddingHorizontal: 10}}>
+                                        <Text style={{fontWeight: '600'}}>{qntLike} Curtidas</Text>
                                     </View>
                                     <View style={styles.interation}>
                                         {like == false ? 
@@ -218,7 +273,6 @@ info:{
 },
 interation:{
     flexDirection: 'row',
-    marginTop: '50%',
     marginHorizontal: '2%'
 },  
 profileInfo:{

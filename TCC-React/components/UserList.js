@@ -11,7 +11,7 @@ export default function UserList({...item}){
         async function getPictures(){
             //Ingredient Picture
             let profile = item.profilePicture;
-            let picturePath = 'http://192.168.0.108:3000/Images/'
+            let picturePath = 'http://192.168.43.92:3000/Images/'
             let profileimg = picturePath + profile
             let profilefinal = profileimg.toString();
             setPictureProfile(profilefinal)

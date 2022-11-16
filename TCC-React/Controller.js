@@ -10,7 +10,7 @@ const { Op, where, or } = require("sequelize");
 const { QueryTypes } = require('sequelize');
 const db = require('./models/index')
 
-//Pc do chris no wifi do avalone 192.168.0.108
+//Pc do chris no wifi do avalone 192.168.43.92
 
 const app = express();
 app.use(cors());
@@ -20,9 +20,10 @@ let user=models.User;
 let recipe=models.Recipe;
 let ingrediente = models.Ingrediente
 let follow = models.UserSegueUser
+let like = models.userLikeRecipe
 let port=process.env.PORT || 3000;
 
-const host = '192.168.0.108';
+const host = '192.168.43.92';
 
 
 
@@ -350,11 +351,35 @@ app.post('/followInfo', async(req, res) =>{
     })
 })
 
-app.post('getLike/:idRecipe', async(req, res)=>{
+app.post('/getLike/:idRecipe', async(req, res) =>{
     let qntLike = await db.sequelize.query(`SELECT count(id) as likes from userlikerecipes where recipeId = ${req.params.idRecipe}`)
+    if (qntLike != null){
+        res.send({likes: qntLike[0][0].likes})
+    }
 })
 
+app.post('/like/:idRecipe', async(req,res)=> {
+    let response = await like.create({userId: req.body.userId, recipeId: req.params.idRecipe})
+    if (response != null){
+        console.log(JSON.stringify('true'))
+    }
+})
 
+app.post('/dislike/:idRecipe', async(req, res)=>{
+    let response = await like.destroy({where: {userId: req.body.userId, recipeId: req.params.idRecipe}})
+    if (response != null){
+        res.send(JSON.stringify('true'))
+    }
+})
+
+app.post('/checkLike/:idRecipe', async(req, res)=>{
+    let response = await like.findOne({where: {userId: req.body.userId, recipeId: req.params.idRecipe}})
+    if (response == null){
+        res.send(JSON.stringify('noLiked'))
+    }else{
+        res.send(JSON.stringify('liked'))
+    }
+})
 
 
 

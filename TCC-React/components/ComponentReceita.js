@@ -13,7 +13,7 @@ export default function ComponentReceita({...item}){
             async function getPictures(){
                 //Profile Picture
                 let profile = item.User.profilePicture;
-                let picturePath = 'http://192.168.0.108:3000/Images/'
+                let picturePath = 'http://192.168.43.92:3000/Images/'
                 let profileimg = picturePath + profile
                 let profilefinal = profileimg.toString();
                 setPictureProfile(profilefinal)
