@@ -24,9 +24,13 @@ Curso/módulo: 3 AMSDS FATEC 2022
 - Leonardo Henrique dos Santos
 
 ## Sumário
+- [Documentação](#documentação)
 - [Tecnologias utilizadas nesse projeto](#tecnologias-utilizadas-nesse-projeto)
 - [Códigos](#códigos)
 - [Galeria](#galeria)
+
+## Documentação
+[Acessar a documentação TCC](https://github.com/Gustavo2022003/TCC/tree/main/assets/Docs)
 
 ## Tecnologias utilizadas nesse projeto:
 <p>
