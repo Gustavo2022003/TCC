@@ -6,12 +6,15 @@
 
 >Trabalho de Conclusão de Curso apresentado ao Curso Técnico do Ensino Médio com Habilitação Profissional de Técnico em Desenvolvimento de Sistemas da Etec Pedro Ferreira Alves, orientado pelos Prof. M. Sc. Marcos Roberto de Morais e Prof. Esp. Sinzomar Gomes de Melo como requisito parcial para obtenção do título de técnico em Ensino Médio com Habilitação Profissional de Técnico em Desenvolvimento de Sistemas.
 
-
-> Dados
+---
+ 
+### Dados
 
 Curso/módulo: 3 AMSDS FATEC 2022
 
-> Integrantes:
+---
+
+### Integrantes:
 - Avalone Silva Cabrera
 - Arthur Cândido de Melo
 - Christian Martins Teixeira
