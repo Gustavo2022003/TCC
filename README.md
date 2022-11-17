@@ -24,3 +24,11 @@ Curso/módulo: 3 AMSDS FATEC 2022
 <img src="https://img.shields.io/badge/REACT-116cc2?style=for-the-badge&logo=react&logoColor=white">
 <img src="https://img.shields.io/badge/MYSQL-a9bbcc?style=for-the-badge&logo=mysql&logoColor=white">
 </p>
+
+## Galeria
+<img src="">
+<img src="assets/imgs/Web/Screenshot_1.png">
+<img src="assets/imgs/Web/Screenshot_2.png">
+<img src="assets/imgs/Web/Screenshot_3.png">
+<img src="assets/imgs/Web/Screenshot_4.png">
+<img src="assets/imgs/Web/Screenshot_5.png">
