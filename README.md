@@ -1,21 +1,17 @@
-# TCC (Trabalho de Conclusão de Curso)
+# Trabalho de Conclusão de Curso
 
-### Protótipos
-> - [x] Protótipo versão mobile
-> - [ ] Protótipo versão Web
+> Dados
 
-### Modelo conceitual
-> - [ ] Versão Web
-> - [ ] Mobile
+Curso/módulo: 3 AMSDS FATEC 2022
 
-### Documentação
-> - [ ] Documentação
-
-### Versão definitiva
-> - [ ] Web
-> - [ ] Mobile
-> - [ ] MySQL
-> - [ ] Mapeamento Banco de dados
+> Integrantes:
+- Avalone Silva Cabrera
+- Arthur Cândido de Melo
+- Christian Martins Teixeira
+- Gustavo Gutierrez
+- Gabriel José Pires de Avila
+- João Henrique de Oliveira
+- Leonardo Henrique dos Santos
 
 ## Tecnologias:
 
