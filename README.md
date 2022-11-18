@@ -15,11 +15,11 @@ Curso/módulo: 3 AMSDS FATEC 2022
 ---
 
 ### Integrantes:
-- Avalone Silva Cabrera
 - Arthur Cândido de Melo
+- Avalone Silva Cabrera
 - Christian Martins Teixeira
-- Gustavo Gutierrez
 - Gabriel José Pires de Avila
+- Gustavo Gutierrez
 - João Henrique de Oliveira
 - Leonardo Henrique dos Santos
 
